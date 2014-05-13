@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package BusinessLogicLayer;
+package DataAccessLayer;
 
 import frameworkairpur.Cast;
 import java.sql.*;

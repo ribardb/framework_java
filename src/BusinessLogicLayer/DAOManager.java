@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package DataAccessLayer;
+package BusinessLogicLayer;
 
-import BusinessLogicLayer.DatabaseConnection;
-import BusinessLogicLayer.DatabaseConnectionMySQL;
-import BusinessLogicLayer.DatabaseConnectionOracle;
-import BusinessLogicLayer.DatabaseConnectionSQLServer;
+import DataAccessLayer.DatabaseConnection;
+import DataAccessLayer.DatabaseConnectionMySQL;
+import DataAccessLayer.DatabaseConnectionOracle;
+import DataAccessLayer.DatabaseConnectionSQLServer;
 import frameworkairpur.ImportXML;
 import java.util.ArrayList;
 

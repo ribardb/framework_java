@@ -5,10 +5,10 @@
  */
 package frameworkairpur;
 
-import BusinessLogicLayer.DatabaseConnection;
-import BusinessLogicLayer.DatabaseConnectionMySQL;
-import BusinessLogicLayer.DatabaseConnectionOracle;
-import BusinessLogicLayer.DatabaseConnectionSQLServer;
+import DataAccessLayer.DatabaseConnection;
+import DataAccessLayer.DatabaseConnectionMySQL;
+import DataAccessLayer.DatabaseConnectionOracle;
+import DataAccessLayer.DatabaseConnectionSQLServer;
 import java.io.File;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;

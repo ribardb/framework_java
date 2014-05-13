@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package BusinessLogicLayer;
+package DataAccessLayer;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;

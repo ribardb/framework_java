@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package DataAccessLayer;
+package BusinessLogicLayer;
 
 import java.util.ArrayList;
 
