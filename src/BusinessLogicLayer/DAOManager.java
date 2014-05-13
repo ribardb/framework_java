@@ -95,7 +95,7 @@ public class DAOManager implements DAOManagerInterface {
     }
 
 }
-public void setRequeteAjouter(Object table)
+/*public void setRequeteAjouter(Object table)
 	{
             ArrayList<String> temp = this.cast.getParamQuery(table); //récupération d'une liste(nom de la table | liste des 
                                                                                 //attributs entre parenthèses
@@ -248,3 +248,4 @@ public void setRequeteAjouter(Object table)
 	{
 		return $this->parametres;
 	}
+*/
