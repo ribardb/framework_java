@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <database>
+        Oracle
+    </database>
+    <ip>
+        svroracle.montpellier.epsi.fr
+    </ip>
+    <port>
+        4521
+    </port>
+    <sid_base>
+        bdaolap
+    </sid_base>
+    <login>
+        BDD_Airpur
+    </login>
+    <password>
+        fghnbv0
+    </password>
+</config>
