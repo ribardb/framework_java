@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 public class DatabaseConnectionOracle extends DatabaseConnection {    
     
     private final String sid;
+    private static final String DRIVER_ORACLE = "oracle.jdbc.OracleDriver";
+    private static final String INSTANCE_ORACLE = "jdbc:oracle:thin:@";
     
     
     public DatabaseConnectionOracle(String login, String psw, String ip, String port, String sid) throws Exception {

@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 public class DatabaseConnectionMySQL extends DatabaseConnection {
     
     private final String base;
+    private static final String DRIVER_MYSQL = "com.mysql.jdbc.Driver";
+    private static final String INSTANCE_MYSQL = "jdbc:mysql:thin:@";
 
     public DatabaseConnectionMySQL(String login, String psw, String ip, String port, String base) throws Exception {
         super(login, psw, ip, port);

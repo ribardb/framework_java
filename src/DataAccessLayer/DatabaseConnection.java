@@ -19,14 +19,7 @@ public abstract class DatabaseConnection {
     protected String ip;
     protected String port;
     protected String url;
-    protected Connection con = null;
-    protected static final String DRIVER_ORACLE = "oracle.jdbc.OracleDriver";
-    protected static final String DRIVER_SQLSERVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    protected static final String DRIVER_MYSQL = "com.mysql.jdbc.Driver";
-    protected static final String INSTANCE_ORACLE = "jdbc:oracle:thin:@";
-    protected static final String INSTANCE_SQLSERVER = "jdbc:sqlserver:thin:@";
-    protected static final String INSTANCE_MYSQL = "jdbc:mysql:thin:@";
-    
+    protected Connection con = null;    
     
     public DatabaseConnection(String login, String psw, String ip, String port) {
         this.login = login;

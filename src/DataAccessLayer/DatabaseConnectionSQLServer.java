@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 public class DatabaseConnectionSQLServer extends DatabaseConnection {
     
     private final String base;
+    private static final String DRIVER_SQLSERVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+    private static final String INSTANCE_SQLSERVER = "jdbc:sqlserver:thin:@";
 
     public DatabaseConnectionSQLServer(String login, String psw, String ip, String port, String base) throws Exception {
         super(login, psw, ip, port);
