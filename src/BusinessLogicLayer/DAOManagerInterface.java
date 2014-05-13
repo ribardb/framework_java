@@ -7,6 +7,7 @@
 package BusinessLogicLayer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  */
 public interface DAOManagerInterface {
     
-    public ArrayList<String> select(ArrayList<String> param);
+    public String select(ArrayList<String> select, String table, ArrayList<String> where);
     public void update(Object table);
     public void delete(Object table);
     public void insert(Object table);

@@ -5,13 +5,14 @@
  */
 package frameworkairpur;
 
+import BusinessLogicLayer.DAOManager;
 import DataAccessLayer.DatabaseConnection;
 import DataAccessLayer.DatabaseConnectionMySQL;
 import DataAccessLayer.DatabaseConnectionOracle;
 import DataAccessLayer.DatabaseConnectionSQLServer;
-import BusinessLogicLayer.DAOManager;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Document;
 import javax.xml.bind.JAXBContext;
@@ -39,6 +40,14 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         DAOManager dao = new DAOManager("src/frameworkairpur/database.xml") {};
+        ArrayList<String> tab = new ArrayList<String>();
+        String t = "re";
+        String y = "ro";
+        tab.add(t);
+        tab.add(y);
+        tab.add(t);
+        tab.add(y);
+        System.out.println(dao.select(tab,"bla",tab));
                                 
     }
 

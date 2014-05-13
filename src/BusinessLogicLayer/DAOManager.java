@@ -11,6 +11,7 @@ import DataAccessLayer.DatabaseConnectionOracle;
 import DataAccessLayer.DatabaseConnectionSQLServer;
 import frameworkairpur.ImportXML;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 public class DAOManager implements DAOManagerInterface {
 
     DatabaseConnection con = null;
+    String query;
+    
 
     public DAOManager(String url) throws Exception {
         ImportXML xml = new ImportXML(url);
@@ -37,9 +40,28 @@ public class DAOManager implements DAOManagerInterface {
         this.con.getConnection();
     }
 
+    /**
+     *
+     * @param select
+     * @param table
+     * @param where
+     * @return
+     */
     @Override
-    public ArrayList<String> select(ArrayList<String> param) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String select(ArrayList<String> select, String table, ArrayList<String> where) {
+        
+        if (where.isEmpty()) //$primary représente le nom du champ clé primaire
+        {
+            this.query = "SELECT (" + select.toString().substring(1, select.toString().length()-1) + ") FROM " + table;
+        } else {
+            String clause = " ";
+            for (int i = 0 ; i < where.size() ; i+=2) {
+                clause = clause + where.get(i) + "=" + where.get(i+1) + " AND ";
+            }
+            this.query = "SELECT (" + select.toString().substring(1, select.toString().length()-1) + ") FROM " + table
+                    + " WHERE" + clause.substring(0, clause.length()-5) + ";";
+        }
+        return this.query;
     }
 
     @Override
@@ -73,26 +95,7 @@ public class DAOManager implements DAOManagerInterface {
     }
 
 }
-
-/* Méthodes destinées à la génération automatique du texte des requêtes SQL*/
-/**
- *
- * @param table
- * @param champ
- * @param valeur
- */
-public void setRequeteLister(String table, String champ, String valeur) {	
-	if(valeur==null && champ==null) //$primary représente le nom du champ clé primaire
-	{
-            this.query = "SELECT  * FROM " + table;
-	}
-	else
-	{
-            this.query = "SELECT  * FROM " + table + " WHERE " + champ + "='" + valeur + "'";
-	}
-	
-    }
-	public void setRequeteAjouter(Object table)
+public void setRequeteAjouter(Object table)
 	{
             ArrayList<String> temp = this.cast.getParamQuery(table); //récupération d'une liste(nom de la table | liste des 
                                                                                 //attributs entre parenthèses
