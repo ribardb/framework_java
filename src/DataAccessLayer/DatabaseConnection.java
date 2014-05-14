@@ -18,14 +18,16 @@ public abstract class DatabaseConnection {
     protected String psw;
     protected String ip;
     protected String port;
+    protected String base;
     protected String url;
     protected Connection con = null;    
     
-    public DatabaseConnection(String login, String psw, String ip, String port) {
+    public DatabaseConnection(String login, String psw, String ip, String port, String base) {
         this.login = login;
         this.psw = psw;
         this.ip = ip;
         this.port = port;
+        this.base = base;
     }
     
     /**

@@ -16,14 +16,12 @@ import javax.swing.JOptionPane;
  */
 public class DatabaseConnectionOracle extends DatabaseConnection {    
     
-    private final String sid;
     private static final String DRIVER_ORACLE = "oracle.jdbc.OracleDriver";
     private static final String INSTANCE_ORACLE = "jdbc:oracle:thin:@";
     
     
-    public DatabaseConnectionOracle(String login, String psw, String ip, String port, String sid) throws Exception {
-        super(login, psw, ip, port);
-        this.sid = sid;
+    public DatabaseConnectionOracle(String login, String psw, String ip, String port, String base) throws Exception {
+        super(login, psw, ip, port, base);
     }
     /**
      *
@@ -39,7 +37,7 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
 	}
         
         try {
-            this.con = DriverManager.getConnection(INSTANCE_ORACLE + ip + ":" + port + ":" + sid, login, psw);
+            this.con = DriverManager.getConnection(INSTANCE_ORACLE + ip + ":" + port + ":" + base, login, psw);
             System.out.println("Connexion Oracle ok");
             return true;
 	}

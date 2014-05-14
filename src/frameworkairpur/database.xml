@@ -9,7 +9,7 @@
     <port>
         1521
     </port>
-    <sid_base>
+    <base>
         bdaolap
     </sid_base>
     <login>

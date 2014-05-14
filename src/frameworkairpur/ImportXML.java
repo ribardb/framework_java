@@ -28,7 +28,7 @@ public class ImportXML {
     private String typeDB;
     private String ip;
     private String port;
-    private String sid_base;
+    private String base;
     private String login;
     private String psw;
 
@@ -84,13 +84,13 @@ public class ImportXML {
                     this.port = ((Node) textPortList.item(0)).getNodeValue().trim();
 
                     //----
-                    NodeList sid_baseList = DataBaseElement.getElementsByTagName("sid_base");
-                    Element sid_baseElement = (Element) sid_baseList.item(0);
+                    NodeList baseList = DataBaseElement.getElementsByTagName("base");
+                    Element baseElement = (Element) baseList.item(0);
 
-                    NodeList textSid_BaseList = sid_baseElement.getChildNodes();
+                    NodeList textSid_BaseList = baseElement.getChildNodes();
                     System.out.println("Sid ou Base : "
                             + ((Node) textSid_BaseList.item(0)).getNodeValue().trim());
-                    this.sid_base = ((Node) textSid_BaseList.item(0)).getNodeValue().trim();
+                    this.base = ((Node) textSid_BaseList.item(0)).getNodeValue().trim();
 
                     //----
                     NodeList loginList = DataBaseElement.getElementsByTagName("login");
@@ -144,7 +144,7 @@ public class ImportXML {
     }
 
     public String getSid_base() {
-        return sid_base;
+        return base;
     }
 
     public String getLogin() {
