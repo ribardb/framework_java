@@ -5,7 +5,6 @@
         <group>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/DataAccessLayer/DatabaseConnectionOracle.java</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/DataAccessLayer/DatabaseConnection.java</file>
-            <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/BusinessLogicLayer/DAOManager.java</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/DataAccessLayer/DatabaseConnectionMySQL.java</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/DataAccessLayer/DatabaseConnectionSQLServer.java</file>
         </group>

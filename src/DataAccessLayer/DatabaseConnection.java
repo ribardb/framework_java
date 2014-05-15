@@ -4,9 +4,7 @@
  */
 package DataAccessLayer;
 
-import frameworkairpur.Cast;
 import java.sql.*;
-import java.util.ArrayList;
 
 /**
  *
@@ -20,7 +18,7 @@ public abstract class DatabaseConnection {
     protected String port;
     protected String base;
     protected String url;
-    protected Connection con = null;    
+    protected Connection con = null;
     
     public DatabaseConnection(String login, String psw, String ip, String port, String base) {
         this.login = login;
