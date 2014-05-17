@@ -39,7 +39,7 @@ public class DatabaseConnectionSQLServer extends DatabaseConnection {
 	}
         
         try {
-            this.con = DriverManager.getConnection(INSTANCE_SQLSERVER + ip + ":" + port + ";database=" + base + ";user=" + login + ";password" + psw);
+            this.con = DriverManager.getConnection(INSTANCE_SQLSERVER + ip + ":" + port + ";databaseName=" + base , login , psw);
             System.out.println("Connexion SQL Serveur ok");
             return true;
 	}
@@ -52,7 +52,6 @@ public class DatabaseConnectionSQLServer extends DatabaseConnection {
                System.out.println("Message = " + message);
                System.out.println("SQLState = " + sqlState);
                System.out.println("ErrorCode = " + errorCode);
-               ex.printStackTrace();
                ex = ex.getNextException();
             }
             return false;

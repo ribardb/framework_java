@@ -52,7 +52,6 @@ public class DatabaseConnectionMySQL extends DatabaseConnection {
                System.out.println("Message = " + message);
                System.out.println("SQLState = " + sqlState);
                System.out.println("ErrorCode = " + errorCode);
-               ex.printStackTrace();
                ex = ex.getNextException();
             }
             return false;
