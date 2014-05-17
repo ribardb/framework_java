@@ -17,7 +17,7 @@ public interface DAOManagerInterface {
     
     public String select(ArrayList<String> select, String table, ArrayList<String> where);
     public void update(Object table);
-    public void delete(Object table);
+    public void delete(String table, ArrayList<String> where);
     public void insert(Object table);
     public void create();
     public void drop();

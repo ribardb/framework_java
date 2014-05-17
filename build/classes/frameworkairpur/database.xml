@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <database>
-        SQLServer
+        Oracle
     </database>
     <ip>
-        192.168.72.130
-   </ip>
+        svroracle.montpellier.epsi.fr
+    </ip>
     <port>
-        1433
+        4521
     </port>
     <base>
-        MvcMusicStore
-    </base>
+        bdaolap
+    </sid_base>
     <login>
-        edgar.gosselet
+        BDD_Airpur
     </login>
     <password>
-        abcd4ABCD
+        fghnbv0
     </password>
 </config>
