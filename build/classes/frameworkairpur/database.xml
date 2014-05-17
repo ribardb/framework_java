@@ -11,7 +11,7 @@
     </port>
     <base>
         bdaolap
-    </sid_base>
+    </base>
     <login>
         BDD_Airpur
     </login>

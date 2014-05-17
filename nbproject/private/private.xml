@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/BusinessLogicLayer/DAOManagerInterface.java</file>
+            <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/frameworkairpur/Main.java</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/DataAccessLayer/DatabaseConnectionOracle.java</file>
-            <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/DataAccessLayer/DatabaseConnection.java</file>
+            <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/frameworkairpur/database.xml</file>
+            <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/BusinessLogicLayer/DAOManager.java</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/DataAccessLayer/DatabaseConnectionMySQL.java</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/DataAccessLayer/DatabaseConnectionSQLServer.java</file>
         </group>

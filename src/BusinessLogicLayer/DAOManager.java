@@ -58,7 +58,7 @@ public class DAOManager implements DAOManagerInterface {
                 clause = clause + where.get(i) + "=" + where.get(i+1) + " AND ";
             }
             this.query = "SELECT (" + select.toString().substring(1, select.toString().length()-1) + ") FROM " + table
-                    + " WHERE" + clause.substring(0, clause.length()-5) + ";";
+                    + " WHERE" + clause.substring(0, clause.length()-5);
         }
         return this.query;
     }
@@ -69,7 +69,7 @@ public class DAOManager implements DAOManagerInterface {
     }
 
     @Override
-    public void delete(String table, ArrayList<String> where) {
+    public String delete(String table, ArrayList<String> where) {
         if (where.isEmpty()) {
             this.query = "DELETE FROM " + table;
         } else {
@@ -79,11 +79,27 @@ public class DAOManager implements DAOManagerInterface {
             }
             this.query = "DELETE FROM " + table + " WHERE" + clause.substring(0, clause.length()-5);
         }
+        return this.query;
     }
 
     @Override
-    public void insert(Object table) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String insert(ArrayList<String> into, String table, ArrayList<String> values) {
+        if (into.isEmpty()) {
+            String tmp = "";
+            for (int i = 0 ; i < values.size() ; i++) {
+                tmp = tmp + values.get(i) + ",";
+            }
+            this.query = "INSERT INTO " + table + " VALUES (" + tmp.substring(0, tmp.length()-1) + ")";
+        } else {
+            String tmp = "";
+            String tmp2 = "";
+            for (int i = 0 ; i < values.size() ; i++) {
+                tmp = tmp + values.get(i) + ",";
+                tmp2 = tmp2 + into.get(i) + ",";
+            }
+            this.query = "INSERT INTO " + table + " (" + tmp2.substring(0, tmp2.length()-1) + ") VALUES (" + tmp.substring(0, tmp.length()-1) + ")";
+        }
+        return this.query;     
     }
 
     @Override

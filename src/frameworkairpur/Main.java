@@ -40,14 +40,17 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         DAOManager dao = new DAOManager("src/frameworkairpur/database.xml") {};
-        /*ArrayList<String> tab = new ArrayList<String>();
+        ArrayList<String> tab = new ArrayList<String>();
         String t = "re";
         String y = "ro";
         tab.add(t);
         tab.add(y);
         tab.add(t);
         tab.add(y);
-        System.out.println(dao.select(tab,"bla",tab));*/
+        System.out.println(tab);
+        System.out.println(dao.select(tab,"bla",tab));
+        System.out.println(dao.delete("blabl", tab));
+        System.out.println(dao.insert(tab, "bla", tab));
                                 
     }
 
