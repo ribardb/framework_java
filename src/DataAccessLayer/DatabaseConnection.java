@@ -17,7 +17,6 @@ public abstract class DatabaseConnection {
     protected String ip;
     protected String port;
     protected String base;
-    protected String url;
     protected Connection con = null;
     
     public DatabaseConnection(String login, String psw, String ip, String port, String base) {
@@ -34,9 +33,9 @@ public abstract class DatabaseConnection {
      * @return boolean
      * @throws SQLException
      */
-    public boolean getConnection() throws Exception {
+    public Connection getConnection() throws Exception {
         System.out.println("Connection de base ok");
-        return false;
+        return this.con;
     }
 
     /**

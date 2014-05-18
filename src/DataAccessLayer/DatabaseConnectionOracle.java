@@ -6,6 +6,7 @@
 
 package DataAccessLayer;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -27,7 +28,8 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
      *
      * @return 
      */
-        public boolean getConnection() throws Exception {
+    @Override
+        public Connection getConnection() throws Exception {
         try {
             Class.forName(DRIVER_ORACLE);
         }
@@ -39,7 +41,6 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
         try {
             this.con = DriverManager.getConnection(INSTANCE_ORACLE + ip + ":" + port + ":" + base, login, psw);
             System.out.println("Connexion Oracle ok");
-            return true;
 	}
         catch (SQLException ex) {
             System.out.println("Exception SQL : ");
@@ -52,8 +53,8 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
                System.out.println("ErrorCode = " + errorCode);
                ex = ex.getNextException();
             }
-            return false;
 	}
+        return this.con;
     }
     
 }
