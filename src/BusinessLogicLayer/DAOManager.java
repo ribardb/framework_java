@@ -64,25 +64,6 @@ public class DAOManager implements DAOManagerInterface {
     }
 
     @Override
-    public void update(Object table) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String delete(String table, ArrayList<String> where) {
-        if (where.isEmpty()) {
-            this.query = "DELETE FROM " + table;
-        } else {
-            String clause = " ";
-            for (int i = 0 ; i < where.size() ; i+=2) {
-                clause = clause + where.get(i) + "=" + where.get(i+1) + " AND ";
-            }
-            this.query = "DELETE FROM " + table + " WHERE" + clause.substring(0, clause.length()-5);
-        }
-        return this.query;
-    }
-
-    @Override
     public String insert(ArrayList<String> into, String table, ArrayList<String> values) {
         if (into.isEmpty()) {
             String tmp = "";
@@ -103,18 +84,22 @@ public class DAOManager implements DAOManagerInterface {
     }
 
     @Override
-    public void create() {
+    public void update(Object table) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void drop() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void grant() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String delete(String table, ArrayList<String> where) {
+        if (where.isEmpty()) {
+            this.query = "DELETE FROM " + table;
+        } else {
+            String clause = " ";
+            for (int i = 0 ; i < where.size() ; i+=2) {
+                clause = clause + where.get(i) + "=" + where.get(i+1) + " AND ";
+            }
+            this.query = "DELETE FROM " + table + " WHERE" + clause.substring(0, clause.length()-5);
+        }
+        return this.query;
     }
 
 }
