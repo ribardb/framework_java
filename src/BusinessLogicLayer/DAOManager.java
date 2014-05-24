@@ -48,7 +48,7 @@ public class DAOManager implements DAOManagerInterface {
      * @return
      */
     @Override
-    public String select(ArrayList<String> select, String table, ArrayList<String> where) {
+    public String select(ArrayList select, String table, ArrayList where) {
         
         if (where.isEmpty()) {
             this.query = "SELECT (" + select.toString().substring(1, select.toString().length()-1) + ") FROM " + table;
@@ -64,7 +64,7 @@ public class DAOManager implements DAOManagerInterface {
     }
 
     @Override
-    public String insert(ArrayList<String> into, String table, ArrayList<String> values) {
+    public String insert(ArrayList into, String table, ArrayList values) {
         if (into.isEmpty()) {
             String tmp = "";
             for (int i = 0 ; i < values.size() ; i++) {
@@ -89,7 +89,7 @@ public class DAOManager implements DAOManagerInterface {
     }
 
     @Override
-    public String delete(String table, ArrayList<String> where) {
+    public String delete(String table, ArrayList where) {
         if (where.isEmpty()) {
             this.query = "DELETE FROM " + table;
         } else {

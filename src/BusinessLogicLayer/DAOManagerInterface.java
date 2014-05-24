@@ -15,10 +15,10 @@ import java.util.List;
  */
 public interface DAOManagerInterface {
     
-    public String select(ArrayList<String> select, String table, ArrayList<String> where);
-    public String insert(ArrayList<String> into, String table, ArrayList<String> values);
+    public String select(ArrayList select, String table, ArrayList where);
+    public String insert(ArrayList into, String table, ArrayList values);
     public void update(Object table);
-    public String delete(String table, ArrayList<String> where);
+    public String delete(String table, ArrayList where);
     /*public void create();
     public void drop();
     public void grant();*/

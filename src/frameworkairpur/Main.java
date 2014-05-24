@@ -13,6 +13,7 @@ import DataAccessLayer.DatabaseConnectionSQLServer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.text.Document;
 import javax.xml.bind.JAXBContext;
@@ -40,13 +41,19 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         DAOManager dao = new DAOManager("src/frameworkairpur/database.xml") {};
-        ArrayList<String> tab = new ArrayList<String>();
+        ArrayList tab = new ArrayList();
         String t = "re";
         String y = "ro";
         tab.add(t);
         tab.add(y);
-        tab.add(t);
-        tab.add(y);
+        tab.add(t+1);
+        tab.add(y+1);
+        
+        Iterator it = tab.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+        
         System.out.println(tab);
         System.out.println(dao.select(tab,"bla",tab));
         System.out.println(dao.delete("blabl", tab));
