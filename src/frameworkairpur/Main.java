@@ -40,24 +40,8 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-        DAOManager dao = new DAOManager("src/frameworkairpur/database.xml") {};
-        ArrayList tab = new ArrayList();
-        String t = "re";
-        String y = "ro";
-        tab.add(t);
-        tab.add(y);
-        tab.add(t+1);
-        tab.add(y+1);
-        
-        Iterator it = tab.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next());
-        }
-        
-        System.out.println(tab);
-        System.out.println(dao.select(tab,"bla",tab));
-        System.out.println(dao.delete("blabl", tab));
-        System.out.println(dao.insert(tab, "bla", tab));
+        Menu menu = new Menu();
+        menu.afficherMenuPrincipal();
                                 
     }
 

@@ -39,6 +39,10 @@ public class DAOManager implements DAOManagerInterface {
         }
         this.con.getConnection();
     }
+    
+    public void disconnect() throws Exception {
+        this.con.disconnect();
+    }
 
     /**
      *
