@@ -17,13 +17,13 @@ import java.util.List;
  *
  * @author Edgar
  */
-public class DAOManager implements DAOManagerInterface {
+public class DAOManagerQuery implements DAOManagerInterface {
 
     DatabaseConnection con = null;
     String query;
     
 
-    public DAOManager(String url) throws Exception {
+    public DAOManagerQuery(String url) throws Exception {
         ImportXML xml = new ImportXML(url);
 
         switch (xml.getTypeDB()) {
@@ -84,8 +84,18 @@ public class DAOManager implements DAOManagerInterface {
     }
 
     @Override
-    public void update(Object table) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String update(ArrayList values, String table, ArrayList where) {
+        if(values.isEmpty()) {
+            
+        }else{
+            String NewValues = "";
+            for (int i = 0 ; i < values.size(); i+=2)
+            {
+                NewValues = NewValues + values.get(i) ;
+            }
+        }
+        
+        return this.query;
     }
 
     @Override
