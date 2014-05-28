@@ -29,7 +29,7 @@ public class Menu {
         }
     }
     
-    public void afficherMenuPrincipal() {
+    public void afficherMenuPrincipal() throws Exception {
         
         int choixMenuPrincipal;
         do {
@@ -68,7 +68,7 @@ public class Menu {
             }
         } while (choixMenuPrincipal != 8);
         
-        dao.
+        dao.disconnect();
         
     }
     
