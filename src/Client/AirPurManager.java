@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class AirPurManager {
 
-    private final DAOManager dao = new DAOManager("../framework/database.xml");
+    private final DAOManager dao = new DAOManager("src/frameworkairpur/database.xml");
     private Cast cast;
     private ResultSet result;
     private ArrayList lister;
