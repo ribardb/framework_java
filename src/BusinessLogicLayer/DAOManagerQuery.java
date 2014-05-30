@@ -34,8 +34,8 @@ public class DAOManagerQuery implements DAOManagerInterface {
             this.query = "SELECT (" + select.toString().substring(1, select.toString().length() - 1) + ") FROM " + table;
         } else {
             String clause = " ";
-            for (int i = 0; i < where.size(); i += 2) {
-                clause = clause + where.get(i) + "=" + where.get(i + 1) + " AND ";
+            for (int i = 0; i < where.size(); i++) {
+                clause = clause + where.get(i) + " AND ";
             }
             this.query = "SELECT (" + select.toString().substring(1, select.toString().length() - 1) + ") FROM " + table
                     + " WHERE" + clause.substring(0, clause.length() - 5);
@@ -69,13 +69,13 @@ public class DAOManagerQuery implements DAOManagerInterface {
         if (where.isEmpty()) {
             String tmp = "";
             for (int i = 0; i < values.size(); i += 2) {
-                tmp = tmp + values.get(i) + "=" + values.get(i + 1) + ", ";
+                tmp = tmp + values.get(i) + ", ";
             }
             this.query = "UPDATE " + table + "SET" + tmp.substring(0, tmp.length() - 1);
         } else {
             String tmp = "";
-            for (int i = 0; i < values.size(); i += 2) {
-                tmp = tmp + values.get(i) + "=" + values.get(i + 1) + ", ";
+            for (int i = 0; i < values.size(); i++) {
+                tmp = tmp + values.get(i) + ", ";
             }
             String clause = "";
             for (int j = 0; j < where.size(); j += 2) {
@@ -94,8 +94,8 @@ public class DAOManagerQuery implements DAOManagerInterface {
             this.query = "DELETE FROM " + table;
         } else {
             String clause = " ";
-            for (int i = 0; i < where.size(); i += 2) {
-                clause = clause + where.get(i) + "=" + where.get(i + 1) + " AND ";
+            for (int i = 0; i < where.size(); i++) {
+                clause = clause + where.get(i) + " AND ";
             }
             this.query = "DELETE FROM " + table + " WHERE" + clause.substring(0, clause.length() - 5);
         }

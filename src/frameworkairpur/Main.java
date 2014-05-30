@@ -10,6 +10,7 @@ import DataAccessLayer.DatabaseConnection;
 import DataAccessLayer.DatabaseConnectionMySQL;
 import DataAccessLayer.DatabaseConnectionOracle;
 import DataAccessLayer.DatabaseConnectionSQLServer;
+import airpur.Materiel;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,9 +41,9 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-        Menu menu = new Menu();
-        menu.afficherMenuPrincipal();
-                                
+        /*Menu menu = new Menu();
+        menu.afficherMenuPrincipal();*/
+        
     }
 
 }

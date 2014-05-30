@@ -23,11 +23,8 @@ public class Cast {
     String cast4 = "String ";
     String cast5 = "float ";
     String cast6 = "airpur.";
-    String cast7;
-
-    public Cast() {
-        
-    }
+    String cast7 = "class ";
+    String castTMP;
     
     public ArrayList<String> getParamQuery(Object obj) {
         ArrayList<String> result = new ArrayList();
@@ -42,9 +39,9 @@ public class Cast {
         attr = attr.replaceAll("\\[","(");
         int tp = attr.indexOf(".");
         tab = attr.substring(1, tp);
-        cast7 = tab + ".";
+        castTMP = tab + ".";
         //System.out.println(tab);
-        attr = attr.replaceAll(cast7,"");
+        attr = attr.replaceAll(castTMP,"");
         result.add(tab);
         result.add(attr);
         
@@ -71,6 +68,14 @@ public class Cast {
         listeAttr.add(temp.substring(emplacement.get(i)+2,temp.length()-1));
         
         return listeAttr;
+    }
+    
+    public String getType(Object obj) {
+        String type;
+        type = obj.getClass().toString();
+        type = type.replaceAll(cast2, "");
+        type = type.replaceAll(cast7, "");
+        return type;
     }
     
 }

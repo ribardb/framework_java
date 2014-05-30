@@ -15,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,21 +30,29 @@ public class DAOManager {
     private Statement stmt;
     private ResultSet rs;
 
-    public DAOManager(String url) throws Exception {
-        ImportXML xml = new ImportXML(url);
-
-        switch (xml.getTypeDB()) {
-            case "Oracle":
-                this.con = new DatabaseConnectionOracle(xml.getLogin(), xml.getPsw(), xml.getIp(), xml.getPort(), xml.getSid_base());
-                break;
-            case "SQLServer":
-                this.con = new DatabaseConnectionSQLServer(xml.getLogin(), xml.getPsw(), xml.getIp(), xml.getPort(), xml.getSid_base());
-                break;
-            case "MySQL":
-                this.con = new DatabaseConnectionMySQL(xml.getLogin(), xml.getPsw(), xml.getIp(), xml.getPort(), xml.getSid_base());
-                break;
+    /**
+     *
+     * @param url
+     */
+    public DAOManager(String url) {
+        try {
+            ImportXML xml = new ImportXML(url);
+            
+            switch (xml.getTypeDB()) {
+                case "Oracle":
+                    this.con = new DatabaseConnectionOracle(xml.getLogin(), xml.getPsw(), xml.getIp(), xml.getPort(), xml.getSid_base());
+                    break;
+                case "SQLServer":
+                    this.con = new DatabaseConnectionSQLServer(xml.getLogin(), xml.getPsw(), xml.getIp(), xml.getPort(), xml.getSid_base());
+                    break;
+                case "MySQL":
+                    this.con = new DatabaseConnectionMySQL(xml.getLogin(), xml.getPsw(), xml.getIp(), xml.getPort(), xml.getSid_base());
+                    break;
+            }
+            this.con.getConnection();
+        } catch (Exception ex) {
+            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.con.getConnection();
     }
     
     public void disconnect() throws Exception {
