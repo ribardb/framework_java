@@ -101,7 +101,7 @@ public class AirPurManager {
             this.values.add("'" + mat.getNom_materiel() + "',");
         }
         if (mat.getModele_materiel() != null) {
-            this.into.add("description_materiel,");
+            this.into.add("modele_materiel,");
             this.values.add("'" + mat.getModele_materiel() + "',");
         }
         if (mat.getDescription_materiel() != null) {
@@ -120,6 +120,35 @@ public class AirPurManager {
                 
         try {
             dao.setInsert(this.into, this.table, this.values);
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void modifierMateriel(Materiel mat) {
+        this.table = mat.getClasse();
+        
+        this.values.add("id_tva=" + mat.getId_tva());
+        this.values.add("id_categorie=" + mat.getId_categorie());
+        this.values.add("nom_materiel='" + mat.getNom_materiel() + "'");
+        this.values.add("modele_materiel='" + mat.getModele_materiel() + "'");
+        this.values.add("description_materiel='" + mat.getDescription_materiel() + "'");
+        
+        this.where.add("id_materiel=" + mat.getId_materiel());
+        
+        try {
+            dao.setUpdate(this.values, this.table, this.where);
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void supprimerMateriel(Materiel mat) {
+        this.table = mat.getClasse();
+        this.where = null;
+        
+        try {
+            dao.setDelete(this.table, this.where);
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
