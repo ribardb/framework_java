@@ -44,6 +44,9 @@ public class AirPurManager {
         this.table = mat.getClasse();
         this.select = select;
         this.where = where;
+        
+        if (this.select.isEmpty())
+            this.select.add("*");
 
         try {
             this.result = dao.setSelect(this.select, this.table, this.where);
@@ -76,5 +79,49 @@ public class AirPurManager {
         }
 
         return this.lister;
+    }
+    
+    public void ajoutMateriel(Materiel mat) {
+        this.table = mat.getClasse();
+        
+        if (mat.getId_materiel() != 0) {
+            this.into.add("id_materiel,");
+            this.values.add(mat.getId_materiel() + ",");
+        }
+        if (mat.getId_tva() != 0) {
+            this.into.add("id_tva");
+            this.values.add(mat.getId_tva() + ",");
+        }
+        if (mat.getId_categorie() != 0) {
+            this.into.add("id_categorie,");
+            this.values.add("'" + mat.getId_categorie() + ",");
+        }
+        if (mat.getNom_materiel() != null) {
+            this.into.add("nom_materiel,");
+            this.values.add("'" + mat.getNom_materiel() + "',");
+        }
+        if (mat.getModele_materiel() != null) {
+            this.into.add("description_materiel,");
+            this.values.add("'" + mat.getModele_materiel() + "',");
+        }
+        if (mat.getDescription_materiel() != null) {
+            this.into.add("description_materiel,");
+            this.values.add("'" + mat.getDescription_materiel() + "',");
+        }
+        
+        this.into.set(
+                this.into.size()-1, this.into.get(
+                        this.into.size()-1).toString().substring(
+                                0, this.into.size()-1).toString().length()-1);
+        this.values.set(
+                this.values.size()-1, this.values.get(
+                        this.values.size()-1).toString().substring(
+                                0, this.values.size()-1).toString().length()-1);
+                
+        try {
+            dao.setInsert(this.into, this.table, this.values);
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
