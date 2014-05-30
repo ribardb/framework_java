@@ -5,9 +5,12 @@
         <group>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/BusinessLogicLayer/DAOManagerInterface.java</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/frameworkairpur/Main.java</file>
+            <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/frameworkairpur/Menu.java</file>
+            <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/DataAccessLayer/DatabaseConnection.java</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/frameworkairpur/database.xml</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/BusinessLogicLayer/DAOManager.java</file>
             <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/Client/AirPurManager.java</file>
+            <file>file:/C:/Users/Edgar/Documents/GitHub/framework_java/src/BusinessLogicLayer/DAOManagerQuery.java</file>
         </group>
     </open-files>
 </project-private>

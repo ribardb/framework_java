@@ -17,9 +17,9 @@ import java.util.ArrayList;
  * @author Edgar
  */
 public class DAOManagerQuery implements DAOManagerInterface {
-        
-    String query;
-    
+
+    private String query;
+
     /**
      *
      * @param select
@@ -66,17 +66,24 @@ public class DAOManagerQuery implements DAOManagerInterface {
     @Override
     public String update(ArrayList values, String table, ArrayList where) {
 
-        String NewValues = "";
-        for (int i = 0; i < values.size(); i += 2) {
-            NewValues = NewValues + values.get(i) + "=" + values.get(i + 1) + ", ";
+        if (where.isEmpty()) {
+            String tmp = "";
+            for (int i = 0; i < values.size(); i += 2) {
+                tmp = tmp + values.get(i) + "=" + values.get(i + 1) + ", ";
+            }
+            this.query = "UPDATE " + table + "SET" + tmp.substring(0, tmp.length() - 1);
+        } else {
+            String tmp = "";
+            for (int i = 0; i < values.size(); i += 2) {
+                tmp = tmp + values.get(i) + "=" + values.get(i + 1) + ", ";
+            }
+            String clause = "";
+            for (int j = 0; j < where.size(); j += 2) {
+                clause = clause + where.get(j) + "=" + where.get(j + 1) + " AND ";
+            }
+            this.query = "UPDATE " + table + "SET " + tmp.substring(0, tmp.length() - 1) + "WHERE " + clause.substring(0, clause.length() - 5);
+            
         }
-
-        String Clause = "";
-        for (int j = 0; j < where.size(); j += 2) {
-            Clause = Clause + where.get(j) + "=" + where.get(j + 1) + " AND ";
-        }
-
-        this.query = "UPDATE " + table + "SET " + NewValues.substring(0, NewValues.length() - 2) + "WHERE " + Clause.substring(0, Clause.length() - 5);
 
         return this.query;
     }
