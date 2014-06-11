@@ -8,6 +8,7 @@ package DataAccessLayer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
 
 /**
@@ -29,7 +30,7 @@ public class DatabaseConnectionSQLServer extends DatabaseConnection {
      * @return
      */
     @Override
-    public Connection getConnection() {
+    public Statement getConnection() {
         try {
             Class.forName(DRIVER_SQLSERVER);
         } catch (ClassNotFoundException ex) {
@@ -40,6 +41,7 @@ public class DatabaseConnectionSQLServer extends DatabaseConnection {
         try {
             this.con = DriverManager.getConnection(INSTANCE_SQLSERVER + ip + ":" + port + ";databaseName=" + base, login, psw);
             System.out.println("Connexion SQL Serveur ok");
+            this.stmt = this.con.createStatement();
         } catch (SQLException ex) {
             System.out.println("Exception SQL : ");
             while (ex != null) {
@@ -52,7 +54,7 @@ public class DatabaseConnectionSQLServer extends DatabaseConnection {
                 ex = ex.getNextException();
             }
         }
-        return this.con;
+        return this.stmt;
     }
 
 }

@@ -9,6 +9,7 @@ package DataAccessLayer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
 
 /**
@@ -29,7 +30,7 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
      * @return 
      */
     @Override
-        public Connection getConnection() throws Exception {
+        public Statement getConnection() {
         try {
             Class.forName(DRIVER_ORACLE);
         }
@@ -41,20 +42,20 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
         try {
             this.con = DriverManager.getConnection(INSTANCE_ORACLE + ip + ":" + port + ":" + base, login, psw);
             System.out.println("Connexion Oracle ok");
-	}
-        catch (SQLException ex) {
+            this.stmt = this.con.createStatement();
+        } catch (SQLException ex) {
             System.out.println("Exception SQL : ");
             while (ex != null) {
-               String message = ex.getMessage();
-               String sqlState = ex.getSQLState();
-               int errorCode = ex.getErrorCode();
-               System.out.println("Message = " + message);
-               System.out.println("SQLState = " + sqlState);
-               System.out.println("ErrorCode = " + errorCode);
-               ex = ex.getNextException();
+                String message = ex.getMessage();
+                String sqlState = ex.getSQLState();
+                int errorCode = ex.getErrorCode();
+                System.out.println("Message = " + message);
+                System.out.println("SQLState = " + sqlState);
+                System.out.println("ErrorCode = " + errorCode);
+                ex = ex.getNextException();
             }
-	}
-        return this.con;
+        }
+        return this.stmt;
     }
     
 }

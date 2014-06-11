@@ -26,9 +26,9 @@ public class DAOManager {
     
     private DatabaseConnection con = null;
     private DAOManagerQuery daoQuery = new DAOManagerQuery();
-    private String query;
-    private Statement stmt;
-    private ResultSet rs;
+    private String query = null;
+    private Statement stmt = null;
+    private ResultSet rs = null;
 
     /**
      *
@@ -49,7 +49,7 @@ public class DAOManager {
                     this.con = new DatabaseConnectionMySQL(xml.getLogin(), xml.getPsw(), xml.getIp(), xml.getPort(), xml.getSid_base());
                     break;
             }
-            this.con.getConnection();
+            this.stmt = this.con.getConnection();
         } catch (Exception ex) {
             Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -61,7 +61,9 @@ public class DAOManager {
     
     public ResultSet setSelect(ArrayList select, String table, ArrayList where) throws SQLException {
         this.query = daoQuery.select(select, table, where);
+        System.out.println(this.query);
         this.rs = this.stmt.executeQuery(this.query);
+        System.out.println(this.rs);
         return this.rs;
     }
     

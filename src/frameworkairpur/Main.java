@@ -6,6 +6,7 @@
 package frameworkairpur;
 
 import BusinessLogicLayer.DAOManager;
+import Client.AirPurManager;
 import DataAccessLayer.DatabaseConnection;
 import DataAccessLayer.DatabaseConnectionMySQL;
 import DataAccessLayer.DatabaseConnectionOracle;
@@ -43,6 +44,9 @@ public class Main {
 
         /*Menu menu = new Menu();
         menu.afficherMenuPrincipal();*/
+        
+        AirPurManager gestion = new AirPurManager();
+        System.out.println(gestion.listerMateriel(null, null));
         
     }
 

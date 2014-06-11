@@ -24,14 +24,14 @@ public class AirPurManager {
     private final DAOManager dao = new DAOManager("src/frameworkairpur/database.xml");
     private Cast cast;
     private ResultSet result;
-    private ArrayList lister;
-    private ArrayList select; //liste d'attributs
-    private ArrayList where; //liste d'attributs et de valeurs ex:id=1
-    private ArrayList into; //liste d'attributs
-    private ArrayList values; //liste de valeurs | liste d'attributs et de valeurs ex:id=1
+    private ArrayList lister = new ArrayList();
+    private ArrayList select = new ArrayList(); //liste d'attributs
+    private ArrayList where = new ArrayList(); //liste d'attributs et de valeurs ex:id=1
+    private ArrayList into = new ArrayList(); //liste d'attributs
+    private ArrayList values = new ArrayList(); //liste de valeurs | liste d'attributs et de valeurs ex:id=1
     private String table;
 
-    static Materiel mat;
+    static Materiel mat = new Materiel(0,0,0,null,null,null);
     static Exemplaire_location location;
     static Exemplaire_vente vente;
     static Emprunter emprun;
@@ -41,12 +41,17 @@ public class AirPurManager {
     static Modepaiement mode;
 
     public ArrayList listerMateriel(ArrayList select, ArrayList where) {
+        System.out.println(mat.getClasse());
         this.table = mat.getClasse();
         this.select = select;
+        System.out.println(select);
+        System.out.println(this.select);
         this.where = where;
         
-        if (this.select.isEmpty())
+        if (this.select == null) {
+            this.select = new ArrayList();
             this.select.add("*");
+        }
 
         try {
             this.result = dao.setSelect(this.select, this.table, this.where);
