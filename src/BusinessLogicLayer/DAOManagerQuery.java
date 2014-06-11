@@ -31,7 +31,13 @@ public class DAOManagerQuery implements DAOManagerInterface {
     public String select(ArrayList select, String table, ArrayList where) {
 
         if (where == null) {
-            this.query = "SELECT (" + select.toString().substring(1, select.toString().length() - 1) + ") FROM " + table;
+            if (select.contains("*")) {
+                this.query = "SELECT " + select.toString().substring(1, select.toString().length() - 1) + " FROM " + table;
+            }
+            else {
+                this.query = "SELECT (" + select.toString().substring(1, select.toString().length() - 1) + ") FROM " + table;
+            }
+            
         } else {
             String clause = " ";
             for (int i = 0; i < where.size(); i++) {
@@ -45,18 +51,19 @@ public class DAOManagerQuery implements DAOManagerInterface {
 
     @Override
     public String insert(ArrayList into, String table, ArrayList values) {
+        System.out.println(values);
         if (into == null) {
             String tmp = "";
             for (int i = 0; i < values.size(); i++) {
-                tmp = tmp + values.get(i) + ",";
+                tmp = tmp + values.get(i);
             }
             this.query = "INSERT INTO " + table + " VALUES (" + tmp.substring(0, tmp.length() - 1) + ")";
         } else {
             String tmp = "";
             String tmp2 = "";
             for (int i = 0; i < values.size(); i++) {
-                tmp = tmp + values.get(i) + ",";
-                tmp2 = tmp2 + into.get(i) + ",";
+                tmp = tmp + values.get(i);
+                tmp2 = tmp2 + into.get(i);
             }
             this.query = "INSERT INTO " + table + " (" + tmp2.substring(0, tmp2.length() - 1) + ") VALUES (" + tmp.substring(0, tmp.length() - 1) + ")";
         }
@@ -71,17 +78,16 @@ public class DAOManagerQuery implements DAOManagerInterface {
             for (int i = 0; i < values.size(); i += 2) {
                 tmp = tmp + values.get(i) + ", ";
             }
-            this.query = "UPDATE " + table + "SET" + tmp.substring(0, tmp.length() - 1);
+            this.query = "UPDATE " + table + " SET" + tmp.substring(0, tmp.length() - 1);
         } else {
+            System.out.println(values);
+            System.out.println(where);
             String tmp = "";
             for (int i = 0; i < values.size(); i++) {
                 tmp = tmp + values.get(i) + ", ";
             }
-            String clause = "";
-            for (int j = 0; j < where.size(); j += 2) {
-                clause = clause + where.get(j) + "=" + where.get(j + 1) + " AND ";
-            }
-            this.query = "UPDATE " + table + "SET " + tmp.substring(0, tmp.length() - 1) + "WHERE " + clause.substring(0, clause.length() - 5);
+            tmp = tmp.substring(0, tmp.length()-1);
+            this.query = "UPDATE " + table + " SET " + tmp.substring(0, tmp.length() - 1) + "WHERE " + where.get(0);
             
         }
 

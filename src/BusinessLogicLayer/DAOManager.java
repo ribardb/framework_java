@@ -70,16 +70,19 @@ public class DAOManager {
     
     public void setInsert(ArrayList into, String table, ArrayList values) throws SQLException {
         this.query = daoQuery.insert(into, table, values);
+        System.out.println(this.query);
         this.stmt.executeQuery(this.query);
     }
     
     public void setUpdate(ArrayList values, String table, ArrayList where) throws SQLException {
-        this.query = daoQuery.update(values, table, values);
+        this.query = daoQuery.update(values, table, where);
+        System.out.println(this.query);
         this.stmt.executeQuery(this.query);
     }
     
     public void setDelete(String table, ArrayList where) throws SQLException {
         this.query = daoQuery.delete(table, where);
+        System.out.println(this.query);
         this.stmt.executeQuery(this.query);
     }
     

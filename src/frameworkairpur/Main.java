@@ -46,7 +46,10 @@ public class Main {
         menu.afficherMenuPrincipal();*/
         
         AirPurManager gestion = new AirPurManager();
-        System.out.println(gestion.listerMateriel(null, null));
+        Materiel mat = new Materiel(51,2,47,"hibou","chouette","caca");
+        Materiel mat2 = new Materiel(80,3,46,"hiboux","chouettes","cacas");
+        gestion.ajoutMateriel(mat);
+        gestion.modifierMateriel(mat2);
         
     }
 

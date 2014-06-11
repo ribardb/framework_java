@@ -62,20 +62,29 @@ public class AirPurManager {
             if (this.result != null) {
                 while (this.result.next()) {
                     String tmp = "";
-                    for (int i = 0; i < this.select.size(); i++) {
-                        switch (cast.getType(this.select.get(i))) {
-                            case "Integer":
-                                tmp = tmp + this.result.getInt(i) + "'";
-                                break;
-                            case "String":
-                                tmp = tmp + this.result.getString(i) + "'";
-                                break;
-                            case "Date":
-                                tmp = tmp + this.result.getDate(i) + "'";
-                                break;
-                            case "Float":
-                                tmp = tmp + this.result.getFloat(i) + "'";
-                                break;
+                    if (this.select.contains("*")) {
+                        tmp = tmp + this.result.getInt(1) + ";";
+                        tmp = tmp + this.result.getInt(2) + ";";
+                        tmp = tmp + this.result.getInt(3) + ";";
+                        tmp = tmp + this.result.getString(4) + ";";
+                        tmp = tmp + this.result.getString(5) + ";";
+                        tmp = tmp + this.result.getString(6) + ";";
+                    } else {
+                        for (int i = 0; i < this.select.size(); i++) {
+                            switch (cast.getType(this.select.get(i))) {
+                                case "Integer":
+                                    tmp = tmp + this.result.getInt(i) + ";";
+                                    break;
+                                case "String":
+                                    tmp = tmp + this.result.getString(i) + ";";
+                                    break;
+                                case "Date":
+                                    tmp = tmp + this.result.getDate(i) + ";";
+                                    break;
+                                case "Float":
+                                    tmp = tmp + this.result.getFloat(i) + ";";
+                                    break;
+                            }
                         }
                     }
                     this.lister.add(tmp.substring(0, tmp.length() - 1));
@@ -84,6 +93,12 @@ public class AirPurManager {
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        this.table = null;
+        this.result = null;
+        this.select.clear();
+        this.where.clear();
+        this.lister.clear();
 
         return this.lister;
     }
@@ -96,12 +111,12 @@ public class AirPurManager {
             this.values.add(mat.getId_materiel() + ",");
         }
         if (mat.getId_tva() != 0) {
-            this.into.add("id_tva");
+            this.into.add("id_tva,");
             this.values.add(mat.getId_tva() + ",");
         }
         if (mat.getId_categorie() != 0) {
             this.into.add("id_categorie,");
-            this.values.add("'" + mat.getId_categorie() + ",");
+            this.values.add(mat.getId_categorie() + ",");
         }
         if (mat.getNom_materiel() != null) {
             this.into.add("nom_materiel,");
@@ -116,20 +131,15 @@ public class AirPurManager {
             this.values.add("'" + mat.getDescription_materiel() + "',");
         }
 
-        this.into.set(
-                this.into.size() - 1, this.into.get(
-                        this.into.size() - 1).toString().substring(
-                        0, this.into.size() - 1).toString().length() - 1);
-        this.values.set(
-                this.values.size() - 1, this.values.get(
-                        this.values.size() - 1).toString().substring(
-                        0, this.values.size() - 1).toString().length() - 1);
-
         try {
             dao.setInsert(this.into, this.table, this.values);
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        this.table = null;
+        this.into.clear();
+        this.values.clear();
     }
 
     public void modifierMateriel(Materiel mat) {
@@ -148,16 +158,23 @@ public class AirPurManager {
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        this.table = null;
+        this.where.clear();
+        this.values.clear();
     }
 
-    public void supprimerMateriel(Materiel mat) {
+    public void supprimerMateriel(ArrayList where) {
         this.table = mat.getClasse();
-        this.where = null;
+        this.where = where;
 
         try {
             dao.setDelete(this.table, this.where);
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        this.table = null;
+        this.where.clear();
     }
 }
