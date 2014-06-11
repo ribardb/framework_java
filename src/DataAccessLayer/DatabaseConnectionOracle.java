@@ -30,7 +30,7 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
      * @return 
      */
     @Override
-        public Statement getConnection() {
+        public Connection getConnection() {
         try {
             Class.forName(DRIVER_ORACLE);
         }
@@ -42,7 +42,6 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
         try {
             this.con = DriverManager.getConnection(INSTANCE_ORACLE + ip + ":" + port + ":" + base, login, psw);
             System.out.println("Connexion Oracle ok");
-            this.stmt = this.con.createStatement();
         } catch (SQLException ex) {
             System.out.println("Exception SQL : ");
             while (ex != null) {
@@ -55,7 +54,7 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
                 ex = ex.getNextException();
             }
         }
-        return this.stmt;
+        return this.con;
     }
     
 }

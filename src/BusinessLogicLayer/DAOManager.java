@@ -49,7 +49,7 @@ public class DAOManager {
                     this.con = new DatabaseConnectionMySQL(xml.getLogin(), xml.getPsw(), xml.getIp(), xml.getPort(), xml.getSid_base());
                     break;
             }
-            this.stmt = this.con.getConnection();
+            this.stmt = this.con.getConnection().createStatement();
         } catch (Exception ex) {
             Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -62,8 +62,9 @@ public class DAOManager {
     public ResultSet setSelect(ArrayList select, String table, ArrayList where) throws SQLException {
         this.query = daoQuery.select(select, table, where);
         System.out.println(this.query);
-        this.rs = this.stmt.executeQuery(this.query);
+        System.out.println(this.stmt);
         System.out.println(this.rs);
+        this.rs = this.stmt.executeQuery(this.query);
         return this.rs;
     }
     

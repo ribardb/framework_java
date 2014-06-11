@@ -30,7 +30,7 @@ public class DatabaseConnectionMySQL extends DatabaseConnection {
      * @return
      */
     @Override
-    public Statement getConnection() {
+    public Connection getConnection() {
         try {
             Class.forName(DRIVER_MYSQL);
         } catch (ClassNotFoundException ex) {
@@ -41,7 +41,6 @@ public class DatabaseConnectionMySQL extends DatabaseConnection {
         try {
             this.con = DriverManager.getConnection(INSTANCE_MYSQL + ip + ":" + port + "/" + base, login, psw);
             System.out.println("Connexion MySQL ok");
-            this.stmt = this.con.createStatement();
         } catch (SQLException ex) {
             System.out.println("Exception SQL : ");
             while (ex != null) {
@@ -54,7 +53,7 @@ public class DatabaseConnectionMySQL extends DatabaseConnection {
                 ex = ex.getNextException();
             }
         }
-        return this.stmt;
+        return this.con;
     }
 
 }
