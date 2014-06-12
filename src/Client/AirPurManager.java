@@ -12,7 +12,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -152,71 +151,68 @@ public class AirPurManager {
         this.table = null;
         this.into.clear();
         this.values.clear();
+        this.listeAttr.clear();
+        this.listeTypeAttr.clear();
+        this.listeMethod.clear();
     }
+    
+    public void modifier(Object obj) {
+        this.table = cast.getTable(obj);
+        this.listeAttr = cast.getAttr(obj);
+        this.listeTypeAttr = cast.getTypeAttr(obj);
+        this.listeMethod = cast.getGetters(obj);
+        
+        for (int i = 1; i < listeAttr.size(); i++) {
+            this.into.add(listeAttr.get(i) + ",");
+            if (this.listeTypeAttr.get(i).equals("String")) {
+                try {
+                    this.values.add(this.listeAttr.get(i) + "='" + this.listeMethod.get(i).invoke(obj, null) + "',");
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                try {
+                    this.values.add(this.listeAttr.get(i) + "=" + this.listeMethod.get(i).invoke(obj, null) + ",");
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
 
-    public void ajouterMateriel(Materiel mat) {
-        this.table = mat.getClasse();
-
-        if (mat.getId_materiel() != 0) {
-            this.into.add("id_materiel,");
-            this.values.add(mat.getId_materiel() + ",");
+        try {
+            this.where.add(this.listeAttr.get(0) + "=" + this.listeMethod.get(0).invoke(obj, null));
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (mat.getId_tva() != 0) {
-            this.into.add("id_tva,");
-            this.values.add(mat.getId_tva() + ",");
-        }
-        if (mat.getId_categorie() != 0) {
-            this.into.add("id_categorie,");
-            this.values.add(mat.getId_categorie() + ",");
-        }
-        if (mat.getNom_materiel() != null) {
-            this.into.add("nom_materiel,");
-            this.values.add("'" + mat.getNom_materiel() + "',");
-        }
-        if (mat.getModele_materiel() != null) {
-            this.into.add("modele_materiel,");
-            this.values.add("'" + mat.getModele_materiel() + "',");
-        }
-        if (mat.getDescription_materiel() != null) {
-            this.into.add("description_materiel,");
-            this.values.add("'" + mat.getDescription_materiel() + "',");
-        }
-
+        
         System.out.println(this.table);
-        System.out.println(this.into);
+        System.out.println(this.where);
         System.out.println(this.values);
 
         /*try {
-            dao.setInsert(this.into, this.table, this.values);
+            dao.setUpdate(this.values, this.table, this.where);
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }*/
 
         this.table = null;
-        this.into.clear();
-        this.values.clear();
-    }
-
-    public void modifierMateriel(Materiel mat) {
-        this.table = mat.getClasse();
-
-        this.values.add("id_tva=" + mat.getId_tva());
-        this.values.add("id_categorie=" + mat.getId_categorie());
-        this.values.add("nom_materiel='" + mat.getNom_materiel() + "'");
-        this.values.add("modele_materiel='" + mat.getModele_materiel() + "'");
-        this.values.add("description_materiel='" + mat.getDescription_materiel() + "'");
-
-        this.where.add("id_materiel=" + mat.getId_materiel());
-
-        try {
-            dao.setUpdate(this.values, this.table, this.where);
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        this.table = null;
         this.where.clear();
         this.values.clear();
+        this.listeAttr.clear();
+        this.listeTypeAttr.clear();
+        this.listeMethod.clear();
     }
 
     public void supprimerMateriel(ArrayList where) {
