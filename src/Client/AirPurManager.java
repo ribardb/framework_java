@@ -138,15 +138,11 @@ public class AirPurManager {
             }
         }
 
-        System.out.println(this.table);
-        System.out.println(this.into);
-        System.out.println(this.values);
-
-        /*try {
+        try {
             dao.setInsert(this.into, this.table, this.values);
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
 
         this.table = null;
         this.into.clear();
@@ -155,13 +151,13 @@ public class AirPurManager {
         this.listeTypeAttr.clear();
         this.listeMethod.clear();
     }
-    
+
     public void modifier(Object obj) {
         this.table = cast.getTable(obj);
         this.listeAttr = cast.getAttr(obj);
         this.listeTypeAttr = cast.getTypeAttr(obj);
         this.listeMethod = cast.getGetters(obj);
-        
+
         for (int i = 1; i < listeAttr.size(); i++) {
             this.into.add(listeAttr.get(i) + ",");
             if (this.listeTypeAttr.get(i).equals("String")) {
@@ -196,16 +192,12 @@ public class AirPurManager {
         } catch (InvocationTargetException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        System.out.println(this.table);
-        System.out.println(this.where);
-        System.out.println(this.values);
 
-        /*try {
+        try {
             dao.setUpdate(this.values, this.table, this.where);
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
 
         this.table = null;
         this.where.clear();
@@ -215,9 +207,21 @@ public class AirPurManager {
         this.listeMethod.clear();
     }
 
-    public void supprimerMateriel(ArrayList where) {
-        this.table = mat.getClasse();
-        this.where = where;
+    public void supprimer(Object obj) {
+        this.table = cast.getTable(obj);
+        this.listeAttr = cast.getAttr(obj);
+        this.listeTypeAttr = cast.getTypeAttr(obj);
+        this.listeMethod = cast.getGetters(obj);
+
+        try {
+            this.where.add(this.listeAttr.get(0) + "=" + this.listeMethod.get(0).invoke(obj, null));
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         try {
             dao.setDelete(this.table, this.where);
@@ -227,6 +231,9 @@ public class AirPurManager {
 
         this.table = null;
         this.where.clear();
+        this.listeAttr.clear();
+        this.listeTypeAttr.clear();
+        this.listeMethod.clear();
     }
 
     public void getLastId_partenaire() {
