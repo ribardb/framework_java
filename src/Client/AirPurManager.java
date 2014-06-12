@@ -8,6 +8,8 @@ package Client;
 import BusinessLogicLayer.DAOManager;
 import airpur.*;
 import frameworkairpur.Cast;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,14 +24,17 @@ import java.util.logging.Logger;
 public class AirPurManager {
 
     private final DAOManager dao = new DAOManager("src/frameworkairpur/database.xml");
-    private Cast cast;
+    private Cast cast = new Cast();
     private ResultSet result;
     private ArrayList lister = new ArrayList();
     private ArrayList select = new ArrayList(); //liste d'attributs
     private ArrayList where = new ArrayList(); //liste d'attributs et de valeurs ex:id=1
     private ArrayList into = new ArrayList(); //liste d'attributs
     private ArrayList values = new ArrayList(); //liste de valeurs | liste d'attributs et de valeurs ex:id=1
-    private String table;
+    private String table = null;
+    private ArrayList listeAttr = new ArrayList();
+    private ArrayList listeTypeAttr = new ArrayList();
+    private ArrayList<Method> listeMethod = new ArrayList<Method>();
 
     static Materiel mat = new Materiel(0, 0, 0, null, null, null);
     static Exemplaire_location location;
@@ -93,7 +98,7 @@ public class AirPurManager {
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         this.table = null;
         this.result = null;
         this.select.clear();
@@ -103,7 +108,53 @@ public class AirPurManager {
         return this.lister;
     }
 
-    public void ajoutMateriel(Materiel mat) {
+    public void ajouter(Object obj) {
+        this.table = cast.getTable(obj);
+        this.listeAttr = cast.getAttr(obj);
+        this.listeTypeAttr = cast.getTypeAttr(obj);
+        this.listeMethod = cast.getGetters(obj);
+
+        for (int i = 0; i < listeAttr.size(); i++) {
+            this.into.add(listeAttr.get(i) + ",");
+            if (this.listeTypeAttr.get(i).equals("String")) {
+                try {
+                    this.values.add("'" + this.listeMethod.get(i).invoke(obj, null) + "',");
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                try {
+                    this.values.add(this.listeMethod.get(i).invoke(obj, null) + ",");
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        System.out.println(this.table);
+        System.out.println(this.into);
+        System.out.println(this.values);
+
+        /*try {
+            dao.setInsert(this.into, this.table, this.values);
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+
+        this.table = null;
+        this.into.clear();
+        this.values.clear();
+    }
+
+    public void ajouterMateriel(Materiel mat) {
         this.table = mat.getClasse();
 
         if (mat.getId_materiel() != 0) {
@@ -131,12 +182,16 @@ public class AirPurManager {
             this.values.add("'" + mat.getDescription_materiel() + "',");
         }
 
-        try {
+        System.out.println(this.table);
+        System.out.println(this.into);
+        System.out.println(this.values);
+
+        /*try {
             dao.setInsert(this.into, this.table, this.values);
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        }*/
+
         this.table = null;
         this.into.clear();
         this.values.clear();
@@ -158,7 +213,7 @@ public class AirPurManager {
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         this.table = null;
         this.where.clear();
         this.values.clear();
@@ -173,8 +228,48 @@ public class AirPurManager {
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         this.table = null;
         this.where.clear();
+    }
+
+    public void getLastId_partenaire() {
+        try {
+            System.out.println(dao.getLastId_partenaire());
+        } catch (Exception ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void totalFactureHT(int idFacture) {
+        try {
+            System.out.println(dao.totalFactureHT(idFacture));
+        } catch (Exception ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void totalFactureVente(int idFacture) {
+        try {
+            System.out.println(dao.totalFactureVente(idFacture));
+        } catch (Exception ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void totalStockLocation(int idMateriel) {
+        try {
+            System.out.println(dao.totalStockLocation(idMateriel));
+        } catch (Exception ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void totalStockVente(int idMateriel) {
+        try {
+            System.out.println(dao.totalStockVente(idMateriel));
+        } catch (Exception ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

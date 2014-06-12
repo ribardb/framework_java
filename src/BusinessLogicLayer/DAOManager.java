@@ -11,9 +11,11 @@ import DataAccessLayer.DatabaseConnectionMySQL;
 import DataAccessLayer.DatabaseConnectionOracle;
 import DataAccessLayer.DatabaseConnectionSQLServer;
 import frameworkairpur.ImportXML;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +30,7 @@ public class DAOManager {
     private DAOManagerQuery daoQuery = new DAOManagerQuery();
     private String query = null;
     private Statement stmt = null;
+    private CallableStatement csStmt;
     private ResultSet rs = null;
 
     /**
@@ -84,6 +87,70 @@ public class DAOManager {
         this.query = daoQuery.delete(table, where);
         System.out.println(this.query);
         this.stmt.executeQuery(this.query);
+    }
+    
+    public Integer getLastId_partenaire() throws Exception {
+        try {
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call getLastId_partenaire() }");
+            this.csStmt.registerOutParameter(1, Types.INTEGER);
+            this.csStmt.execute();
+        } catch (SQLException e) {
+            throw new SQLException(
+                    "L'execution de la fonction est en erreur");
+        }
+        return this.csStmt.getInt(1);
+    }
+    
+    public Float totalFactureHT(int idFacture) throws Exception {
+        try {
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalFactureHT(?) }");
+            this.csStmt.registerOutParameter(1, Types.FLOAT);
+            this.csStmt.setInt(2, idFacture);
+            this.csStmt.execute();
+        } catch (SQLException e) {
+            throw new SQLException(
+                    "L'execution de la fonction est en erreur");
+        }
+        return this.csStmt.getFloat(1);
+    }
+    
+    public Float totalFactureVente(int idFacture) throws Exception {
+        try {
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalFactureVente(?) }");
+            this.csStmt.registerOutParameter(1, Types.FLOAT);
+            this.csStmt.setInt(2, idFacture);
+            this.csStmt.execute();
+        } catch (SQLException e) {
+            throw new SQLException(
+                    "L'execution de la fonction est en erreur");
+        }
+        return this.csStmt.getFloat(1);
+    }
+    
+    public Integer totalStockLocation(int idMateriel) throws Exception {
+        try {
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalStockLocation(?) }");
+            this.csStmt.registerOutParameter(1, Types.INTEGER);
+            this.csStmt.setInt(2, idMateriel);
+            this.csStmt.execute();
+        } catch (SQLException e) {
+            throw new SQLException(
+                    "L'execution de la fonction est en erreur");
+        }
+        return this.csStmt.getInt(1);
+    }
+    
+    public Integer totalStockVente(int idMateriel) throws Exception {
+        try {
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalStockVente(?) }");
+            this.csStmt.registerOutParameter(1, Types.INTEGER);
+            this.csStmt.setInt(2, idMateriel);
+            this.csStmt.execute();
+        } catch (SQLException e) {
+            throw new SQLException(
+                    "L'execution de la fonction est en erreur");
+        }
+        return this.csStmt.getInt(1);
     }
     
 }

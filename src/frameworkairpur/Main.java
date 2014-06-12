@@ -14,6 +14,7 @@ import DataAccessLayer.DatabaseConnectionSQLServer;
 import airpur.Materiel;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,15 +44,12 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         /*Menu menu = new Menu();
-        menu.afficherMenuPrincipal();*/
-        
-        AirPurManager gestion = new AirPurManager();
-        Materiel mat = new Materiel(51,2,47,"hibou","chouette","caca");
-        Materiel mat2 = new Materiel(80,3,46,"hiboux","chouettes","cacas");
-        gestion.ajoutMateriel(mat);
-        gestion.modifierMateriel(mat2);
+         menu.afficherMenuPrincipal();*/
+        Materiel mat = new Materiel(1, 2, 3, "hiboux", "chouettes", "boubou");
+        AirPurManager ai = new AirPurManager();
+        ai.ajouter(mat);
+        ai.ajouterMateriel(mat);
         
     }
 
 }
- 
