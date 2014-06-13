@@ -8,6 +8,7 @@ package Client;
 import BusinessLogicLayer.DAOManager;
 import airpur.*;
 import frameworkairpur.Cast;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,7 +27,7 @@ public class AirPurManager {
     private final DAOManager dao = new DAOManager("src/frameworkairpur/database.xml");
     private Cast cast = new Cast();
     private ResultSet result;
-    private ArrayList lister = new ArrayList();
+    private Object[] lister;
     private ArrayList select = new ArrayList(); //liste d'attributs
     private ArrayList where = new ArrayList(); //liste d'attributs et de valeurs ex:id=1
     private ArrayList into = new ArrayList(); //liste d'attributs
@@ -44,9 +45,8 @@ public class AirPurManager {
     static Payer payer;
     static Modepaiement mode;
 
-    public ArrayList listerMateriel(ArrayList select, ArrayList where) {
-        System.out.println(mat.getClasse());
-        this.table = mat.getClasse();
+    public Object[] lister(Object obj, ArrayList select, ArrayList where) {
+        this.table = obj.getClass().getSimpleName();
         this.select = select;
         System.out.println(select);
         System.out.println(this.select);
@@ -62,7 +62,8 @@ public class AirPurManager {
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
+        
+        /*try {
             if (this.result != null) {
                 while (this.result.next()) {
                     String tmp = "";
@@ -93,16 +94,15 @@ public class AirPurManager {
                     }
                     this.lister.add(tmp.substring(0, tmp.length() - 1));
                 }
+            } else {
+                lister[0] = "Aucun résultat";
             }
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
 
-        this.table = null;
-        this.result = null;
         this.select.clear();
         this.where.clear();
-        this.lister.clear();
 
         return this.lister;
     }
