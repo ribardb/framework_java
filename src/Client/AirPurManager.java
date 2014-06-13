@@ -33,7 +33,7 @@ public class AirPurManager {
     private ArrayList values = new ArrayList(); //liste de valeurs | liste d'attributs et de valeurs ex:id=1
     private String table = null;
     private Field[] listeAttr;
-    private ArrayList<Method> listeMethod = new ArrayList<Method>();
+    private ArrayList<Method> listeMethod = new ArrayList<>();
 
     static Materiel mat = new Materiel(0, 0, 0, null, null, null);
     static Exemplaire_location location;
@@ -117,21 +117,13 @@ public class AirPurManager {
             if (this.listeAttr[i].getGenericType().equals("String")) {
                 try {
                     this.values.add("'" + this.listeMethod.get(i).invoke(obj, null) + "',");
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 try {
                     this.values.add(this.listeMethod.get(i).invoke(obj, null) + ",");
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -158,21 +150,13 @@ public class AirPurManager {
             if (this.listeAttr[i].getGenericType().equals("String")) {
                 try {
                     this.values.add(this.listeAttr[i] + "='" + this.listeMethod.get(i).invoke(obj, null) + "',");
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 try {
                     this.values.add(this.listeAttr[i] + "=" + this.listeMethod.get(i).invoke(obj, null) + ",");
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -180,11 +164,7 @@ public class AirPurManager {
 
         try {
             this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null));
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -206,11 +186,7 @@ public class AirPurManager {
 
         try {
             this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null));
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
