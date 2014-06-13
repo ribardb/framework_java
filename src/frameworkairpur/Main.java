@@ -47,6 +47,7 @@ public class Main {
          menu.afficherMenuPrincipal();*/
         Materiel mat = new Materiel(1, 2, 3, "hiboux", "chouettes", "boubou");
         AirPurManager ai = new AirPurManager();
+        System.out.println(ai.lister(mat, null, null));
         
     }
 

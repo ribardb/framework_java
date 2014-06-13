@@ -7,16 +7,19 @@ package Client;
 
 import BusinessLogicLayer.DAOManager;
 import airpur.*;
+import com.sun.rowset.CachedRowSetImpl;
 import frameworkairpur.Cast;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sql.rowset.CachedRowSet;
 
 /**
  *
@@ -27,8 +30,10 @@ public class AirPurManager {
     private final DAOManager dao = new DAOManager("src/frameworkairpur/database.xml");
     private Cast cast = new Cast();
     private ResultSet result;
-    private Object[] lister;
-    private ArrayList select = new ArrayList(); //liste d'attributs
+    private ResultSetMetaData metadata;
+    private CachedRowSet rowset;
+    private Object[][] lister;
+    private ArrayList<String> select = new ArrayList<>(); //liste d'attributs
     private ArrayList where = new ArrayList(); //liste d'attributs et de valeurs ex:id=1
     private ArrayList into = new ArrayList(); //liste d'attributs
     private ArrayList values = new ArrayList(); //liste de valeurs | liste d'attributs et de valeurs ex:id=1
@@ -45,61 +50,91 @@ public class AirPurManager {
     static Payer payer;
     static Modepaiement mode;
 
-    public Object[] lister(Object obj, ArrayList select, ArrayList where) {
+    public Object[][] lister(Object obj, ArrayList select, ArrayList where) {
         this.table = obj.getClass().getSimpleName();
+        this.listeAttr = obj.getClass().getDeclaredFields();
         this.select = select;
-        System.out.println(select);
-        System.out.println(this.select);
         this.where = where;
 
         if (this.select == null) {
-            this.select = new ArrayList();
+            this.select = new ArrayList<>();
             this.select.add("*");
         }
 
         try {
             this.result = dao.setSelect(this.select, this.table, this.where);
+            this.metadata = this.result.getMetaData();
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        /*try {
+
+        try {
+            rowset = new CachedRowSetImpl();
+            rowset.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
+            rowset.setConcurrency(ResultSet.CONCUR_UPDATABLE);
+            rowset.populate(this.result);
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            this.lister = new Object[this.rowset.size()][this.metadata.getColumnCount()];
+            System.out.println("Tableau : " + this.rowset.size() + "," + this.metadata.getColumnCount());
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
             if (this.result != null) {
+                int i = 0;
                 while (this.result.next()) {
-                    String tmp = "";
                     if (this.select.contains("*")) {
-                        tmp = tmp + this.result.getInt(1) + ";";
-                        tmp = tmp + this.result.getInt(2) + ";";
-                        tmp = tmp + this.result.getInt(3) + ";";
-                        tmp = tmp + this.result.getString(4) + ";";
-                        tmp = tmp + this.result.getString(5) + ";";
-                        tmp = tmp + this.result.getString(6) + ";";
-                    } else {
-                        for (int i = 0; i < this.select.size(); i++) {
-                            switch (cast.getType(this.select.get(i))) {
-                                case "Integer":
-                                    tmp = tmp + this.result.getInt(i) + ";";
+                        for (int j = 0; j < this.listeAttr.length; j++) {
+                            switch (this.listeAttr[j].getType().getSimpleName()) {
+                                case "int":
+                                    System.out.println(i + "," + j);
+                                    this.lister[i][j] = this.result.getInt(j + 1);
                                     break;
                                 case "String":
-                                    tmp = tmp + this.result.getString(i) + ";";
-                                    break;
-                                case "Date":
-                                    tmp = tmp + this.result.getDate(i) + ";";
+                                    System.out.println(i + "," + j);
+                                    this.lister[i][j] = this.result.getString(j + 1);
                                     break;
                                 case "Float":
-                                    tmp = tmp + this.result.getFloat(i) + ";";
+                                    System.out.println(i + "," + j);
+                                    this.lister[i][j] = this.result.getFloat(j + 1);
                                     break;
                             }
                         }
+                    } else {
+                        for (int k = 0; k < this.select.size(); k++) {
+                            boolean trouve = false;
+                            int l = 0;
+                            while (trouve == false) {
+                                if (this.listeAttr[l].getName().equalsIgnoreCase(this.select.get(k))) {
+                                    switch (this.listeAttr[l].getType().getSimpleName()) {
+                                        case "int":
+                                            this.lister[i][k] = this.result.getInt(k + 1);
+                                            break;
+                                        case "String":
+                                            this.lister[i][k] = this.result.getString(k + 1);
+                                            break;
+                                        case "Float":
+                                            this.lister[i][k] = this.result.getFloat(k + 1);
+                                            break;
+                                    }
+                                }
+                            }
+
+                        }
                     }
-                    this.lister.add(tmp.substring(0, tmp.length() - 1));
+                    i++;
                 }
             } else {
-                lister[0] = "Aucun résultat";
+                lister[0][0] = "Aucun résultat";
             }
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
 
         this.select.clear();
         this.where.clear();
