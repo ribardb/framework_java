@@ -87,21 +87,22 @@ public class AirPurManager {
         try {
             if (this.result != null) {
                 int i = 0;
-                while (this.result.next()) {
+                this.rowset.isFirst();
+                while (this.rowset.next()) {
                     if (this.select.contains("*")) {
                         for (int j = 0; j < this.listeAttr.length; j++) {
                             switch (this.listeAttr[j].getType().getSimpleName()) {
                                 case "int":
                                     System.out.println(i + "," + j);
-                                    this.lister[i][j] = this.result.getInt(j + 1);
+                                    this.lister[i][j] = this.rowset.getInt(j + 1);
                                     break;
                                 case "String":
                                     System.out.println(i + "," + j);
-                                    this.lister[i][j] = this.result.getString(j + 1);
+                                    this.lister[i][j] = this.rowset.getString(j + 1);
                                     break;
                                 case "Float":
                                     System.out.println(i + "," + j);
-                                    this.lister[i][j] = this.result.getFloat(j + 1);
+                                    this.lister[i][j] = this.rowset.getFloat(j + 1);
                                     break;
                             }
                         }
@@ -113,16 +114,26 @@ public class AirPurManager {
                                 if (this.listeAttr[l].getName().equalsIgnoreCase(this.select.get(k))) {
                                     switch (this.listeAttr[l].getType().getSimpleName()) {
                                         case "int":
-                                            this.lister[i][k] = this.result.getInt(k + 1);
+                                            //System.out.println(i + "," + k);
+                                            this.lister[i][k] = this.rowset.getInt(k + 1);
+                                            trouve = true;
                                             break;
                                         case "String":
-                                            this.lister[i][k] = this.result.getString(k + 1);
+                                            //System.out.println(i + "," + k);
+                                            this.lister[i][k] = this.rowset.getString(k + 1);
+                                            trouve = true;
                                             break;
                                         case "Float":
-                                            this.lister[i][k] = this.result.getFloat(k + 1);
+                                            //System.out.println(i + "," + k);
+                                            this.lister[i][k] = this.rowset.getFloat(k + 1);
+                                            trouve = true;
                                             break;
+                                        default:
+                                            System.out.println("Type inconnu");
+                                            trouve = true;
                                     }
                                 }
+                                l++;
                             }
 
                         }
@@ -137,7 +148,7 @@ public class AirPurManager {
         }
 
         this.select.clear();
-        this.where.clear();
+        //this.where.clear();
 
         return this.lister;
     }

@@ -31,19 +31,14 @@ public class DAOManagerQuery implements DAOManagerInterface {
     public String select(ArrayList select, String table, ArrayList where) {
 
         if (where == null) {
-            if (select.contains("*")) {
-                this.query = "SELECT " + select.toString().substring(1, select.toString().length() - 1) + " FROM " + table;
-            }
-            else {
-                this.query = "SELECT (" + select.toString().substring(1, select.toString().length() - 1) + ") FROM " + table;
-            }
-            
+            this.query = "SELECT " + select.toString().substring(1, select.toString().length() - 1) + " FROM " + table;
+
         } else {
             String clause = " ";
             for (int i = 0; i < where.size(); i++) {
                 clause = clause + where.get(i) + " AND ";
             }
-            this.query = "SELECT (" + select.toString().substring(1, select.toString().length() - 1) + ") FROM " + table
+            this.query = "SELECT " + select.toString().substring(1, select.toString().length() - 1) + " FROM " + table
                     + " WHERE" + clause.substring(0, clause.length() - 5);
         }
         return this.query;
@@ -86,9 +81,9 @@ public class DAOManagerQuery implements DAOManagerInterface {
             for (int i = 0; i < values.size(); i++) {
                 tmp = tmp + values.get(i) + ", ";
             }
-            tmp = tmp.substring(0, tmp.length()-1);
+            tmp = tmp.substring(0, tmp.length() - 1);
             this.query = "UPDATE " + table + " SET " + tmp.substring(0, tmp.length() - 1) + "WHERE " + where.get(0);
-            
+
         }
 
         return this.query;

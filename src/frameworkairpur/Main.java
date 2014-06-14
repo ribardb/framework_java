@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.text.Document;
@@ -47,7 +48,10 @@ public class Main {
          menu.afficherMenuPrincipal();*/
         Materiel mat = new Materiel(1, 2, 3, "hiboux", "chouettes", "boubou");
         AirPurManager ai = new AirPurManager();
-        System.out.println(ai.lister(mat, null, null));
+        ArrayList select = new ArrayList();
+        select.add("nom_materiel");
+        select.add("description_materiel");
+        System.out.println(Arrays.deepToString(ai.lister(mat, select, null)));
         
     }
 
