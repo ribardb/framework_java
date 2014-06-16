@@ -91,9 +91,9 @@ public class DAOManager {
     
     public Integer getLastId_partenaire() throws Exception {
         try {
-            this.csStmt = this.con.getConnection().prepareCall("{ ? = call getLastId_partenaire() }");
-            this.csStmt.registerOutParameter(1, Types.INTEGER);
-            this.csStmt.execute();
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call getLastId_partenaire() }"); //Création de la requête d'appel de la fonction sans paramètre
+            this.csStmt.registerOutParameter(1, Types.INTEGER); //Définition du paramètre de sortie
+            this.csStmt.execute(); //Execution de l'appel de la fonction
         } catch (SQLException e) {
             throw new SQLException(
                     "L'execution de la fonction est en erreur");
@@ -103,23 +103,23 @@ public class DAOManager {
     
     public Float totalFactureHT(int idFacture) throws Exception {
         try {
-            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalFactureHT(?) }");
-            this.csStmt.registerOutParameter(1, Types.FLOAT);
-            this.csStmt.setInt(2, idFacture);
-            this.csStmt.execute();
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalFactureHT(?) }");//Création de la requête d'appel de la fonction avec paramètre
+            this.csStmt.registerOutParameter(1, Types.FLOAT); //Définition du paramètre de sortie
+            this.csStmt.setInt(2, idFacture); //Définition du paramètre d'entrée
+            this.csStmt.execute(); //Execution de l'appel de la fonction
         } catch (SQLException e) {
             throw new SQLException(
-                    "L'execution de la fonction est en erreur");
+                    "L'execution de la fonction est en erreur");//Création de la requête d'appel de la fonction avec paramètre
         }
         return this.csStmt.getFloat(1);
     }
     
     public Float totalFactureVente(int idFacture) throws Exception {
         try {
-            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalFactureVente(?) }");
-            this.csStmt.registerOutParameter(1, Types.FLOAT);
-            this.csStmt.setInt(2, idFacture);
-            this.csStmt.execute();
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalFactureVente(?) }");//Création de la requête d'appel de la fonction avec paramètre
+            this.csStmt.registerOutParameter(1, Types.FLOAT); //Définition du paramètre de sortie
+            this.csStmt.setInt(2, idFacture); //Définition du paramètre d'entrée
+            this.csStmt.execute(); //Execution de l'appel de la fonction
         } catch (SQLException e) {
             throw new SQLException(
                     "L'execution de la fonction est en erreur");
@@ -129,10 +129,10 @@ public class DAOManager {
     
     public Integer totalStockLocation(int idMateriel) throws Exception {
         try {
-            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalStockLocation(?) }");
-            this.csStmt.registerOutParameter(1, Types.INTEGER);
-            this.csStmt.setInt(2, idMateriel);
-            this.csStmt.execute();
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalStockLocation(?) }");//Création de la requête d'appel de la fonction avec paramètre
+            this.csStmt.registerOutParameter(1, Types.INTEGER); //Définition du paramètre de sortie
+            this.csStmt.setInt(2, idMateriel); //Définition du paramètre d'entrée
+            this.csStmt.execute(); //Execution de l'appel de la fonction
         } catch (SQLException e) {
             throw new SQLException(
                     "L'execution de la fonction est en erreur");
@@ -142,10 +142,10 @@ public class DAOManager {
     
     public Integer totalStockVente(int idMateriel) throws Exception {
         try {
-            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalStockVente(?) }");
-            this.csStmt.registerOutParameter(1, Types.INTEGER);
-            this.csStmt.setInt(2, idMateriel);
-            this.csStmt.execute();
+            this.csStmt = this.con.getConnection().prepareCall("{ ? = call TotalStockVente(?) }");//Création de la requête d'appel de la fonction avec paramètre
+            this.csStmt.registerOutParameter(1, Types.INTEGER); //Définition du paramètre de sortie
+            this.csStmt.setInt(2, idMateriel); //Définition du paramètre d'entrée
+            this.csStmt.execute(); //Execution de l'appel de la fonction
         } catch (SQLException e) {
             throw new SQLException(
                     "L'execution de la fonction est en erreur");
