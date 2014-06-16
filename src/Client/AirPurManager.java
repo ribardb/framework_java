@@ -51,10 +51,10 @@ public class AirPurManager {
     static Modepaiement mode;
 
     public Object[][] lister(Object obj, ArrayList select, ArrayList where) {
-        this.table = obj.getClass().getSimpleName();
-        this.listeAttr = obj.getClass().getDeclaredFields();
-        this.select = select;
-        this.where = where;
+        this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
+        this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
+        this.select = select; //Récupération des champs demandés
+        this.where = where; //Récupération des restrictions
 
         if (this.select == null) {
             this.select = new ArrayList<>();
@@ -62,69 +62,63 @@ public class AirPurManager {
         }
 
         try {
-            this.result = dao.setSelect(this.select, this.table, this.where);
-            this.metadata = this.result.getMetaData();
+            this.result = dao.setSelect(this.select, this.table, this.where); //Execution de la requête
+            this.metadata = this.result.getMetaData(); //Création d'un metadata
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            rowset = new CachedRowSetImpl();
+            rowset = new CachedRowSetImpl(); //Création d'un rowset
             rowset.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
             rowset.setConcurrency(ResultSet.CONCUR_UPDATABLE);
-            rowset.populate(this.result);
+            rowset.populate(this.result); //Remplissage du rowset par rapport au ResultSet
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            this.lister = new Object[this.rowset.size()][this.metadata.getColumnCount()];
-            System.out.println("Tableau : " + this.rowset.size() + "," + this.metadata.getColumnCount());
+            this.lister = new Object[this.rowset.size()][this.metadata.getColumnCount()]; //Récupération des dimensions du tableau
+            //System.out.println("Tableau : " + this.rowset.size() + "," + this.metadata.getColumnCount());
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            if (this.result != null) {
-                int i = 0;
-                this.rowset.isFirst();
+            if (this.result != null) { //La requête a renvoyé des résultats
+                int i = 0; //Numéro de la ligne du tableau
+                this.rowset.isFirst(); //Replacement du curseur au début du ResultSet
                 while (this.rowset.next()) {
-                    if (this.select.contains("*")) {
+                    if (this.select.contains("*")) { //Si on sélectionne tout les champs
                         for (int j = 0; j < this.listeAttr.length; j++) {
-                            switch (this.listeAttr[j].getType().getSimpleName()) {
+                            switch (this.listeAttr[j].getType().getSimpleName()) { //Analyse du type de l'attribut
                                 case "int":
-                                    System.out.println(i + "," + j);
                                     this.lister[i][j] = this.rowset.getInt(j + 1);
                                     break;
                                 case "String":
-                                    System.out.println(i + "," + j);
                                     this.lister[i][j] = this.rowset.getString(j + 1);
                                     break;
                                 case "Float":
-                                    System.out.println(i + "," + j);
                                     this.lister[i][j] = this.rowset.getFloat(j + 1);
                                     break;
                             }
                         }
-                    } else {
+                    } else { //Si on sélectionne des champs spécifiques
                         for (int k = 0; k < this.select.size(); k++) {
                             boolean trouve = false;
-                            int l = 0;
+                            int l = 0; //Parcours de la liste des attributs
                             while (trouve == false) {
-                                if (this.listeAttr[l].getName().equalsIgnoreCase(this.select.get(k))) {
+                                if (this.listeAttr[l].getName().equalsIgnoreCase(this.select.get(k))) { 
                                     switch (this.listeAttr[l].getType().getSimpleName()) {
                                         case "int":
-                                            //System.out.println(i + "," + k);
                                             this.lister[i][k] = this.rowset.getInt(k + 1);
                                             trouve = true;
                                             break;
                                         case "String":
-                                            //System.out.println(i + "," + k);
                                             this.lister[i][k] = this.rowset.getString(k + 1);
                                             trouve = true;
                                             break;
                                         case "Float":
-                                            //System.out.println(i + "," + k);
                                             this.lister[i][k] = this.rowset.getFloat(k + 1);
                                             trouve = true;
                                             break;
@@ -140,35 +134,36 @@ public class AirPurManager {
                     }
                     i++;
                 }
-            } else {
+            } else { //Si la requête ne renvoie aucun résultat
                 lister[0][0] = "Aucun résultat";
             }
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.select.clear();
-        //this.where.clear();
+        this.select.clear(); //Ré-initialisation de l'ArrayList
+        if (this.where != null)
+            this.where.clear(); //Ré-initialisation de l'ArrayList
 
         return this.lister;
     }
 
     public void ajouter(Object obj) {
-        this.table = obj.getClass().getSimpleName();
-        this.listeAttr = obj.getClass().getDeclaredFields();
-        this.listeMethod = cast.getGetters(obj);
+        this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
+        this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
+        this.listeMethod = cast.getGetters(obj); //Récupération de la liste des getters
 
         for (int i = 0; i < listeAttr.length; i++) {
-            this.into.add(listeAttr[i] + ",");
-            if (this.listeAttr[i].getGenericType().equals("String")) {
+            this.into.add(listeAttr[i] + ","); //Création de l'INTO de la requête
+            if (this.listeAttr[i].getGenericType().equals("String")) { //Création selon le type de l'attribut
                 try {
-                    this.values.add("'" + this.listeMethod.get(i).invoke(obj, null) + "',");
+                    this.values.add("'" + this.listeMethod.get(i).invoke(obj, null) + "',"); //Remplissage de l'ArrayList des valeurs grace aux getters
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 try {
-                    this.values.add(this.listeMethod.get(i).invoke(obj, null) + ",");
+                    this.values.add(this.listeMethod.get(i).invoke(obj, null) + ","); //Remplissage de l'ArrayList des valeurs grace aux getters
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -176,32 +171,31 @@ public class AirPurManager {
         }
 
         try {
-            dao.setInsert(this.into, this.table, this.values);
+            dao.setInsert(this.into, this.table, this.values); //Execution de la requête d'insertion
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.into.clear();
-        this.values.clear();
-        this.listeMethod.clear();
+        this.into.clear(); //Ré-initialisation de l'ArrayList
+        this.values.clear(); //Ré-initialisation de l'ArrayList
+        this.listeMethod.clear(); //Ré-initialisation de l'ArrayList
     }
 
     public void modifier(Object obj) {
-        this.table = obj.getClass().getSimpleName();
-        this.listeAttr = obj.getClass().getDeclaredFields();
-        this.listeMethod = cast.getGetters(obj);
+        this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
+        this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
+        this.listeMethod = cast.getGetters(obj); //Récupération de la liste des getters
 
         for (int i = 1; i < listeAttr.length; i++) {
-            this.into.add(listeAttr[i] + ",");
-            if (this.listeAttr[i].getGenericType().equals("String")) {
+            if (this.listeAttr[i].getGenericType().equals("String")) { //Création selon le type d'attributs
                 try {
-                    this.values.add(this.listeAttr[i] + "='" + this.listeMethod.get(i).invoke(obj, null) + "',");
+                    this.values.add(this.listeAttr[i] + "='" + this.listeMethod.get(i).invoke(obj, null) + "',"); //Remplissage de l'ArrayList des valeurs grace aux getters
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 try {
-                    this.values.add(this.listeAttr[i] + "=" + this.listeMethod.get(i).invoke(obj, null) + ",");
+                    this.values.add(this.listeAttr[i] + "=" + this.listeMethod.get(i).invoke(obj, null) + ","); //Remplissage de l'ArrayList des valeurs grace aux getters
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -209,46 +203,46 @@ public class AirPurManager {
         }
 
         try {
-            this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null));
+            this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null)); //Remplissage de l'ArrayList des valeurs grace aux getters
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            dao.setUpdate(this.values, this.table, this.where);
+            dao.setUpdate(this.values, this.table, this.where); //Execution de la requête de modification
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.where.clear();
-        this.values.clear();
-        this.listeMethod.clear();
+        this.where.clear(); //Ré-initialisation de l'ArrayList
+        this.values.clear(); //Ré-initialisation de l'ArrayList
+        this.listeMethod.clear(); //Ré-initialisation de l'ArrayList
     }
 
     public void supprimer(Object obj) {
-        this.table = obj.getClass().getSimpleName();
-        this.listeAttr = obj.getClass().getDeclaredFields();
-        this.listeMethod = cast.getGetters(obj);
+        this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
+        this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
+        this.listeMethod = cast.getGetters(obj); //Récupération de la liste des getters
 
         try {
-            this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null));
+            this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null)); //Remplissage de l'ArrayList des valeurs grace aux getters
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            dao.setDelete(this.table, this.where);
+            dao.setDelete(this.table, this.where); //Execution de la requête de suppression
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.where.clear();
-        this.listeMethod.clear();
+        this.where.clear(); //Ré-initialisation de l'ArrayList
+        this.listeMethod.clear(); //Ré-initialisation de l'ArrayList
     }
 
     public void getLastId_partenaire() {
         try {
-            System.out.println(dao.getLastId_partenaire());
+            System.out.println(dao.getLastId_partenaire()); //Execution de la fonction
         } catch (Exception ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -256,7 +250,7 @@ public class AirPurManager {
 
     public void totalFactureHT(int idFacture) {
         try {
-            System.out.println(dao.totalFactureHT(idFacture));
+            System.out.println(dao.totalFactureHT(idFacture)); //Execution de la fonction
         } catch (Exception ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -264,7 +258,7 @@ public class AirPurManager {
 
     public void totalFactureVente(int idFacture) {
         try {
-            System.out.println(dao.totalFactureVente(idFacture));
+            System.out.println(dao.totalFactureVente(idFacture)); //Execution de la fonction
         } catch (Exception ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -272,7 +266,7 @@ public class AirPurManager {
 
     public void totalStockLocation(int idMateriel) {
         try {
-            System.out.println(dao.totalStockLocation(idMateriel));
+            System.out.println(dao.totalStockLocation(idMateriel)); //Execution de la fonction
         } catch (Exception ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -280,7 +274,7 @@ public class AirPurManager {
 
     public void totalStockVente(int idMateriel) {
         try {
-            System.out.println(dao.totalStockVente(idMateriel));
+            System.out.println(dao.totalStockVente(idMateriel)); //Execution de la fonction
         } catch (Exception ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
