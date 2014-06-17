@@ -41,15 +41,8 @@ public class AirPurManager {
     private Field[] listeAttr;
     private ArrayList<Method> listeMethod = new ArrayList<>();
 
-    static Materiel mat = new Materiel(0, 0, 0, null, null, null);
-    static Exemplaire_location location;
-    static Exemplaire_vente vente;
-    static Emprunter emprun;
-    static Site site;
-    static Facture fact;
-    static Payer payer;
-    static Modepaiement mode;
-
+    
+    /***************************    Gestion    ***************************/
     public Object[][] lister(Object obj, ArrayList select, ArrayList where) {
         this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
         this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
@@ -240,6 +233,7 @@ public class AirPurManager {
         this.listeMethod.clear(); //Ré-initialisation de l'ArrayList
     }
 
+    /***************************    Fonctions de la base de données Oracle   ***************************/
     public void getLastId_partenaire() {
         try {
             System.out.println(dao.getLastId_partenaire()); //Execution de la fonction
