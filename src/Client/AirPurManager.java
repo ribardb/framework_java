@@ -30,7 +30,7 @@ public class AirPurManager {
     private ResultSet result;
     private ArrayList lister;
     private ArrayList select; //liste d'attributs
-    private ArrayList where; //liste d'attributs et de valeurs ex:id=1
+    private ArrayList where = new ArrayList(); //liste d'attributs et de valeurs ex:id=1
     private ArrayList into; //liste d'attributs
     private ArrayList values; //liste de valeurs | liste d'attributs et de valeurs ex:id=1
     private String table;
@@ -43,13 +43,14 @@ public class AirPurManager {
     static Facture fact;
     static Payer payer;
     static Modepaiement mode;
+    static TVA tva;
 
     //Liste des materiels
     public ArrayList<Materiel> listerMateriel() {
         ArrayList<Materiel> listMateriel = new ArrayList<Materiel>();
         try {
 
-            this.result = dao.selectManager("Select * from Materiel");
+            this.result = dao.lister(this.mat, this.where);
 
             Materiel materiel;
             int idM;
@@ -76,10 +77,10 @@ public class AirPurManager {
     }
 
     public Materiel trouverMateriel(int id) throws SQLException {
-        Materiel materiel = null;
+        this.where.add("id_materiel=" + id);
         try {
 
-            this.result = dao.selectManager("Select * from MATERIEL WHERE ID_MATERIEL =" + id);
+            this.result = dao.lister(this.mat, this.where);
             if (result.first()) {
                 int idM = this.result.getInt("ID_MATERIEL");
                 int idTva = this.result.getInt("ID_TVA");
@@ -87,13 +88,13 @@ public class AirPurManager {
                 String nomMat = this.result.getString("NOM_MATERIEL");
                 String modelMat = this.result.getString("MODELE_MATERIEL");
                 String descr = this.result.getString("DESCRIPTION_MATERIEL");
-                materiel = new Materiel(idM, idTva, idCat, nomMat, modelMat, descr);
+                this.mat = new Materiel(idM, idTva, idCat, nomMat, modelMat, descr);
 
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return materiel;
+        return this.mat;
     }
 
     //Ajout d'un materiel et verification de la TVA
@@ -180,17 +181,17 @@ public class AirPurManager {
 
     //revoi une TVA
     public TVA trouverTva(int id) throws SQLException {
-        TVA tva = null;
+        this.where.add("id_tva" + id);
         try {
 
-            this.result = dao.selectManager("Select * from TVA WHERE ID_TVA =" + id);
+            this.result = dao.lister(this.tva, this.where);
             if (result.first()) {
-                tva = new TVA(id, this.result.getFloat("TAUX_TVA"), this.result.getString("DATEFINVALIDATION_TVA"));
+                this.tva = new TVA(id, this.result.getFloat("TAUX_TVA"), this.result.getString("DATEFINVALIDATION_TVA"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return tva;
+        return this.tva;
     }
 
     //Liste des Tva
@@ -272,6 +273,100 @@ public class AirPurManager {
 
     }
 
+    public ArrayList<Exemplaire_location> listerExemplaireLocation() {
+        ArrayList<Exemplaire_location> listExemplaire = new ArrayList<Exemplaire_location>();
+
+        try {
+
+            this.result = dao.selectManager("select * from Exemplaire_location");
+            if (result.first()) {
+                while (result.next()) {
+                    Exemplaire_location exemplaireLocation;
+                    int idL = this.result.getInt("ID_LOCATION");
+                    int idM = this.result.getInt("ID_MATERIEL");
+                    int idS = this.result.getInt("ID_SITE");
+                    Float tarif = this.result.getFloat("TARIF_LOCATION");
+                    String etat = this.result.getString("ETATEMPRUNT_LOCATION");
+                    exemplaireLocation = new Exemplaire_location(idL, idM, idS, tarif, etat);
+                    listExemplaire.add(exemplaireLocation);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listExemplaire;
+    }
+
+    public Exemplaire_location trouverExemplaireLocation(int id) {
+        Exemplaire_location exemplaireLocation = null;
+
+        try {
+
+            this.result = dao.selectManager("select * from Exemplaire_location where ID_LOCATION=" + id);
+            if (result.first()) {
+
+                int idL = this.result.getInt("ID_LOCATION");
+                int idM = this.result.getInt("ID_MATERIEL");
+                int idS = this.result.getInt("ID_SITE");
+                Float tarif = this.result.getFloat("TARIF_LOCATION");
+                String etat = this.result.getString("ETATEMPRUNT_LOCATION");
+                exemplaireLocation = new Exemplaire_location(idL, idM, idS, tarif, etat);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return exemplaireLocation;
+    }
+
+    //Modification d'un exepemplaire location
+    public Exemplaire_location modifierUnExemplaireLocation(Exemplaire_location exemplaireLocation) {
+        Exemplaire_location locationlUpdate = null;
+        try {
+
+            locationlUpdate = trouverExemplaireLocation(exemplaireLocation.getId_location());
+
+            if (locationlUpdate != null) {
+                //requete Update  de l'exemplaire
+                String update = "Update Exemplaire_location set TARIF_LOCATION = '" + exemplaireLocation.getTarif_location() + "' , "
+                        + "ETATEMPRUNT_LOCATION = '" + exemplaireLocation.getEtatemprunt_location() + "' "
+                        + "WHERE ID_LOCATION =" + exemplaireLocation.getId_location();
+                //execution de la requete
+                dao.updateManager(update);
+                //recuperation du materiel modifié
+                locationlUpdate = trouverExemplaireLocation(exemplaireLocation.getId_location());
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //retour de l'exemplaire modifié
+        return locationlUpdate;
+
+    }
+
+    public void supprimerExemplaireLocation(Exemplaire_location exemplaireLocation) {
+        Exemplaire_location locationlUpdate = null;
+        try {
+            //Pour des raisons de securité On ne peut changer seulement le nom le modele et la description
+            //verification si le materiel existe bien
+            locationlUpdate = trouverExemplaireLocation(exemplaireLocation.getId_location());
+
+            if (locationlUpdate != null) {
+                String delete = "Delete Exemplaire_location where ID_Location =" + exemplaireLocation.getId_location();
+                //execution de la requete
+                dao.updateManager(delete);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * ************* Fonctions de la Base de Données **************
+     */
     public int getLastId_partenaire() {
         int lastId = 0;
         try {
