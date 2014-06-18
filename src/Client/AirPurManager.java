@@ -193,7 +193,7 @@ public class AirPurManager {
         return tva;
     }
 
-      //Liste des Tva
+    //Liste des Tva
     /*
      *Parametre = bool
      *Si le parametre est a vrai alors on filtre les TVA encore valide
@@ -201,26 +201,30 @@ public class AirPurManager {
      */
     public ArrayList<TVA> listerTva(boolean dateValide) {
         ArrayList<TVA> listTva = new ArrayList<TVA>();
+        ArrayList where = new ArrayList();
+        TVA tvasel = new TVA();
         try {
-            if (!dateValide) {
-                this.result = dao.selectManager("Select * from TVA");
+            if (dateValide) {
+                where.add("datefinvalidation_tva > SYSDATE");
             } else {
-                this.result = dao.selectManager("Select * from TVA where datefinvalidation_tva > SYSDATE");
+                where = null;
             }
+
+            this.result = dao.lister(tvasel, where);
+
             TVA tva;
             int idTva;
             float tauxtva;
             Date dateFinValidite;
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            if (result.first()) {
-                while (result.next()) {
-                    idTva = this.result.getInt("ID_TVA");
-                    tauxtva = this.result.getFloat("ID_CATEGORIE");
-                    dateFinValidite = this.result.getDate("NOM_MATERIEL");
-                    tva = new TVA(idTva, tauxtva, formatter.format(dateFinValidite));
-                    listTva.add(tva);
-                }
+            while (result.next()) {
+                idTva = this.result.getInt("ID_TVA");
+                tauxtva = this.result.getFloat("taux_tva");
+                dateFinValidite = this.result.getDate("datefinvalidation_tva");
+                tva = new TVA(idTva, tauxtva, formatter.format(dateFinValidite));
+                listTva.add(tva);
             }
+
             this.result.close();
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -301,7 +305,7 @@ public class AirPurManager {
     public int totalStockLocation(int idMateriel) {
         int totalStock = 0;
         try {
-            totalStock =(dao.totalStockLocation(idMateriel)); //Execution de la fonction
+            totalStock = (dao.totalStockLocation(idMateriel)); //Execution de la fonction
         } catch (Exception ex) {
             Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }

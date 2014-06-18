@@ -28,19 +28,20 @@ public class DAOManagerQuery implements DAOManagerInterface {
      * @return
      */
     @Override
-    public String select(ArrayList select, String table, ArrayList where) {
+    public String select(String table, ArrayList where) {
 
         if (where == null) {
-            this.query = "SELECT " + select.toString().substring(1, select.toString().length() - 1) + " FROM " + table;
+            this.query = "SELECT * FROM " + table;
 
         } else {
             String clause = " ";
             for (int i = 0; i < where.size(); i++) {
                 clause = clause + where.get(i) + " AND ";
             }
-            this.query = "SELECT " + select.toString().substring(1, select.toString().length() - 1) + " FROM " + table
+            this.query = "SELECT * FROM " + table
                     + " WHERE" + clause.substring(0, clause.length() - 5);
         }
+        System.out.println(this.query);
         return this.query;
     }
 

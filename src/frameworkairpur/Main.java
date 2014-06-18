@@ -49,9 +49,8 @@ public class Main {
          menu.afficherMenuPrincipal();*/
         
         AirPurManager ai = new AirPurManager();
-        Materiel mat = new Materiel(1,2,46,"couc","pareil","boubou");
-        ai.ajouterMariel(mat);
-        
+        Materiel mat = new Materiel(101,2,46,"vbyglqieksuefh","pareil","boubou");
+        System.out.println(ai.listerTva(true));
     }
 
 }

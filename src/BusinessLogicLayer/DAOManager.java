@@ -37,9 +37,7 @@ import javax.sql.rowset.CachedRowSet;
 public class DAOManager {
 
     private Cast cast = new Cast();
-    private ResultSet result;
-    private ResultSetMetaData metadata;
-    private CachedRowSet rowset;
+    private ResultSet result = null;
     private Object[][] lister;
     private ArrayList<String> select = new ArrayList<>(); //liste d'attributs
     private ArrayList where = new ArrayList(); //liste d'attributs et de valeurs ex:id=1
@@ -111,94 +109,17 @@ public class DAOManager {
 
     /**
      * ************************* Gestion **************************
+     * @param obj
+     * @param where
+     * @return 
      */
-    public Object[][] lister(Object obj, ArrayList select, ArrayList where) {
+    public ResultSet lister(Object obj, ArrayList where) {
         this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
         this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
-        this.select = select; //Récupération des champs demandés
         this.where = where; //Récupération des restrictions
-
-        if (this.select == null) {
-            this.select = new ArrayList<>();
-            this.select.add("*");
-        }
-
+        
         try {
-            // this.result = daoQuery.select(this.select, this.table, this.where); //Execution de la requête
-            this.metadata = this.result.getMetaData(); //Création d'un metadata
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            rowset = new CachedRowSetImpl(); //Création d'un rowset
-            rowset.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
-            rowset.setConcurrency(ResultSet.CONCUR_UPDATABLE);
-            rowset.populate(this.result); //Remplissage du rowset par rapport au ResultSet
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            this.lister = new Object[this.rowset.size()][this.metadata.getColumnCount()]; //Récupération des dimensions du tableau
-            //System.out.println("Tableau : " + this.rowset.size() + "," + this.metadata.getColumnCount());
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            if (this.result != null) { //La requête a renvoyé des résultats
-                int i = 0; //Numéro de la ligne du tableau
-                this.rowset.isFirst(); //Replacement du curseur au début du ResultSet
-                while (this.rowset.next()) {
-                    if (this.select.contains("*")) { //Si on sélectionne tout les champs
-                        for (int j = 0; j < this.listeAttr.length; j++) {
-                            switch (this.listeAttr[j].getType().getSimpleName()) { //Analyse du type de l'attribut
-                                case "int":
-                                    this.lister[i][j] = this.rowset.getInt(j + 1);
-                                    break;
-                                case "String":
-                                    this.lister[i][j] = this.rowset.getString(j + 1);
-                                    break;
-                                case "Float":
-                                    this.lister[i][j] = this.rowset.getFloat(j + 1);
-                                    break;
-                            }
-                        }
-                    } else { //Si on sélectionne des champs spécifiques
-                        for (int k = 0; k < this.select.size(); k++) {
-                            boolean trouve = false;
-                            int l = 0; //Parcours de la liste des attributs
-                            while (trouve == false) {
-                                if (this.listeAttr[l].getName().equalsIgnoreCase(this.select.get(k))) {
-                                    switch (this.listeAttr[l].getType().getSimpleName()) {
-                                        case "int":
-                                            this.lister[i][k] = this.rowset.getInt(k + 1);
-                                            trouve = true;
-                                            break;
-                                        case "String":
-                                            this.lister[i][k] = this.rowset.getString(k + 1);
-                                            trouve = true;
-                                            break;
-                                        case "Float":
-                                            this.lister[i][k] = this.rowset.getFloat(k + 1);
-                                            trouve = true;
-                                            break;
-                                        default:
-                                            System.out.println("Type inconnu");
-                                            trouve = true;
-                                    }
-                                }
-                                l++;
-                            }
-
-                        }
-                    }
-                    i++;
-                }
-            } else { //Si la requête ne renvoie aucun résultat
-                lister[0][0] = "Aucun résultat";
-            }
+            this.result = this.stmt.executeQuery(daoQuery.select(this.table, this.where));
         } catch (SQLException ex) {
             Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -207,7 +128,8 @@ public class DAOManager {
         if (this.where != null) {
             this.where.clear(); //Ré-initialisation de l'ArrayList
         }
-        return this.lister;
+        
+        return this.result;
     }
 
     public void ajouter(Object obj) {
