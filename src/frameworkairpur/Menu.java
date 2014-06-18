@@ -23,7 +23,6 @@ public class Menu {
 
     public Menu() {
         try {
-            this.dao = new DAOManager("src/frameworkairpur/database.xml");
         } catch (Exception ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }

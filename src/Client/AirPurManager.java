@@ -7,19 +7,17 @@ package Client;
 
 import BusinessLogicLayer.DAOManager;
 import airpur.*;
-import com.sun.rowset.CachedRowSetImpl;
 import frameworkairpur.Cast;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sql.rowset.CachedRowSet;
 
 /**
  *
@@ -27,250 +25,297 @@ import javax.sql.rowset.CachedRowSet;
  */
 public class AirPurManager {
 
-    private final DAOManager dao = new DAOManager("src/frameworkairpur/database.xml");
-    private Cast cast = new Cast();
+    private final DAOManager dao = DAOManager.getInstance();
+    private Cast cast;
     private ResultSet result;
-    private ResultSetMetaData metadata;
-    private CachedRowSet rowset;
-    private Object[][] lister;
-    private ArrayList<String> select = new ArrayList<>(); //liste d'attributs
-    private ArrayList where = new ArrayList(); //liste d'attributs et de valeurs ex:id=1
-    private ArrayList into = new ArrayList(); //liste d'attributs
-    private ArrayList values = new ArrayList(); //liste de valeurs | liste d'attributs et de valeurs ex:id=1
-    private String table = null;
-    private Field[] listeAttr;
-    private ArrayList<Method> listeMethod = new ArrayList<>();
+    private ArrayList lister;
+    private ArrayList select; //liste d'attributs
+    private ArrayList where; //liste d'attributs et de valeurs ex:id=1
+    private ArrayList into; //liste d'attributs
+    private ArrayList values; //liste de valeurs | liste d'attributs et de valeurs ex:id=1
+    private String table;
 
-    
-    /***************************    Gestion    ***************************/
-    public Object[][] lister(Object obj, ArrayList select, ArrayList where) {
-        this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
-        this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
-        this.select = select; //Récupération des champs demandés
-        this.where = where; //Récupération des restrictions
+    static Materiel mat;
+    static Exemplaire_location location;
+    static Exemplaire_vente vente;
+    static Emprunter emprun;
+    static Site site;
+    static Facture fact;
+    static Payer payer;
+    static Modepaiement mode;
 
-        if (this.select == null) {
-            this.select = new ArrayList<>();
-            this.select.add("*");
-        }
-
+    //Liste des materiels
+    public ArrayList<Materiel> listerMateriel() {
+        ArrayList<Materiel> listMateriel = new ArrayList<Materiel>();
         try {
-            this.result = dao.setSelect(this.select, this.table, this.where); //Execution de la requête
-            this.metadata = this.result.getMetaData(); //Création d'un metadata
+
+            this.result = dao.selectManager("Select * from Materiel");
+
+            Materiel materiel;
+            int idM;
+            int idTva;
+            int idCat;
+            String nomMat;
+            String modelMat;
+            String descr;
+            while (result.next()) {
+                idM = this.result.getInt("ID_MATERIEL");
+                idTva = this.result.getInt("ID_TVA");
+                idCat = this.result.getInt("ID_CATEGORIE");
+                nomMat = this.result.getString("NOM_MATERIEL");
+                modelMat = this.result.getString("MODELE_MATERIEL");
+                descr = this.result.getString("DESCRIPTION_MATERIEL");
+                materiel = new Materiel(idM, idTva, idCat, nomMat, modelMat, descr);
+                listMateriel.add(materiel);
+            }
+            this.result.close();
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return listMateriel;
+    }
 
+    public Materiel trouverMateriel(int id) throws SQLException {
+        Materiel materiel = null;
         try {
-            rowset = new CachedRowSetImpl(); //Création d'un rowset
-            rowset.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
-            rowset.setConcurrency(ResultSet.CONCUR_UPDATABLE);
-            rowset.populate(this.result); //Remplissage du rowset par rapport au ResultSet
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+
+            this.result = dao.selectManager("Select * from MATERIEL WHERE ID_MATERIEL =" + id);
+            if (result.first()) {
+                int idM = this.result.getInt("ID_MATERIEL");
+                int idTva = this.result.getInt("ID_TVA");
+                int idCat = this.result.getInt("ID_CATEGORIE");
+                String nomMat = this.result.getString("NOM_MATERIEL");
+                String modelMat = this.result.getString("MODELE_MATERIEL");
+                String descr = this.result.getString("DESCRIPTION_MATERIEL");
+                materiel = new Materiel(idM, idTva, idCat, nomMat, modelMat, descr);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return materiel;
+    }
 
+    //Ajout d'un materiel et verification de la TVA
+    public boolean ajouterMariel(Materiel mat) {
+
+        boolean result = false;
         try {
-            this.lister = new Object[this.rowset.size()][this.metadata.getColumnCount()]; //Récupération des dimensions du tableau
-            //System.out.println("Tableau : " + this.rowset.size() + "," + this.metadata.getColumnCount());
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
-        try {
-            if (this.result != null) { //La requête a renvoyé des résultats
-                int i = 0; //Numéro de la ligne du tableau
-                this.rowset.isFirst(); //Replacement du curseur au début du ResultSet
-                while (this.rowset.next()) {
-                    if (this.select.contains("*")) { //Si on sélectionne tout les champs
-                        for (int j = 0; j < this.listeAttr.length; j++) {
-                            switch (this.listeAttr[j].getType().getSimpleName()) { //Analyse du type de l'attribut
-                                case "int":
-                                    this.lister[i][j] = this.rowset.getInt(j + 1);
-                                    break;
-                                case "String":
-                                    this.lister[i][j] = this.rowset.getString(j + 1);
-                                    break;
-                                case "Float":
-                                    this.lister[i][j] = this.rowset.getFloat(j + 1);
-                                    break;
-                            }
-                        }
-                    } else { //Si on sélectionne des champs spécifiques
-                        for (int k = 0; k < this.select.size(); k++) {
-                            boolean trouve = false;
-                            int l = 0; //Parcours de la liste des attributs
-                            while (trouve == false) {
-                                if (this.listeAttr[l].getName().equalsIgnoreCase(this.select.get(k))) { 
-                                    switch (this.listeAttr[l].getType().getSimpleName()) {
-                                        case "int":
-                                            this.lister[i][k] = this.rowset.getInt(k + 1);
-                                            trouve = true;
-                                            break;
-                                        case "String":
-                                            this.lister[i][k] = this.rowset.getString(k + 1);
-                                            trouve = true;
-                                            break;
-                                        case "Float":
-                                            this.lister[i][k] = this.rowset.getFloat(k + 1);
-                                            trouve = true;
-                                            break;
-                                        default:
-                                            System.out.println("Type inconnu");
-                                            trouve = true;
-                                    }
-                                }
-                                l++;
-                            }
+            //Format de la date de fin de validation pour la TVA
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-                        }
-                    }
-                    i++;
+            //Date du jour
+            Date dateNow = new Date();
+            //recherche de la tva dans
+            TVA tva = trouverTva(mat.getId_tva());
+            //si la tva existe
+            if (tva != null) {
+                //parsing de la date de fin de validation de la TVA (format string en format Date)
+                Date dateTva = sdf.parse(tva.getDatefinvalidation_tva());
+                //si la tva est valide
+                if (dateTva.compareTo(dateNow) > 0) {
+                    //insertion du materiel et on retourne true
+                    this.dao.ajouter(mat);
+                    result = true;
                 }
-            } else { //Si la requête ne renvoie aucun résultat
-                lister[0][0] = "Aucun résultat";
+
+            }
+
+        } catch (SQLException | ParseException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    //Modification d'un Materiel
+    public Materiel modifierUnMateriel(Materiel materiel) {
+        Materiel materielUpdate = null;
+        try {
+            //Pour des raisons de securité On ne peut changer seulement le nom le modele et la description
+            //verification si le materiel existe bien
+            materielUpdate = trouverMateriel(materiel.getId_materiel());
+
+            if (materielUpdate != null) {
+                //requete Update  du materiel
+                String update = "Update Materiel set NOM_MATERIEL = '" + materiel.getNom_materiel() + "' , MODELE_MATERIEL = '" + materiel.getModele_materiel() + "' , DESCRIPTION_MATERIEL = '" + materiel.getDescription_materiel() + "' "
+                        + "WHERE ID_MATERIEL =" + materiel.getId_materiel();
+                //execution de la requete
+                dao.updateManager(update);
+                //recuperation du materiel modifié
+                materielUpdate = trouverMateriel(materiel.getId_materiel());
             }
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //retour du materiel modifié
+        return materielUpdate;
 
-        this.select.clear(); //Ré-initialisation de l'ArrayList
-        if (this.where != null)
-            this.where.clear(); //Ré-initialisation de l'ArrayList
-
-        return this.lister;
     }
 
-    public void ajouter(Object obj) {
-        this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
-        this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
-        this.listeMethod = cast.getGetters(obj); //Récupération de la liste des getters
+    public void supprimer(int id, String nomTable, String nomChampClePrimaire) {
+        try {
+            String delete = "Delete " + nomTable + " where " + nomChampClePrimaire + "= '" + id + "'";
+            //execution de la requete
+            dao.updateManager(delete);
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-        for (int i = 0; i < listeAttr.length; i++) {
-            this.into.add(listeAttr[i] + ","); //Création de l'INTO de la requête
-            if (this.listeAttr[i].getGenericType().equals("String")) { //Création selon le type de l'attribut
-                try {
-                    this.values.add("'" + this.listeMethod.get(i).invoke(obj, null) + "',"); //Remplissage de l'ArrayList des valeurs grace aux getters
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
+    public boolean supprimerMateriel(int id) {
+        boolean result = false;
+        try {
+            if (trouverMateriel(id) != null) {
+                String delete = "Delete Materiel WHERE id_materiel= '" + id + "'";
+                //execution de la requete
+                dao.updateManager(delete);
+                result = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    //revoi une TVA
+    public TVA trouverTva(int id) throws SQLException {
+        TVA tva = null;
+        try {
+
+            this.result = dao.selectManager("Select * from TVA WHERE ID_TVA =" + id);
+            if (result.first()) {
+                tva = new TVA(id, this.result.getFloat("TAUX_TVA"), this.result.getString("DATEFINVALIDATION_TVA"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tva;
+    }
+
+      //Liste des Tva
+    /*
+     *Parametre = bool
+     *Si le parametre est a vrai alors on filtre les TVA encore valide
+     *Sinon on renvoi toutes les données de la table TVA
+     */
+    public ArrayList<TVA> listerTva(boolean dateValide) {
+        ArrayList<TVA> listTva = new ArrayList<TVA>();
+        try {
+            if (!dateValide) {
+                this.result = dao.selectManager("Select * from TVA");
             } else {
-                try {
-                    this.values.add(this.listeMethod.get(i).invoke(obj, null) + ","); //Remplissage de l'ArrayList des valeurs grace aux getters
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+                this.result = dao.selectManager("Select * from TVA where datefinvalidation_tva > SYSDATE");
+            }
+            TVA tva;
+            int idTva;
+            float tauxtva;
+            Date dateFinValidite;
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            if (result.first()) {
+                while (result.next()) {
+                    idTva = this.result.getInt("ID_TVA");
+                    tauxtva = this.result.getFloat("ID_CATEGORIE");
+                    dateFinValidite = this.result.getDate("NOM_MATERIEL");
+                    tva = new TVA(idTva, tauxtva, formatter.format(dateFinValidite));
+                    listTva.add(tva);
                 }
             }
-        }
-
-        try {
-            dao.setInsert(this.into, this.table, this.values); //Execution de la requête d'insertion
+            this.result.close();
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        this.into.clear(); //Ré-initialisation de l'ArrayList
-        this.values.clear(); //Ré-initialisation de l'ArrayList
-        this.listeMethod.clear(); //Ré-initialisation de l'ArrayList
+        return listTva;
     }
 
-    public void modifier(Object obj) {
-        this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
-        this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
-        this.listeMethod = cast.getGetters(obj); //Récupération de la liste des getters
 
-        for (int i = 1; i < listeAttr.length; i++) {
-            if (this.listeAttr[i].getGenericType().equals("String")) { //Création selon le type d'attributs
-                try {
-                    this.values.add(this.listeAttr[i] + "='" + this.listeMethod.get(i).invoke(obj, null) + "',"); //Remplissage de l'ArrayList des valeurs grace aux getters
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+    /*
+     *Ajout d'une TVA
+     *Renvoi Vrai si la date a bien été saisie
+     *faux si la date est inferieur à la date du jour
+     */
+    public boolean ajouterTVA(TVA tva) {
+
+        boolean result = false;
+        try {
+
+            //Format de la date de fin de validation pour la TVA
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            //Date du jour
+            Date dateNow = new Date();
+
+            //si la tva existe
+            if (tva != null) {
+                //parsing de la date de fin de validation de la TVA (format string en format Date)
+                Date dateTva = sdf.parse(tva.getDatefinvalidation_tva());
+                //si la tva est valide
+                if (dateTva.compareTo(dateNow) > 0) {
+                    //insertion du materiel et on retourne true
+                    String insert = "insert into TVA (Taux_TVA, datefinvalidation_tva)"
+                            + "Values(" + tva.getTaux_tva() + " ,'" + dateTva + "')";
+                    System.out.println(insert);
+                    dao.insertManager(insert);
+                    result = true;
                 }
-            } else {
-                try {
-                    this.values.add(this.listeAttr[i] + "=" + this.listeMethod.get(i).invoke(obj, null) + ","); //Remplissage de l'ArrayList des valeurs grace aux getters
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
             }
-        }
 
-        try {
-            this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null)); //Remplissage de l'ArrayList des valeurs grace aux getters
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (SQLException | ParseException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return result;
 
-        try {
-            dao.setUpdate(this.values, this.table, this.where); //Execution de la requête de modification
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        this.where.clear(); //Ré-initialisation de l'ArrayList
-        this.values.clear(); //Ré-initialisation de l'ArrayList
-        this.listeMethod.clear(); //Ré-initialisation de l'ArrayList
     }
 
-    public void supprimer(Object obj) {
-        this.table = obj.getClass().getSimpleName(); //Récupération du nom de la classe
-        this.listeAttr = obj.getClass().getDeclaredFields(); //Récupération de la liste des attributs
-        this.listeMethod = cast.getGetters(obj); //Récupération de la liste des getters
-
+    public int getLastId_partenaire() {
+        int lastId = 0;
         try {
-            this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null)); //Remplissage de l'ArrayList des valeurs grace aux getters
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            dao.setDelete(this.table, this.where); //Execution de la requête de suppression
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        this.where.clear(); //Ré-initialisation de l'ArrayList
-        this.listeMethod.clear(); //Ré-initialisation de l'ArrayList
-    }
-
-    /***************************    Fonctions de la base de données Oracle   ***************************/
-    public void getLastId_partenaire() {
-        try {
-            System.out.println(dao.getLastId_partenaire()); //Execution de la fonction
+            lastId = dao.getLastId_partenaire(); //Execution de la fonction
         } catch (Exception ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return lastId;
     }
 
-    public void totalFactureHT(int idFacture) {
+    public float totalFactureHT(int idFacture) {
+        float totalFacture = 0;
         try {
-            System.out.println(dao.totalFactureHT(idFacture)); //Execution de la fonction
+            totalFacture = dao.totalFactureHT(idFacture); //Execution de la fonction
         } catch (Exception ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return totalFacture;
     }
 
-    public void totalFactureVente(int idFacture) {
+    public float totalFactureVente(int idFacture) {
+        float totalFacture = 0;
         try {
-            System.out.println(dao.totalFactureVente(idFacture)); //Execution de la fonction
+            totalFacture = dao.totalFactureVente(idFacture); //Execution de la fonction
         } catch (Exception ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return totalFacture;
     }
 
-    public void totalStockLocation(int idMateriel) {
+    public int totalStockLocation(int idMateriel) {
+        int totalStock = 0;
         try {
-            System.out.println(dao.totalStockLocation(idMateriel)); //Execution de la fonction
+            totalStock =(dao.totalStockLocation(idMateriel)); //Execution de la fonction
         } catch (Exception ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return totalStock;
     }
 
-    public void totalStockVente(int idMateriel) {
+    public int totalStockVente(int idMateriel) {
+        int totalStock = 0;
         try {
-            System.out.println(dao.totalStockVente(idMateriel)); //Execution de la fonction
+            totalStock = dao.totalStockVente(idMateriel); //Execution de la fonction
         } catch (Exception ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return totalStock;
     }
+
 }

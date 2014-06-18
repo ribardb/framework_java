@@ -6,6 +6,7 @@
 package frameworkairpur;
 
 import BusinessLogicLayer.DAOManager;
+import BusinessLogicLayer.DAOManager;
 import Client.AirPurManager;
 import DataAccessLayer.DatabaseConnection;
 import DataAccessLayer.DatabaseConnectionMySQL;
@@ -46,12 +47,10 @@ public class Main {
 
         /*Menu menu = new Menu();
          menu.afficherMenuPrincipal();*/
-        Materiel mat = new Materiel(1, 2, 3, "hiboux", "chouettes", "boubou");
+        
         AirPurManager ai = new AirPurManager();
-        ArrayList select = new ArrayList();
-        select.add("nom_materiel");
-        select.add("description_materiel");
-        System.out.println(Arrays.deepToString(ai.lister(mat, select, null)));
+        Materiel mat = new Materiel(1,2,46,"couc","pareil","boubou");
+        ai.ajouterMariel(mat);
         
     }
 

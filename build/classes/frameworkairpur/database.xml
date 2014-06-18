@@ -7,7 +7,7 @@
         svroracle.montpellier.epsi.fr
     </ip>
     <port>
-        4521
+        1521
     </port>
     <base>
         bdaolap

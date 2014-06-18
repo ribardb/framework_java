@@ -45,23 +45,16 @@ public class DAOManagerQuery implements DAOManagerInterface {
     }
 
     @Override
-    public String insert(ArrayList into, String table, ArrayList values) {
+    public String insert(String table, ArrayList values) {
         System.out.println(values);
-        if (into == null) {
-            String tmp = "";
-            for (int i = 0; i < values.size(); i++) {
-                tmp = tmp + values.get(i);
-            }
-            this.query = "INSERT INTO " + table + " VALUES (" + tmp.substring(0, tmp.length() - 1) + ")";
-        } else {
-            String tmp = "";
-            String tmp2 = "";
-            for (int i = 0; i < values.size(); i++) {
-                tmp = tmp + values.get(i);
-                tmp2 = tmp2 + into.get(i);
-            }
-            this.query = "INSERT INTO " + table + " (" + tmp2.substring(0, tmp2.length() - 1) + ") VALUES (" + tmp.substring(0, tmp.length() - 1) + ")";
+
+        String tmp = "";
+        for (int i = 0; i < values.size(); i++) {
+            tmp = tmp + values.get(i);
         }
+        this.query = "INSERT INTO " + table + " VALUES (" + tmp.substring(0, tmp.length() - 1) + ")";
+
+        System.out.println(this.query);
         return this.query;
     }
 

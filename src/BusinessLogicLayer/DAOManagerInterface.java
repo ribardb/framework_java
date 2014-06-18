@@ -16,7 +16,7 @@ import java.util.List;
 public interface DAOManagerInterface {
     
     public String select(ArrayList select, String table, ArrayList where);
-    public String insert(ArrayList into, String table, ArrayList values);
+    public String insert(String table, ArrayList values);
     public String update(ArrayList values, String table, ArrayList where);
     public String delete(String table, ArrayList where);
     /*public void create();
