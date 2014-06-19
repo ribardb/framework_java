@@ -45,12 +45,12 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-        /*Menu menu = new Menu();
-         menu.afficherMenuPrincipal();*/
+         Menu menu = new Menu();
+         menu.afficherMenuPrincipal();
         
-        AirPurManager ai = new AirPurManager();
+        /*AirPurManager ai = new AirPurManager();
         Materiel mat = new Materiel(101,2,46,"vbyglqieksuefh","pareil","boubou");
-        System.out.println(ai.listerTva(true));
+        System.out.println(ai.listerTva(true));*/
     }
 
 }
