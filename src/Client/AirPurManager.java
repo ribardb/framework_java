@@ -25,17 +25,18 @@ import java.util.logging.Logger;
  */
 public class AirPurManager {
 
+    /********** LISTE DES ATTRIBUTS  **********/
     private final DAOManager dao = DAOManager.getInstance();
     private Cast cast;
     private ResultSet result;
     private ArrayList lister;
     private ArrayList select; //liste d'attributs
-    private ArrayList where = new ArrayList(); //liste d'attributs et de valeurs ex:id=1
+    private ArrayList where = null; //liste d'attributs et de valeurs ex:id=1
     private ArrayList into; //liste d'attributs
     private ArrayList values; //liste de valeurs | liste d'attributs et de valeurs ex:id=1
     private String table;
 
-    static Materiel mat;
+    static Materiel mat = new Materiel();
     static Exemplaire_location location;
     static Exemplaire_vente vente;
     static Emprunter emprun;
@@ -43,13 +44,16 @@ public class AirPurManager {
     static Facture fact;
     static Payer payer;
     static Modepaiement mode;
-    static TVA tva;
+    static TVA tva = new TVA();
 
+    
+    /*************** MATERIEL  ***************/
+    
     //Liste des materiels
+    // TEST -> OK
     public ArrayList<Materiel> listerMateriel() {
         ArrayList<Materiel> listMateriel = new ArrayList<Materiel>();
         try {
-
             this.result = dao.lister(this.mat, this.where);
 
             Materiel materiel;
@@ -76,7 +80,10 @@ public class AirPurManager {
         return listMateriel;
     }
 
+    //Sélectionner un matériel
+    // TEST -> OK
     public Materiel trouverMateriel(int id) throws SQLException {
+        this.where = new ArrayList();
         this.where.add("id_materiel=" + id);
         try {
 
@@ -98,6 +105,7 @@ public class AirPurManager {
     }
 
     //Ajout d'un materiel et verification de la TVA
+    // TEST -> OK
     public boolean ajouterMariel(Materiel mat) {
 
         boolean result = false;
@@ -130,47 +138,36 @@ public class AirPurManager {
     }
 
     //Modification d'un Materiel
-    public Materiel modifierUnMateriel(Materiel materiel) {
-        Materiel materielUpdate = null;
+    // TEST -> OK
+    public boolean modifierUnMateriel(Materiel materiel) {
+        boolean modifier = false;
         try {
             //Pour des raisons de securité On ne peut changer seulement le nom le modele et la description
             //verification si le materiel existe bien
+            Materiel materielUpdate = new Materiel();
             materielUpdate = trouverMateriel(materiel.getId_materiel());
 
             if (materielUpdate != null) {
-                //requete Update  du materiel
-                String update = "Update Materiel set NOM_MATERIEL = '" + materiel.getNom_materiel() + "' , MODELE_MATERIEL = '" + materiel.getModele_materiel() + "' , DESCRIPTION_MATERIEL = '" + materiel.getDescription_materiel() + "' "
-                        + "WHERE ID_MATERIEL =" + materiel.getId_materiel();
-                //execution de la requete
-                dao.updateManager(update);
-                //recuperation du materiel modifié
-                materielUpdate = trouverMateriel(materiel.getId_materiel());
+               
+                this.dao.modifier(materiel);
+                modifier = true;
+               
             }
         } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         //retour du materiel modifié
-        return materielUpdate;
+        return modifier;
 
     }
 
-    public void supprimer(int id, String nomTable, String nomChampClePrimaire) {
-        try {
-            String delete = "Delete " + nomTable + " where " + nomChampClePrimaire + "= '" + id + "'";
-            //execution de la requete
-            dao.updateManager(delete);
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public boolean supprimerMateriel(int id) {
+    //Suppression d'un matériel
+    // TEST -> OK
+    public boolean supprimerMateriel(Materiel materiel) {
         boolean result = false;
         try {
-            if (trouverMateriel(id) != null) {
-                String delete = "Delete Materiel WHERE id_materiel= '" + id + "'";
-                //execution de la requete
-                dao.updateManager(delete);
+            if (trouverMateriel(materiel.getId_materiel()) != null) {
+                this.dao.supprimer(materiel);
                 result = true;
             }
         } catch (SQLException ex) {
@@ -178,10 +175,17 @@ public class AirPurManager {
         }
         return result;
     }
-
-    //revoi une TVA
+    
+    /*************** /MATERIEL  ***************/
+    
+    
+    
+    /*************** TVA  ***************/
+    
+    //Sélectionner une TVA
     public TVA trouverTva(int id) throws SQLException {
-        this.where.add("id_tva" + id);
+        this.where = new ArrayList();
+        this.where.add("id_tva = " + id);
         try {
 
             this.result = dao.lister(this.tva, this.where);
@@ -272,7 +276,14 @@ public class AirPurManager {
         return result;
 
     }
-
+    
+     /*************** /TVA  ***************/
+    
+    
+    
+    /*************** EXEMPLAIRE LOCATION  ***************/
+    
+    //liste des exemplaires de location
     public ArrayList<Exemplaire_location> listerExemplaireLocation() {
         ArrayList<Exemplaire_location> listExemplaire = new ArrayList<Exemplaire_location>();
 
@@ -299,6 +310,7 @@ public class AirPurManager {
         return listExemplaire;
     }
 
+    //Sélectionner un exemplaire de location
     public Exemplaire_location trouverExemplaireLocation(int id) {
         Exemplaire_location exemplaireLocation = null;
 
@@ -346,7 +358,8 @@ public class AirPurManager {
         return locationlUpdate;
 
     }
-
+    
+    //Supprimer un exemplaire de location
     public void supprimerExemplaireLocation(Exemplaire_location exemplaireLocation) {
         Exemplaire_location locationlUpdate = null;
         try {
@@ -363,6 +376,8 @@ public class AirPurManager {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    /*************** /EXEMPLAIRE LOCATION  ***************/
 
     /**
      * ************* Fonctions de la Base de Données **************

@@ -6,6 +6,8 @@
     <ip>
         svroracle.montpellier.epsi.fr
     </ip>
+    <!-- PORT EXTERNE : 4521 -->
+    <!-- PORT LOCAL : 1521 -->
     <port>
         1521
     </port>

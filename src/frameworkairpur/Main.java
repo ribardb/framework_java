@@ -45,12 +45,17 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-         Menu menu = new Menu();
-         menu.afficherMenuPrincipal();
+         //Menu menu = new Menu();
+         //menu.afficherMenuPrincipal();
         
-        /*AirPurManager ai = new AirPurManager();
-        Materiel mat = new Materiel(101,2,46,"vbyglqieksuefh","pareil","boubou");
-        System.out.println(ai.listerTva(true));*/
+        AirPurManager ai = new AirPurManager();
+        Materiel mat = new Materiel(121,2,46,"TEST INSERT","FFFFFF","AAAAAAA");
+        ai.supprimerMateriel(mat);
+        //ArrayList<Materiel> listMateriel = ai.listerMateriel();
+        //System.out.println(listMateriel.get(0).getDescription_materiel());
+     
+        //System.out.println(ai.trouverMateriel(41).getModele_materiel());
+        
     }
 
 }

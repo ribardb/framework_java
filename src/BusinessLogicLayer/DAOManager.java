@@ -172,15 +172,15 @@ public class DAOManager {
         this.listeMethod = cast.getGetters(obj); //Récupération de la liste des getters
 
         for (int i = 1; i < listeAttr.length; i++) {
-            if (this.listeAttr[i].getGenericType().equals("String")) { //Création selon le type d'attributs
+            if (this.listeAttr[i].getType().getSimpleName().equalsIgnoreCase("String")) { //Création selon le type d'attributs
                 try {
-                    this.values.add(this.listeAttr[i] + "='" + this.listeMethod.get(i).invoke(obj, null) + "',"); //Remplissage de l'ArrayList des valeurs grace aux getters
+                    this.values.add(this.listeAttr[i].getName() + "='" + this.listeMethod.get(i).invoke(obj, null) + "',"); //Remplissage de l'ArrayList des valeurs grace aux getters
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 try {
-                    this.values.add(this.listeAttr[i] + "=" + this.listeMethod.get(i).invoke(obj, null) + ","); //Remplissage de l'ArrayList des valeurs grace aux getters
+                    this.values.add(this.listeAttr[i].getName() + "=" + this.listeMethod.get(i).invoke(obj, null) + ","); //Remplissage de l'ArrayList des valeurs grace aux getters
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -188,7 +188,7 @@ public class DAOManager {
         }
 
         try {
-            this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null)); //Remplissage de l'ArrayList des valeurs grace aux getters
+            this.where.add(this.listeAttr[0].getName() + "=" + this.listeMethod.get(0).invoke(obj, null)); //Remplissage de l'ArrayList des valeurs grace aux getters
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -210,12 +210,16 @@ public class DAOManager {
         this.listeMethod = cast.getGetters(obj); //Récupération de la liste des getters
 
         try {
-            this.where.add(this.listeAttr[0] + "=" + this.listeMethod.get(0).invoke(obj, null)); //Remplissage de l'ArrayList des valeurs grace aux getters
+            this.where.add(this.listeAttr[0].getName() + "=" + this.listeMethod.get(0).invoke(obj, null)); //Remplissage de l'ArrayList des valeurs grace aux getters
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        daoQuery.delete(this.table, this.where);
+        
+        try {
+            this.stmt.executeQuery(daoQuery.delete(this.table, this.where));
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         this.where.clear(); //Ré-initialisation de l'ArrayList
         this.listeMethod.clear(); //Ré-initialisation de l'ArrayList

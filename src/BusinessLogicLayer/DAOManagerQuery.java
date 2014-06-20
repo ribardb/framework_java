@@ -65,19 +65,20 @@ public class DAOManagerQuery implements DAOManagerInterface {
         if (where == null) {
             String tmp = "";
             for (int i = 0; i < values.size(); i += 2) {
-                tmp = tmp + values.get(i) + ", ";
+                tmp = tmp + values.get(i);
             }
             this.query = "UPDATE " + table + " SET" + tmp.substring(0, tmp.length() - 1);
+            System.out.println(this.query);
         } else {
             System.out.println(values);
             System.out.println(where);
             String tmp = "";
             for (int i = 0; i < values.size(); i++) {
-                tmp = tmp + values.get(i) + ", ";
+                tmp = tmp + values.get(i);
             }
-            tmp = tmp.substring(0, tmp.length() - 1);
-            this.query = "UPDATE " + table + " SET " + tmp.substring(0, tmp.length() - 1) + "WHERE " + where.get(0);
-
+            tmp = tmp.substring(0, tmp.length());
+            this.query = "UPDATE " + table + " SET " + tmp.substring(0, tmp.length() - 1) + " WHERE " + where.get(0);
+            System.out.println(this.query);
         }
 
         return this.query;
@@ -93,6 +94,7 @@ public class DAOManagerQuery implements DAOManagerInterface {
                 clause = clause + where.get(i) + " AND ";
             }
             this.query = "DELETE FROM " + table + " WHERE" + clause.substring(0, clause.length() - 5);
+            System.out.println(this.query);
         }
         return this.query;
     }
