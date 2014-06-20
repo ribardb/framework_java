@@ -193,7 +193,11 @@ public class DAOManager {
             Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        daoQuery.update(this.values, this.table, this.where);
+        try {
+            this.stmt.executeQuery(daoQuery.update(this.values, this.table, this.where));
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         this.where.clear(); //Ré-initialisation de l'ArrayList
         this.values.clear(); //Ré-initialisation de l'ArrayList
