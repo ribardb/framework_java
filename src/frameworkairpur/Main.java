@@ -46,10 +46,11 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-         //Menu menu = new Menu();
-         //menu.afficherMenuPrincipal();
+        Menu menu = new Menu();
+        menu.afficherMenuPrincipal();
         
-        AirPurManager ai = new AirPurManager();
+         
+        //AirPurManager ai = new AirPurManager();
         
         /*** TEST MATERIEL ***/
         //Materiel mat = new Materiel(121,2,46,"TEST INSERT","FFFFFF","AAAAAAA");
@@ -62,8 +63,8 @@ public class Main {
         /*** TEST PATIENT ***/
         //ai.ListerPatients();
         //System.out.println(ai.TrouverPatient(82).getNom_patient());
-        Partenaire_patient pat =  new Partenaire_patient (0, "Nom", "Prenom", "21/06/2014", "12345678", "Mail", "Password", "f", "AZERTY");
-        ai.AjouterPatient(pat);
+        //Partenaire_patient pat =  new Partenaire_patient (0, "Nom", "Prenom", "21/06/2014", "12345678", "Mail", "Password", "f", "AZERTY");
+        //ai.AjouterPatient(pat);
     }
 
 }

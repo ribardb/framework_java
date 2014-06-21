@@ -42,12 +42,12 @@ public class ImportXML {
 
             // normalize text representation
             doc.getDocumentElement().normalize();
-            System.out.println("Root element of the doc is "
-                    + doc.getDocumentElement().getNodeName());
+            /*System.out.println("Root element of the doc is "
+                    + doc.getDocumentElement().getNodeName());*/
 
             NodeList listDB = doc.getElementsByTagName("config");
             int totalDB = listDB.getLength();
-            System.out.println("Liste des DB : " + totalDB);
+            //System.out.println("Liste des DB : " + totalDB);
 
             for (int s = 0; s < listDB.getLength(); s++) {
 
@@ -61,8 +61,8 @@ public class ImportXML {
                     Element databaseElement = (Element) databaseList.item(0);
 
                     NodeList textDBList = databaseElement.getChildNodes();
-                    System.out.println("Type de DB : "
-                            + ((Node) textDBList.item(0)).getNodeValue().trim());
+                    /*System.out.println("Type de DB : "
+                            + ((Node) textDBList.item(0)).getNodeValue().trim());*/
                     this.typeDB = ((Node) textDBList.item(0)).getNodeValue().trim();
 
                     //-------
@@ -70,8 +70,8 @@ public class ImportXML {
                     Element ipElement = (Element) ipList.item(0);
 
                     NodeList textIPList = ipElement.getChildNodes();
-                    System.out.println("Adresse de la DB : "
-                            + ((Node) textIPList.item(0)).getNodeValue().trim());
+                    /*System.out.println("Adresse de la DB : "
+                            + ((Node) textIPList.item(0)).getNodeValue().trim());*/
                     this.ip = ((Node) textIPList.item(0)).getNodeValue().trim();
 
                     //----
@@ -79,8 +79,8 @@ public class ImportXML {
                     Element portElement = (Element) portList.item(0);
 
                     NodeList textPortList = portElement.getChildNodes();
-                    System.out.println("Port : "
-                            + ((Node) textPortList.item(0)).getNodeValue().trim());
+                    /*System.out.println("Port : "
+                            + ((Node) textPortList.item(0)).getNodeValue().trim());*/
                     this.port = ((Node) textPortList.item(0)).getNodeValue().trim();
 
                     //----
@@ -88,8 +88,8 @@ public class ImportXML {
                     Element baseElement = (Element) baseList.item(0);
 
                     NodeList textSid_BaseList = baseElement.getChildNodes();
-                    System.out.println("Sid ou Base : "
-                            + ((Node) textSid_BaseList.item(0)).getNodeValue().trim());
+                    /*System.out.println("Sid ou Base : "
+                            + ((Node) textSid_BaseList.item(0)).getNodeValue().trim*/
                     this.base = ((Node) textSid_BaseList.item(0)).getNodeValue().trim();
 
                     //----
@@ -97,8 +97,8 @@ public class ImportXML {
                     Element loginElement = (Element) loginList.item(0);
 
                     NodeList textLoginList = loginElement.getChildNodes();
-                    System.out.println("Login : "
-                            + ((Node) textLoginList.item(0)).getNodeValue().trim());
+                    /*System.out.println("Login : "
+                            + ((Node) textLoginList.item(0)).getNodeValue().trim());*/
                     this.login = ((Node) textLoginList.item(0)).getNodeValue().trim();
 
                     //----
@@ -106,8 +106,8 @@ public class ImportXML {
                     Element passwordElement = (Element) passwordList.item(0);
 
                     NodeList textPasswordList = passwordElement.getChildNodes();
-                    System.out.println("Psw : "
-                            + ((Node) textPasswordList.item(0)).getNodeValue().trim());
+                    /*System.out.println("Psw : "
+                            + ((Node) textPasswordList.item(0)).getNodeValue().trim());*/
                     this.psw = ((Node) textPasswordList.item(0)).getNodeValue().trim();
 
                     //------
