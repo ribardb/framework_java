@@ -13,6 +13,7 @@ import DataAccessLayer.DatabaseConnectionMySQL;
 import DataAccessLayer.DatabaseConnectionOracle;
 import DataAccessLayer.DatabaseConnectionSQLServer;
 import airpur.Materiel;
+import airpur.Partenaire_patient;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -49,13 +50,20 @@ public class Main {
          //menu.afficherMenuPrincipal();
         
         AirPurManager ai = new AirPurManager();
-        Materiel mat = new Materiel(121,2,46,"TEST INSERT","FFFFFF","AAAAAAA");
-        ai.supprimerMateriel(mat);
+        
+        /*** TEST MATERIEL ***/
+        //Materiel mat = new Materiel(121,2,46,"TEST INSERT","FFFFFF","AAAAAAA");
+        //ai.supprimerMateriel(mat);
         //ArrayList<Materiel> listMateriel = ai.listerMateriel();
         //System.out.println(listMateriel.get(0).getDescription_materiel());
      
         //System.out.println(ai.trouverMateriel(41).getModele_materiel());
         
+        /*** TEST PATIENT ***/
+        //ai.ListerPatients();
+        //System.out.println(ai.TrouverPatient(82).getNom_patient());
+        Partenaire_patient pat =  new Partenaire_patient (0, "Nom", "Prenom", "21/06/2014", "12345678", "Mail", "Password", "f", "AZERTY");
+        ai.AjouterPatient(pat);
     }
 
 }

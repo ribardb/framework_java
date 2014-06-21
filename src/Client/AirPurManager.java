@@ -45,6 +45,7 @@ public class AirPurManager {
     static Payer payer;
     static Modepaiement mode;
     static TVA tva = new TVA();
+    static Partenaire_patient patient = new Partenaire_patient();
 
     
     /*************** MATERIEL  ***************/
@@ -379,6 +380,98 @@ public class AirPurManager {
     
     /*************** /EXEMPLAIRE LOCATION  ***************/
 
+    /*************** PARTENAIRE PATIENT  ***************/
+    
+    //Liste des patients 
+    // TEST -> OK
+    public ArrayList<Partenaire_patient> ListerPatients()
+    {
+        ArrayList<Partenaire_patient> ListePatients = new ArrayList<Partenaire_patient>();
+        try {
+            this.result = this.dao.lister(this.patient, this.where);
+            
+            Partenaire_patient Patient;
+            int IdP;
+            String Nom;
+            String Prenom;
+            String DateNaiss;
+            String Telephone;
+            String Mail;
+            String Password;
+            String Sexe;
+            String INE;
+            
+            while(result.next()){
+                IdP = this.result.getInt("ID_PATIENT");
+                Nom = this.result.getString("NOM_PATIENT");
+                Prenom = this.result.getString("PRENOM_PATIENT");
+                DateNaiss = this.result.getString("DATENAISSANCE_PATIENT");
+                Telephone = this.result.getString("TELEPHONE_PATIENT");
+                Mail = this.result.getString("MAIL_PATIENT");
+                Password = this.result.getString("PASSWORD_PATIENT");
+                Sexe = this.result.getString("SEXE_PATIENT");
+                INE = this.result.getString("INE_PATIENT");
+                Patient = new Partenaire_patient (IdP, Nom, Prenom, DateNaiss, Telephone, Mail, Password, Sexe, INE);
+                ListePatients.add(Patient);
+            }
+            this.result.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return ListePatients;        
+    }
+    
+    //Sélectionner un patient
+    //TEST -> OK
+    public Partenaire_patient TrouverPatient(int id) throws SQLException
+    {
+        
+        this.where = new ArrayList();
+        this.where.add("ID_PATIENT = " + id);
+        
+        try {
+            
+            this.result = this.dao.lister(this.patient, this.where);
+            if (result.first())
+            {
+                int IdP = this.result.getInt("ID_PATIENT");
+                String Nom = this.result.getString("NOM_PATIENT");
+                String Prenom = this.result.getString("PRENOM_PATIENT");
+                String DateNaiss = this.result.getString("DATENAISSANCE_PATIENT");
+                String Telephone = this.result.getString("TELEPHONE_PATIENT");
+                String Mail = this.result.getString("MAIL_PATIENT");
+                String Password = this.result.getString("PASSWORD_PATIENT");
+                String Sexe = this.result.getString("SEXE_PATIENT");
+                String INE = this.result.getString("INE_PATIENT");
+                this.patient = new Partenaire_patient (IdP, Nom, Prenom, DateNaiss, Telephone, Mail, Password, Sexe, INE);
+                
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return this.patient ;
+    }
+    
+    //Ajouter d'un patient
+    //TEST ->
+    public boolean AjouterPatient (Partenaire_patient patient) throws SQLException
+    {
+        boolean Result = false;
+      
+        this.dao.ajouter(patient);
+        Result = true;
+             
+        return Result;
+    }
+    
+    
+    /*************** /PARTENAIRE PATIENT  ***************/
+    
+    
     /**
      * ************* Fonctions de la Base de Données **************
      */

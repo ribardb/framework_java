@@ -9,7 +9,7 @@
     <!-- PORT EXTERNE : 4521 -->
     <!-- PORT LOCAL : 1521 -->
     <port>
-        1521
+        4521
     </port>
     <base>
         bdaolap
