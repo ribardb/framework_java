@@ -82,19 +82,23 @@ public class Menu {
                     menuTotalFactureHT();
                     break;
                 case 11:
-                    ;
+                    menuTotalFactureTTC();
                     break;
                 case 12:
-                    ;
+                    menuStockLocation();
                     break;
                 case 13:
-                    ;
+                    menuStockVente();
+                    break;
+                case 14:
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("Valeur incorrecte");
+                    choixMenuPrincipal = 0;
 
             }
-        } while (choixMenuPrincipal < 14);
+        } while (choixMenuPrincipal < 15);
 
         dao.disconnect();
 
@@ -269,6 +273,36 @@ public class Menu {
         do {
             System.out.println("Menu Facture HT");
             choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture :");
+        } while (choixMenu == 0);
+
+    }
+
+    public void menuTotalFactureTTC() {
+
+        int choixMenu = 0;
+        do {
+            System.out.println("Menu Facture TTC");
+            choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture :");
+        } while (choixMenu == 0);
+
+    }
+
+    public void menuStockLocation() {
+
+        int choixMenu = 0;
+        do {
+            System.out.println("Menu Stock des exemplaires en location");
+            choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel :");
+        } while (choixMenu == 0);
+
+    }
+
+    public void menuStockVente() {
+
+        int choixMenu = 0;
+        do {
+            System.out.println("Menu Stock des exemplaires en vente");
+            choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel :");
         } while (choixMenu == 0);
 
     }
