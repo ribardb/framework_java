@@ -23,6 +23,7 @@ public class Menu {
 
     public Menu() {
         try {
+            this.dao = new DAOManager();
         } catch (Exception ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -272,7 +273,16 @@ public class Menu {
         int choixMenu = 0;
         do {
             System.out.println("Menu Facture HT");
-            choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture :");
+            choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture");
+            try {
+                Float fact = this.dao.totalFactureHT(choixMenu);
+                if (fact == 0.0) {
+                    System.out.println("Facture inconnue !");
+                    
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } while (choixMenu == 0);
 
     }
@@ -282,7 +292,12 @@ public class Menu {
         int choixMenu = 0;
         do {
             System.out.println("Menu Facture TTC");
-            choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture :");
+            choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture");
+            try {
+                System.out.println(this.dao.totalFactureVente(choixMenu) + "€");
+            } catch (Exception ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } while (choixMenu == 0);
 
     }
@@ -292,7 +307,12 @@ public class Menu {
         int choixMenu = 0;
         do {
             System.out.println("Menu Stock des exemplaires en location");
-            choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel :");
+            choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel");
+            try {
+                System.out.println(this.dao.totalStockLocation(choixMenu) + " exemplaires");
+            } catch (Exception ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } while (choixMenu == 0);
 
     }
@@ -302,7 +322,12 @@ public class Menu {
         int choixMenu = 0;
         do {
             System.out.println("Menu Stock des exemplaires en vente");
-            choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel :");
+            choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel");
+            try {
+                System.out.println(this.dao.totalStockVente(choixMenu) + " exemplaires");
+            } catch (Exception ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } while (choixMenu == 0);
 
     }

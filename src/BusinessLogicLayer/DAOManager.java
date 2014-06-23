@@ -63,7 +63,7 @@ public class DAOManager {
      *
      * @param url
      */
-    private DAOManager() {
+    public DAOManager() {
         try {
             ImportXML xml = new ImportXML("src/frameworkairpur/database.xml");
 
