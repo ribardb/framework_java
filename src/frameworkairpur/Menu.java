@@ -45,7 +45,7 @@ public class Menu {
         int choixMenuPrincipal;
         do {
             System.out.println("Menu principal");
-            System.out.println("1  - Gestion des materiels");
+            System.out.println("1  - Gestion des materiels");// TEST => OK
             System.out.println("2  - Gestion des exemplaires en location");
             System.out.println("3  - Gestion des exemplaires en vente");
             System.out.println("4  - Gestion des emprunts");
@@ -54,10 +54,10 @@ public class Menu {
             System.out.println("7  - Gestion des paiements");
             System.out.println("8  - Gestion des modes de paiements");
             System.out.println("9  - Gestion des TVA");
-            System.out.println("10 - Obtenir le montant HT d'une facture");
-            System.out.println("11 - Obtenir le montant TTC d'une facture");
-            System.out.println("12 - Obtenir le nombre d'exemplaires d'un materiel en location");
-            System.out.println("13 - Obtenir le nombre d'exemplaires d'un materiel en vente");
+            System.out.println("10 - Obtenir le montant HT d'une facture");// TEST => OK
+            System.out.println("11 - Obtenir le montant TTC d'une facture");// TEST => OK
+            System.out.println("12 - Obtenir le nombre d'exemplaires d'un materiel en location");// TEST => OK
+            System.out.println("13 - Obtenir le nombre d'exemplaires d'un materiel en vente");// TEST => OK
             System.out.println("14 - Quitter");
             choixMenuPrincipal = ConsoleReader.readInt("Quel est votre choix ?");
             switch (choixMenuPrincipal) {
@@ -303,7 +303,8 @@ public class Menu {
             System.out.println("3  - Ajouter une facture");
             System.out.println("4  - Modifier une facture");
             System.out.println("5  - Supprimer une facture");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -353,7 +354,8 @@ public class Menu {
             System.out.println("3  - Ajouter une TVA");
             System.out.println("4  - Modifier une TVA");
             System.out.println("5  - Supprimer une TVA");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
