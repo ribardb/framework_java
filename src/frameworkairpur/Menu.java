@@ -22,12 +22,14 @@ public class Menu {
     /**
      *
      */
-    public AirPurManager apm;
+    private AirPurManager apm;
     private ImportXML xml = new ImportXML("src/frameworkairpur/database.xml");
+    private boolean verifMDP;
 
     public Menu() {
         try {
             this.apm = new AirPurManager();
+            this.verifMDP = false;
         } catch (Exception ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -35,8 +37,11 @@ public class Menu {
 
     public void afficherMenuPrincipal() throws Exception {
 
-        verifierMotDePasse();
-
+        if (!this.verifMDP) {
+            verifierMotDePasse();
+            this.verifMDP = true;
+        }
+        this.verifMDP = true;
         int choixMenuPrincipal;
         do {
             System.out.println("Menu principal");
@@ -144,7 +149,8 @@ public class Menu {
             System.out.println("3  - Ajouter un materiel");
             System.out.println("4  - Modifier un materiel");
             System.out.println("5  - Supprimer un materiel");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
             switch (choixMenu) {
                 case 1:
@@ -180,17 +186,35 @@ public class Menu {
                     choixNom = ConsoleReader.readString("Entrez le nom du materiel :");
                     choixModele = ConsoleReader.readString("Entrez le modele du materiel :");
                     choixDescription = ConsoleReader.readString("Entrez la description du materiel :");
-                    mat = new Materiel(0,choixTVA,choixCategorie,choixNom,choixModele,choixDescription);
-                    this.apm.ajouterMariel(mat);
-                    
+                    mat = new Materiel(0, choixTVA, choixCategorie, choixNom, choixModele, choixDescription);
+                    this.apm.ajouterMateriel(mat);
+                    System.out.println("Materiel ajoute");
                     break;
                 case 4:
-                    menuEmprunter();
+                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel a modifier :");
+                    choixTVA = ConsoleReader.readInt("Entrez l'ID de la TVA :");
+                    choixCategorie = ConsoleReader.readInt("Entrez l'ID de la categorie :");
+                    choixNom = ConsoleReader.readString("Entrez le nom du materiel :");
+                    choixModele = ConsoleReader.readString("Entrez le modele du materiel :");
+                    choixDescription = ConsoleReader.readString("Entrez la description du materiel :");
+                    mat = new Materiel(choixID, choixTVA, choixCategorie, choixNom, choixModele, choixDescription);
+                    this.apm.modifierMateriel(mat);
+                    System.out.println("Materiel modifie");
                     break;
                 case 5:
-                    menuSite();
+                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel a supprimer :");
+                    mat = new Materiel(choixID, 0, 0, null, null, null);
+                    this.apm.supprimerMateriel(mat);
+                    System.out.println("Materiel supprimer");
                     break;
                 case 6:
+                    try {
+                        afficherMenuPrincipal();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case 7:
                     System.exit(0);
                     break;
                 default:
@@ -228,7 +252,8 @@ public class Menu {
             System.out.println("3  - Ajouter un exemplaire en vente");
             System.out.println("4  - Modifier un exemplaire en vente");
             System.out.println("5  - Supprimer un exemplaire en vente");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -244,7 +269,8 @@ public class Menu {
             System.out.println("3  - Ajouter un emprunt");
             System.out.println("4  - Modifier un emprunt");
             System.out.println("5  - Supprimer un emprunt");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -260,7 +286,8 @@ public class Menu {
             System.out.println("3  - Ajouter un site");
             System.out.println("4  - Modifier un site");
             System.out.println("5  - Supprimer un site");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -292,7 +319,8 @@ public class Menu {
             System.out.println("3  - Ajouter un mode de paiement");
             System.out.println("4  - Modifier un mode de paiement");
             System.out.println("5  - Supprimer un mode de paiement");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -308,7 +336,8 @@ public class Menu {
             System.out.println("3  - Ajouter un paiement");
             System.out.println("4  - Modifier un paiement");
             System.out.println("5  - Supprimer un paiement");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 

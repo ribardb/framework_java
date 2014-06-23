@@ -107,7 +107,7 @@ public class AirPurManager {
 
     //Ajout d'un materiel et verification de la TVA
     // TEST -> OK
-    public boolean ajouterMariel(Materiel mat) {
+    public boolean ajouterMateriel(Materiel mat) {
 
         boolean result = false;
         try {
@@ -140,7 +140,7 @@ public class AirPurManager {
 
     //Modification d'un Materiel
     // TEST -> OK
-    public boolean modifierUnMateriel(Materiel materiel) {
+    public boolean modifierMateriel(Materiel materiel) {
         boolean modifier = false;
         try {
             //Pour des raisons de securité On ne peut changer seulement le nom le modele et la description
