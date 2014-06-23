@@ -107,7 +107,7 @@ public class AirPurManager {
 
     //Ajout d'un materiel et verification de la TVA
     // TEST -> OK
-    public boolean ajouterMariel(Materiel mat) {
+    public boolean ajouterMateriel(Materiel mat) {
 
         boolean result = false;
         try {
@@ -140,7 +140,7 @@ public class AirPurManager {
 
     //Modification d'un Materiel
     // TEST -> OK
-    public boolean modifierUnMateriel(Materiel materiel) {
+    public boolean modifierMateriel(Materiel materiel) {
         boolean modifier = false;
         try {
             //Pour des raisons de securité On ne peut changer seulement le nom le modele et la description
@@ -384,7 +384,7 @@ public class AirPurManager {
     
     //Liste des patients 
     // TEST -> OK
-    public ArrayList<Partenaire_patient> ListerPatients()
+    public ArrayList<Partenaire_patient> listerPatients()
     {
         ArrayList<Partenaire_patient> ListePatients = new ArrayList<Partenaire_patient>();
         try {
@@ -425,7 +425,7 @@ public class AirPurManager {
     
     //Sélectionner un patient
     //TEST -> OK
-    public Partenaire_patient TrouverPatient(int id) throws SQLException
+    public Partenaire_patient trouverPatient(int id) throws SQLException
     {
         
         this.where = new ArrayList();
@@ -458,7 +458,7 @@ public class AirPurManager {
     
     //Ajouter d'un patient
     //TEST ->
-    public boolean AjouterPatient (Partenaire_patient patient) throws SQLException
+    public boolean ajouterPatient (Partenaire_patient patient) throws SQLException
     {
         boolean Result = false;
       
@@ -470,6 +470,102 @@ public class AirPurManager {
     
     
     /*************** /PARTENAIRE PATIENT  ***************/
+
+    
+    
+    
+    /*************** /SITE  ***************/
+    //TEST -> OK
+    public ArrayList<Site> listerSite()
+    {
+         ArrayList<Site> listeSite = new ArrayList<Site>();
+        try {
+           site= new Site();
+           Site siteSelect ;
+            this.result = this.dao.lister(site, where);
+            
+            while(result.next()){
+                
+                site.setId_site(this.result.getInt("ID_SITE"));
+                site.setNom_site(this.result.getString("NOM_SITE"));
+                site.setMail_site(this.result.getString("mail_site"));
+                site.setFranchise_site(this.result.getString("franchise_site"));
+                site.setTelephone_site(this.result.getString("telephone_site"));
+                site.setId_adresse(this.result.getInt("id_adresse"));
+                siteSelect = new Site(site.getId_site(), site.getId_adresse(), site.getNom_site(),
+                                        site.getFranchise_site(), site.getMail_site(),
+                                        site.getTelephone_site());
+                listeSite.add(siteSelect);
+            }
+            this.result.close();
+            
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+        return listeSite;
+    }
+    
+    public Site trouverSite(int id) throws SQLException
+    {
+        Site siteTrouve = new Site();
+        site= new Site();
+        this.where = new ArrayList();
+        this.where.add("ID_SITE = " + id);
+        this.result = this.dao.lister(site, where);
+        if(result.first()){
+                
+                site.setId_site(this.result.getInt("ID_SITE"));
+                site.setNom_site(this.result.getString("NOM_SITE"));
+                site.setMail_site(this.result.getString("mail_site"));
+                site.setFranchise_site(this.result.getString("franchise_site"));
+                site.setTelephone_site(this.result.getString("telephone_site"));
+                site.setId_adresse(this.result.getInt("id_adresse"));
+                siteTrouve = new Site(site.getId_site(), site.getId_adresse(), site.getNom_site(),
+                                        site.getFranchise_site(), site.getMail_site(),
+                                        site.getTelephone_site());
+                
+            }
+        return siteTrouve;
+    }
+    public boolean modifierSite(Site siteUpdate) throws SQLException
+    {
+        boolean modifier = false;
+        try {
+            Site siteModifier = new Site();
+            siteModifier = trouverSite(siteUpdate.getId_site());
+
+            if (siteModifier != null) {
+               
+                this.dao.modifier(siteUpdate);
+                modifier = true;
+               
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //retour du materiel modifié
+        return modifier;
+    }
+    public boolean supprimerSite(Site site) {
+        boolean resultat = false;
+        try {
+            if (trouverSite(site.getId_site()) != null) {
+                this.dao.supprimer(site);
+                resultat = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultat;
+    }
+    
+    
+    
+    
+    
     
     
     /**
@@ -525,4 +621,5 @@ public class AirPurManager {
         return totalStock;
     }
 
+    
 }

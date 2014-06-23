@@ -14,6 +14,7 @@ import DataAccessLayer.DatabaseConnectionOracle;
 import DataAccessLayer.DatabaseConnectionSQLServer;
 import airpur.Materiel;
 import airpur.Partenaire_patient;
+import airpur.Site;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -46,11 +47,11 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-        Menu menu = new Menu();
-        menu.afficherMenuPrincipal();
+       // Menu menu = new Menu();
+       // menu.afficherMenuPrincipal();
         
          
-        //AirPurManager ai = new AirPurManager();
+        AirPurManager ai = new AirPurManager();
         
         /*** TEST MATERIEL ***/
         //Materiel mat = new Materiel(121,2,46,"TEST INSERT","FFFFFF","AAAAAAA");
@@ -65,6 +66,22 @@ public class Main {
         //System.out.println(ai.TrouverPatient(82).getNom_patient());
         //Partenaire_patient pat =  new Partenaire_patient (0, "Nom", "Prenom", "21/06/2014", "12345678", "Mail", "Password", "f", "AZERTY");
         //ai.AjouterPatient(pat);
+        
+        /*** Test Site OK***/
+        
+       /* for(Site site : ai.listerSite())
+        {
+            System.out.println("ID du site : "+ site.getId_site() );
+             System.out.println("Nom du site : "+ site.getNom_site());
+        
+        }
+        */
+        //System.out.println(ai.trouverSite(41).getId_site());
+       // Site site = ai.trouverSite(7);
+       // System.out.println(ai.modifierSite(site));
+        
+        
+        
     }
 
 }
