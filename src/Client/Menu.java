@@ -266,30 +266,31 @@ public class Menu {
                     break;
                 case 3:
                     System.out.println("Ajout d'un exemplaire en location");
-                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel :");
-                    choixSite = ConsoleReader.readInt("Entrez l'ID du site :");
-                    choixTarif = ConsoleReader.readFloat("Entrez le nom du materiel :");
-                    choixEtat = ConsoleReader.readString("Entrez le modele du materiel :");
+                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel");
+                    choixSite = ConsoleReader.readInt("Entrez l'ID du site");
+                    choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
+                    choixEtat = ConsoleReader.readString("Entrez l'état de l'exemplaire");
                     exLoc = new Exemplaire_location(0, choixMateriel, choixSite, choixTarif, choixEtat);
                     //this.apm.ajouterExemplaire_location(exLoc);
                     System.out.println("Exemplaire en location ajoute");
                     break;
                 case 4:
-                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a modifier :");
-                    
-                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel :");
-                    choixSite = ConsoleReader.readInt("Entrez l'ID du site :");
-                    choixTarif = ConsoleReader.readFloat("Entrez le nom du materiel :");
-                    choixEtat = ConsoleReader.readString("Entrez le modele du materiel :");
-                    exLoc = new Exemplaire_location(0, choixMateriel, choixSite, choixTarif, choixEtat);
+                    System.out.println("Modification d'un exemplaire en location");
+                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a modifier");
+                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel");
+                    choixSite = ConsoleReader.readInt("Entrez l'ID du site");
+                    choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
+                    choixEtat = ConsoleReader.readString("Entrez l'état de l'exemplaire");
+                    exLoc = new Exemplaire_location(choixID, choixMateriel, choixSite, choixTarif, choixEtat);
                     this.apm.modifierUnExemplaireLocation(exLoc);
                     System.out.println("Exemplaire en location modifie");
                     break;
                 case 5:
+                    System.out.println("Suppression d'un exemplaire en location");
                     choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a supprimer :");
                     exLoc = new Exemplaire_location(choixID, 0, 0, 0, null);
                     this.apm.supprimerExemplaireLocation(exLoc);
-                    System.out.println("Exemplaire en location supprimer");
+                    System.out.println("Exemplaire en location supprime");
                     break;
                 case 6:
                     try {
@@ -312,6 +313,13 @@ public class Menu {
 
     public void menuExemplaire_Vente() {
 
+        Exemplaire_vente exVente;
+        int choixID;
+        int choixSite;
+        int choixMateriel;
+        int choixFacture;
+        float choixTarif;
+        float choixRemise;
         do {
             System.out.println("Menu Exemplaire Vente");
             System.out.println("1  - Lister les exemplaires en vente");
@@ -322,6 +330,71 @@ public class Menu {
             System.out.println("6  - Retour menu principal");
             System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
+            /*switch (choixMenu) {
+                case 1:
+                    for (Exemplaire_vente listeVente : apm.listerExemplaireVente()) {
+                        System.out.println("ID du de l'exemplaire : " + listeVente.getId_vente());
+                        System.out.println("ID du site : " + listeVente.getId_site());
+                        System.out.println("ID du materiel : " + listeVente.getId_materiel());
+                        System.out.println("ID de la facture : " + listeVente.getId_facture());
+                        System.out.println("Tarif de l'exemplaire : " + listeVente.getTarif_vente());
+                        System.out.println("Remise accordee a la vente : " + listeVente.getRemise_vente());
+                        System.out.println("*****************************************************************");
+                    }
+                    break;
+                case 2:
+                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire");
+                    exVente = null;
+                    exVente = apm.trouverExemplaireVente(choixID);
+                    System.out.println("ID du de l'exemplaire : " + exVente.getId_vente());
+                    System.out.println("ID du site : " + exVente.getId_site());
+                    System.out.println("ID du materiel : " + exVente.getId_materiel());
+                    System.out.println("ID de la facture : " + exVente.getId_facture());
+                    System.out.println("Tarif de l'exemplaire : " + exVente.getTarif_vente());
+                    System.out.println("Remise accordee a la vente : " + exVente.getRemise_vente());
+                    break;
+                case 3:
+                    System.out.println("Ajout d'un exemplaire en vente");
+                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel");
+                    choixSite = ConsoleReader.readInt("Entrez l'ID du site");
+                    choixFacture = ConsoleReader.readInt("Entrez l'ID de la facture");
+                    choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
+                    choixRemise = ConsoleReader.readFloat("Entrez la remise accordee a la vente");
+                    exVente = new Exemplaire_vente(0, choixMateriel, choixSite, choixFacture, choixTarif, choixRemise);
+                    System.out.println("Exemplaire en vente ajoute");
+                    break;
+                case 4:
+                    System.out.println("Modification d'un exemplaire en vente");
+                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a modifier");
+                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel");
+                    choixSite = ConsoleReader.readInt("Entrez l'ID du site");
+                    choixFacture = ConsoleReader.readInt("Entrez l'ID de la facture");
+                    choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
+                    choixRemise = ConsoleReader.readFloat("Entrez la remise accordee a la vente");
+                    exVente = new Exemplaire_vente(choixID, choixMateriel, choixSite, choixFacture, choixTarif, choixRemise);
+                    this.apm.modifierUnExemplaireVente(exVente);
+                    System.out.println("Exemplaire en vente modifie");
+                    break;
+                case 5:
+                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a supprimer :");
+                    exVente = new Exemplaire_vente(choixID, 0, 0, 0, null);
+                    this.apm.supprimerExemplaireVente(exVente);
+                    System.out.println("Exemplaire en Vente supprimer");
+                    break;
+                case 6:
+                    try {
+                        afficherMenuPrincipal();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case 7:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Valeur incorrecte");
+                    choixMenu = 0;
+            }*/
         } while (choixMenu < 6);
 
     }
