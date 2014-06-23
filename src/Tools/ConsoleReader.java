@@ -9,6 +9,7 @@ import java.util.Scanner;
 /**
  *
  * @author mbritto
+ * @author egosselet
  */
 public class ConsoleReader {
 
@@ -20,6 +21,11 @@ public class ConsoleReader {
     public static String readString(String message) {
         System.out.println(message + " : ");
         return ConsoleReader.getInstance().readString_Internal();
+    }
+    
+    public static Float readFloat(String message) {
+        System.out.println(message + " : ");
+        return ConsoleReader.getInstance().readFloat_Internal();
     }
     private static ConsoleReader _instance;
     private Scanner _scanner;
@@ -65,5 +71,21 @@ public class ConsoleReader {
             }
         } while (!readOk);
         return readInt;
+    }
+    
+    public Float readFloat_Internal() {
+        Float readFloat = null;
+        boolean readOk = false;
+        do {
+            try {
+                readFloat = _scanner.nextFloat();
+                readOk = true;
+            } catch (Exception e) {
+                displayError();
+            } finally {
+                _scanner.nextLine();
+            }
+        } while (!readOk);
+        return readFloat;
     }
 }

@@ -26,6 +26,7 @@ public class Menu {
     private AirPurManager apm;
     private ImportXML xml = new ImportXML("src/frameworkairpur/database.xml");
     private boolean verifMDP;
+    private int choixMenu;
 
     public Menu() {
         try {
@@ -43,7 +44,6 @@ public class Menu {
             this.verifMDP = true;
         }
         this.verifMDP = true;
-        int choixMenuPrincipal;
         do {
             System.out.println("Menu principal");
             System.out.println("1  - Gestion des materiels");// TEST => OK
@@ -60,8 +60,8 @@ public class Menu {
             System.out.println("12 - Obtenir le nombre d'exemplaires d'un materiel en location");// TEST => OK
             System.out.println("13 - Obtenir le nombre d'exemplaires d'un materiel en vente");// TEST => OK
             System.out.println("14 - Quitter");
-            choixMenuPrincipal = ConsoleReader.readInt("Quel est votre choix ?");
-            switch (choixMenuPrincipal) {
+            choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
+            switch (choixMenu) {
                 case 1:
                     menuMateriel();
                     break;
@@ -106,10 +106,10 @@ public class Menu {
                     break;
                 default:
                     System.out.println("Valeur incorrecte");
-                    choixMenuPrincipal = 0;
+                    choixMenu = 0;
 
             }
-        } while (choixMenuPrincipal < 15);
+        } while (choixMenu < 15);
 
     }
 
@@ -134,7 +134,6 @@ public class Menu {
 
     public void menuMateriel() {
 
-        int choixMenu;
         Materiel mat;
         int choixID;
         int choixTVA;
@@ -166,7 +165,7 @@ public class Menu {
                     }
                     break;
                 case 2:
-                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel :");
+                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel");
                     mat = null;
                     try {
                         mat = apm.trouverMateriel(choixID);
@@ -182,28 +181,28 @@ public class Menu {
                     break;
                 case 3:
                     System.out.println("Ajout d'un materiel");
-                    choixTVA = ConsoleReader.readInt("Entrez l'ID de la TVA :");
-                    choixCategorie = ConsoleReader.readInt("Entrez l'ID de la categorie :");
-                    choixNom = ConsoleReader.readString("Entrez le nom du materiel :");
-                    choixModele = ConsoleReader.readString("Entrez le modele du materiel :");
-                    choixDescription = ConsoleReader.readString("Entrez la description du materiel :");
+                    choixTVA = ConsoleReader.readInt("Entrez l'ID de la TVA");
+                    choixCategorie = ConsoleReader.readInt("Entrez l'ID de la categorie");
+                    choixNom = ConsoleReader.readString("Entrez le nom du materiel");
+                    choixModele = ConsoleReader.readString("Entrez le modele du materiel");
+                    choixDescription = ConsoleReader.readString("Entrez la description du materiel");
                     mat = new Materiel(0, choixTVA, choixCategorie, choixNom, choixModele, choixDescription);
                     this.apm.ajouterMateriel(mat);
                     System.out.println("Materiel ajoute");
                     break;
                 case 4:
-                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel a modifier :");
-                    choixTVA = ConsoleReader.readInt("Entrez l'ID de la TVA :");
-                    choixCategorie = ConsoleReader.readInt("Entrez l'ID de la categorie :");
-                    choixNom = ConsoleReader.readString("Entrez le nom du materiel :");
-                    choixModele = ConsoleReader.readString("Entrez le modele du materiel :");
-                    choixDescription = ConsoleReader.readString("Entrez la description du materiel :");
+                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel a modifier");
+                    choixTVA = ConsoleReader.readInt("Entrez l'ID de la TVA");
+                    choixCategorie = ConsoleReader.readInt("Entrez l'ID de la categorie");
+                    choixNom = ConsoleReader.readString("Entrez le nom du materiel");
+                    choixModele = ConsoleReader.readString("Entrez le modele du materiel");
+                    choixDescription = ConsoleReader.readString("Entrez la description du materiel");
                     mat = new Materiel(choixID, choixTVA, choixCategorie, choixNom, choixModele, choixDescription);
                     this.apm.modifierMateriel(mat);
                     System.out.println("Materiel modifie");
                     break;
                 case 5:
-                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel a supprimer :");
+                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel a supprimer");
                     mat = new Materiel(choixID, 0, 0, null, null, null);
                     this.apm.supprimerMateriel(mat);
                     System.out.println("Materiel supprimer");
@@ -229,7 +228,12 @@ public class Menu {
 
     public void menuExemplaire_Location() {
 
-        int choixMenu;
+        Exemplaire_location exLoc;
+        int choixID;
+        int choixMateriel;
+        int choixSite;
+        float choixTarif;
+        String choixEtat;
         do {
             System.out.println("Menu Exemplaire Location");
             System.out.println("1  - Lister les exemplaires en location");
@@ -239,13 +243,75 @@ public class Menu {
             System.out.println("5  - Supprimer un exemplaire en location");
             System.out.println("6  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
+            switch (choixMenu) {
+                case 1:
+                    for (Exemplaire_location listeLocation : apm.listerExemplaireLocation()) {
+                        System.out.println("ID du de l'exemplaire : " + listeLocation.getId_location());
+                        System.out.println("ID du materiel : " + listeLocation.getId_materiel());
+                        System.out.println("ID du site : " + listeLocation.getId_site());
+                        System.out.println("Tarif de l'exemplaire : " + listeLocation.getTarif_location());
+                        System.out.println("Etat de l'emprunt : " + listeLocation.getEtatemprunt_location());
+                        System.out.println("*****************************************************************");
+                    }
+                    break;
+                case 2:
+                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire");
+                    exLoc = null;
+                    exLoc = apm.trouverExemplaireLocation(choixID);
+                    System.out.println("ID du de l'exemplaire : " + exLoc.getId_location());
+                    System.out.println("ID du materiel : " + exLoc.getId_materiel());
+                    System.out.println("ID du site : " + exLoc.getId_site());
+                    System.out.println("Tarif de l'exemplaire : " + exLoc.getTarif_location());
+                    System.out.println("Etat de l'emprunt : " + exLoc.getEtatemprunt_location());
+                    break;
+                case 3:
+                    System.out.println("Ajout d'un exemplaire en location");
+                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel :");
+                    choixSite = ConsoleReader.readInt("Entrez l'ID du site :");
+                    choixTarif = ConsoleReader.readFloat("Entrez le nom du materiel :");
+                    choixEtat = ConsoleReader.readString("Entrez le modele du materiel :");
+                    exLoc = new Exemplaire_location(0, choixMateriel, choixSite, choixTarif, choixEtat);
+                    //this.apm.ajouterExemplaire_location(exLoc);
+                    System.out.println("Exemplaire en location ajoute");
+                    break;
+                case 4:
+                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a modifier :");
+                    
+                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel :");
+                    choixSite = ConsoleReader.readInt("Entrez l'ID du site :");
+                    choixTarif = ConsoleReader.readFloat("Entrez le nom du materiel :");
+                    choixEtat = ConsoleReader.readString("Entrez le modele du materiel :");
+                    exLoc = new Exemplaire_location(0, choixMateriel, choixSite, choixTarif, choixEtat);
+                    this.apm.modifierUnExemplaireLocation(exLoc);
+                    System.out.println("Exemplaire en location modifie");
+                    break;
+                case 5:
+                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a supprimer :");
+                    exLoc = new Exemplaire_location(choixID, 0, 0, 0, null);
+                    this.apm.supprimerExemplaireLocation(exLoc);
+                    System.out.println("Exemplaire en location supprimer");
+                    break;
+                case 6:
+                    try {
+                        afficherMenuPrincipal();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case 7:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Valeur incorrecte");
+                    choixMenu = 0;
+
+            }
         } while (choixMenu < 6);
 
     }
 
     public void menuExemplaire_Vente() {
 
-        int choixMenu;
         do {
             System.out.println("Menu Exemplaire Vente");
             System.out.println("1  - Lister les exemplaires en vente");
@@ -262,7 +328,6 @@ public class Menu {
 
     public void menuEmprunter() {
 
-        int choixMenu;
         do {
             System.out.println("Menu Emprunt");
             System.out.println("1  - Lister les emprunts");
@@ -279,7 +344,6 @@ public class Menu {
 
     public void menuSite() {
 
-        int choixMenu;
         do {
             System.out.println("Menu Site");
             System.out.println("1  - Lister les sites");
@@ -296,7 +360,6 @@ public class Menu {
 
     public void menuFacture() {
 
-        int choixMenu;
         do {
             System.out.println("Menu Facture");
             System.out.println("1  - Lister les factures");
@@ -313,7 +376,6 @@ public class Menu {
 
     public void menuModeDePaiement() {
 
-        int choixMenu;
         do {
             System.out.println("Menu Mode de Paiement");
             System.out.println("1  - Lister les modes de paiement");
@@ -330,7 +392,6 @@ public class Menu {
 
     public void menuPayer() {
 
-        int choixMenu;
         do {
             System.out.println("Menu Paiement");
             System.out.println("1  - Lister les paiements");
@@ -347,7 +408,6 @@ public class Menu {
 
     public void menuTVA() {
 
-        int choixMenu;
         do {
             System.out.println("Menu TVA");
             System.out.println("1  - Lister les TVA");
@@ -364,7 +424,6 @@ public class Menu {
 
     public void menuTotalFactureHT() {
 
-        int choixMenu = 0;
         do {
             System.out.println("Menu Facture HT");
             choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture");
@@ -383,7 +442,6 @@ public class Menu {
 
     public void menuTotalFactureTTC() {
 
-        int choixMenu = 0;
         do {
             System.out.println("Menu Facture TTC");
             choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture");
@@ -398,7 +456,6 @@ public class Menu {
 
     public void menuStockLocation() {
 
-        int choixMenu = 0;
         do {
             System.out.println("Menu Stock des exemplaires en location");
             choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel");
@@ -413,7 +470,6 @@ public class Menu {
 
     public void menuStockVente() {
 
-        int choixMenu = 0;
         do {
             System.out.println("Menu Stock des exemplaires en vente");
             choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel");
