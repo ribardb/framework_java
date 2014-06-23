@@ -7,7 +7,7 @@ package Client;
 
 import BusinessLogicLayer.DAOManager;
 import airpur.*;
-import frameworkairpur.Cast;
+import Tools.Cast;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

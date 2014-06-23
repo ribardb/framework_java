@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package frameworkairpur;
+package Client;
 
 import BusinessLogicLayer.DAOManager;
 import BusinessLogicLayer.DAOManager;
-import Client.AirPurManager;
 import DataAccessLayer.DatabaseConnection;
 import DataAccessLayer.DatabaseConnectionMySQL;
 import DataAccessLayer.DatabaseConnectionOracle;
@@ -15,7 +14,6 @@ import DataAccessLayer.DatabaseConnectionSQLServer;
 import airpur.Materiel;
 import airpur.Partenaire_patient;
 import airpur.Site;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

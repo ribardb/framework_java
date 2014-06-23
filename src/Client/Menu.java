@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package frameworkairpur;
+package Client;
 
 import BusinessLogicLayer.DAOManager;
-import Client.AirPurManager;
 import airpur.*;
+import Tools.ConsoleReader;
+import Tools.ImportXML;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;

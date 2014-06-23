@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package frameworkairpur;
+package Tools;
 
 import DataAccessLayer.DatabaseConnection;
 import DataAccessLayer.DatabaseConnectionMySQL;
