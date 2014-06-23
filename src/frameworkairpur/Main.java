@@ -47,11 +47,11 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-       // Menu menu = new Menu();
-       // menu.afficherMenuPrincipal();
+        Menu menu = new Menu();
+        menu.afficherMenuPrincipal();
         
          
-        AirPurManager ai = new AirPurManager();
+        //AirPurManager ai = new AirPurManager();
         
         /*** TEST MATERIEL ***/
         //Materiel mat = new Materiel(121,2,46,"TEST INSERT","FFFFFF","AAAAAAA");

@@ -6,6 +6,10 @@
 package frameworkairpur;
 
 import BusinessLogicLayer.DAOManager;
+import Client.AirPurManager;
+import airpur.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,12 +22,14 @@ public class Menu {
     /**
      *
      */
-    public DAOManager dao;
+    private AirPurManager apm;
     private ImportXML xml = new ImportXML("src/frameworkairpur/database.xml");
+    private boolean verifMDP;
 
     public Menu() {
         try {
-            this.dao = new DAOManager();
+            this.apm = new AirPurManager();
+            this.verifMDP = false;
         } catch (Exception ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -31,12 +37,15 @@ public class Menu {
 
     public void afficherMenuPrincipal() throws Exception {
 
-        verifierMotDePasse();
-
+        if (!this.verifMDP) {
+            verifierMotDePasse();
+            this.verifMDP = true;
+        }
+        this.verifMDP = true;
         int choixMenuPrincipal;
         do {
             System.out.println("Menu principal");
-            System.out.println("1  - Gestion des materiels");
+            System.out.println("1  - Gestion des materiels");// TEST => OK
             System.out.println("2  - Gestion des exemplaires en location");
             System.out.println("3  - Gestion des exemplaires en vente");
             System.out.println("4  - Gestion des emprunts");
@@ -45,10 +54,10 @@ public class Menu {
             System.out.println("7  - Gestion des paiements");
             System.out.println("8  - Gestion des modes de paiements");
             System.out.println("9  - Gestion des TVA");
-            System.out.println("10 - Obtenir le montant HT d'une facture");
-            System.out.println("11 - Obtenir le montant TTC d'une facture");
-            System.out.println("12 - Obtenir le nombre d'exemplaires d'un materiel en location");
-            System.out.println("13 - Obtenir le nombre d'exemplaires d'un materiel en vente");
+            System.out.println("10 - Obtenir le montant HT d'une facture");// TEST => OK
+            System.out.println("11 - Obtenir le montant TTC d'une facture");// TEST => OK
+            System.out.println("12 - Obtenir le nombre d'exemplaires d'un materiel en location");// TEST => OK
+            System.out.println("13 - Obtenir le nombre d'exemplaires d'un materiel en vente");// TEST => OK
             System.out.println("14 - Quitter");
             choixMenuPrincipal = ConsoleReader.readInt("Quel est votre choix ?");
             switch (choixMenuPrincipal) {
@@ -101,8 +110,6 @@ public class Menu {
             }
         } while (choixMenuPrincipal < 15);
 
-        dao.disconnect();
-
     }
 
     public void verifierMotDePasse() {
@@ -127,6 +134,14 @@ public class Menu {
     public void menuMateriel() {
 
         int choixMenu;
+        Materiel mat;
+        int choixID;
+        int choixTVA;
+        int choixCategorie;
+        String choixNom;
+        String choixModele;
+        String choixDescription;
+
         do {
             System.out.println("Menu Materiel");
             System.out.println("1  - Lister les materiels");
@@ -134,8 +149,79 @@ public class Menu {
             System.out.println("3  - Ajouter un materiel");
             System.out.println("4  - Modifier un materiel");
             System.out.println("5  - Supprimer un materiel");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
+            switch (choixMenu) {
+                case 1:
+                    for (Materiel listeMat : apm.listerMateriel()) {
+                        System.out.println("ID du materiel : " + listeMat.getId_materiel());
+                        System.out.println("ID de la TVA : " + listeMat.getId_tva());
+                        System.out.println("ID de la categorie : " + listeMat.getId_categorie());
+                        System.out.println("Nom du matériel : " + listeMat.getNom_materiel());
+                        System.out.println("Modele du materiel : " + listeMat.getModele_materiel());
+                        System.out.println("Description du matériel : " + listeMat.getDescription_materiel());
+                        System.out.println("*****************************************************************");
+                    }
+                    break;
+                case 2:
+                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel :");
+                    mat = null;
+                    try {
+                        mat = apm.trouverMateriel(choixID);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    System.out.println("ID du materiel : " + mat.getId_materiel());
+                    System.out.println("ID de la TVA : " + mat.getId_tva());
+                    System.out.println("ID de la categorie : " + mat.getId_categorie());
+                    System.out.println("Nom du matériel : " + mat.getNom_materiel());
+                    System.out.println("Modele du materiel : " + mat.getModele_materiel());
+                    System.out.println("Description du matériel : " + mat.getDescription_materiel());
+                    break;
+                case 3:
+                    System.out.println("Ajout d'un materiel");
+                    choixTVA = ConsoleReader.readInt("Entrez l'ID de la TVA :");
+                    choixCategorie = ConsoleReader.readInt("Entrez l'ID de la categorie :");
+                    choixNom = ConsoleReader.readString("Entrez le nom du materiel :");
+                    choixModele = ConsoleReader.readString("Entrez le modele du materiel :");
+                    choixDescription = ConsoleReader.readString("Entrez la description du materiel :");
+                    mat = new Materiel(0, choixTVA, choixCategorie, choixNom, choixModele, choixDescription);
+                    this.apm.ajouterMateriel(mat);
+                    System.out.println("Materiel ajoute");
+                    break;
+                case 4:
+                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel a modifier :");
+                    choixTVA = ConsoleReader.readInt("Entrez l'ID de la TVA :");
+                    choixCategorie = ConsoleReader.readInt("Entrez l'ID de la categorie :");
+                    choixNom = ConsoleReader.readString("Entrez le nom du materiel :");
+                    choixModele = ConsoleReader.readString("Entrez le modele du materiel :");
+                    choixDescription = ConsoleReader.readString("Entrez la description du materiel :");
+                    mat = new Materiel(choixID, choixTVA, choixCategorie, choixNom, choixModele, choixDescription);
+                    this.apm.modifierMateriel(mat);
+                    System.out.println("Materiel modifie");
+                    break;
+                case 5:
+                    choixID = ConsoleReader.readInt("Entrez l'ID du materiel a supprimer :");
+                    mat = new Materiel(choixID, 0, 0, null, null, null);
+                    this.apm.supprimerMateriel(mat);
+                    System.out.println("Materiel supprimer");
+                    break;
+                case 6:
+                    try {
+                        afficherMenuPrincipal();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case 7:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Valeur incorrecte");
+                    choixMenu = 0;
+
+            }
         } while (choixMenu < 6);
 
     }
@@ -166,7 +252,8 @@ public class Menu {
             System.out.println("3  - Ajouter un exemplaire en vente");
             System.out.println("4  - Modifier un exemplaire en vente");
             System.out.println("5  - Supprimer un exemplaire en vente");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -182,7 +269,8 @@ public class Menu {
             System.out.println("3  - Ajouter un emprunt");
             System.out.println("4  - Modifier un emprunt");
             System.out.println("5  - Supprimer un emprunt");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -198,7 +286,8 @@ public class Menu {
             System.out.println("3  - Ajouter un site");
             System.out.println("4  - Modifier un site");
             System.out.println("5  - Supprimer un site");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -214,7 +303,8 @@ public class Menu {
             System.out.println("3  - Ajouter une facture");
             System.out.println("4  - Modifier une facture");
             System.out.println("5  - Supprimer une facture");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -230,7 +320,8 @@ public class Menu {
             System.out.println("3  - Ajouter un mode de paiement");
             System.out.println("4  - Modifier un mode de paiement");
             System.out.println("5  - Supprimer un mode de paiement");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -246,7 +337,8 @@ public class Menu {
             System.out.println("3  - Ajouter un paiement");
             System.out.println("4  - Modifier un paiement");
             System.out.println("5  - Supprimer un paiement");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -262,7 +354,8 @@ public class Menu {
             System.out.println("3  - Ajouter une TVA");
             System.out.println("4  - Modifier une TVA");
             System.out.println("5  - Supprimer une TVA");
-            System.out.println("6  - Quitter");
+            System.out.println("6  - Retour menu principal");
+            System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
         } while (choixMenu < 6);
 
@@ -275,10 +368,10 @@ public class Menu {
             System.out.println("Menu Facture HT");
             choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture");
             try {
-                Float fact = this.dao.totalFactureHT(choixMenu);
+                Float fact = this.apm.totalFactureHT(choixMenu);
                 if (fact == 0.0) {
                     System.out.println("Facture inconnue !");
-                    
+
                 }
             } catch (Exception ex) {
                 Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
@@ -294,7 +387,7 @@ public class Menu {
             System.out.println("Menu Facture TTC");
             choixMenu = ConsoleReader.readInt("Entrez l'ID de la facture");
             try {
-                System.out.println(this.dao.totalFactureVente(choixMenu) + "€");
+                System.out.println(this.apm.totalFactureVente(choixMenu) + "€");
             } catch (Exception ex) {
                 Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -309,7 +402,7 @@ public class Menu {
             System.out.println("Menu Stock des exemplaires en location");
             choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel");
             try {
-                System.out.println(this.dao.totalStockLocation(choixMenu) + " exemplaires");
+                System.out.println(this.apm.totalStockLocation(choixMenu) + " exemplaires");
             } catch (Exception ex) {
                 Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -324,7 +417,7 @@ public class Menu {
             System.out.println("Menu Stock des exemplaires en vente");
             choixMenu = ConsoleReader.readInt("Entrez l'ID du matériel");
             try {
-                System.out.println(this.dao.totalStockVente(choixMenu) + " exemplaires");
+                System.out.println(this.apm.totalStockVente(choixMenu) + " exemplaires");
             } catch (Exception ex) {
                 Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
             }
