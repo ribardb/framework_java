@@ -65,7 +65,7 @@ public class DAOManager {
      */
     public DAOManager() {
         try {
-            ImportXML xml = new ImportXML("src/frameworkairpur/database.xml");
+            ImportXML xml = new ImportXML("src/client/database.xml");
 
             switch (xml.getTypeDB()) {
                 case "Oracle":

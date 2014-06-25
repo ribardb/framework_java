@@ -24,7 +24,7 @@ public class Menu {
      *
      */
     private AirPurManager apm;
-    private ImportXML xml = new ImportXML("src/frameworkairpur/database.xml");
+    private ImportXML xml = new ImportXML("src/client/database.xml");
     private boolean verifMDP;
     private int choixMenu;
 
