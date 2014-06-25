@@ -10,6 +10,7 @@ import airpur.*;
 import Tools.ConsoleReader;
 import Tools.ImportXML;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,7 +133,7 @@ public class Menu {
 
     }
 
-    public void menuMateriel() {
+    public void menuMateriel() throws SQLException, ParseException {
 
         Materiel mat;
         int choixID;
@@ -167,11 +168,7 @@ public class Menu {
                 case 2:
                     choixID = ConsoleReader.readInt("Entrez l'ID du materiel");
                     mat = null;
-                    try {
-                        mat = apm.trouverMateriel(choixID);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    mat = apm.trouverMateriel(choixID);
                     System.out.println("ID du materiel : " + mat.getId_materiel());
                     System.out.println("ID de la TVA : " + mat.getId_tva());
                     System.out.println("ID de la categorie : " + mat.getId_categorie());
@@ -271,7 +268,7 @@ public class Menu {
                     choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
                     choixEtat = ConsoleReader.readString("Entrez l'état de l'exemplaire");
                     exLoc = new Exemplaire_location(0, choixMateriel, choixSite, choixTarif, choixEtat);
-                    //this.apm.ajouterExemplaire_location(exLoc);
+                    this.apm.ajouterExemplaireLocation(exLoc);
                     System.out.println("Exemplaire en location ajoute");
                     break;
                 case 4:
@@ -330,7 +327,7 @@ public class Menu {
             System.out.println("6  - Retour menu principal");
             System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
-            /*switch (choixMenu) {
+            switch (choixMenu) {
              case 1:
              for (Exemplaire_vente listeVente : apm.listerExemplaireVente()) {
              System.out.println("ID de l'exemplaire : " + listeVente.getId_vente());
@@ -361,7 +358,7 @@ public class Menu {
              choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
              choixRemise = ConsoleReader.readFloat("Entrez la remise accordee a la vente");
              exVente = new Exemplaire_vente(0, choixMateriel, choixSite, choixFacture, choixTarif, choixRemise);
-             this.apm.ajouterExemplaire_Vente(exVente);
+             this.apm.ajouterExemplaireVente(exVente);
              System.out.println("Exemplaire en vente ajoute");
              break;
              case 4:
@@ -378,7 +375,7 @@ public class Menu {
              break;
              case 5:
              choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a supprimer :");
-             exVente = new Exemplaire_vente(choixID, 0, 0, 0, null);
+             exVente = new Exemplaire_vente(choixID, 0, 0, 0, 0, 0);
              this.apm.supprimerExemplaireVente(exVente);
              System.out.println("Exemplaire en Vente supprimer");
              break;
@@ -395,7 +392,7 @@ public class Menu {
              default:
              System.out.println("Valeur incorrecte");
              choixMenu = 0;
-             }*/
+             }
         } while (choixMenu < 6);
 
     }
@@ -480,7 +477,7 @@ public class Menu {
 
     }
 
-    public void menuTVA() throws SQLException {
+    public void menuTVA() throws SQLException, ParseException {
 
         TVA tva;
         int choixID;

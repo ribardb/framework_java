@@ -40,12 +40,11 @@ public class AirPurManager {
     static Exemplaire_location location = new Exemplaire_location(); //OK
     static Exemplaire_vente vente = new Exemplaire_vente(); // OK
     static Emprunter emprunt = new Emprunter(); //OK
-    static Site site;
-    static Facture fact;
-    static Payer payer;
-    static Modepaiement mode;
+    static Site site; //OK
+    static Facture fact; //OK
+    static Payer payer; //OK
+    static Modepaiement mode; //ok
     static TVA tva = new TVA();
-    //static Partenaire_patient patient = new Partenaire_patient();
 
     
     /*************** MATERIEL  ***************/
@@ -107,55 +106,37 @@ public class AirPurManager {
 
     //Ajout d'un materiel et verification de la TVA
     // TEST -> OK
-    public boolean ajouterMateriel(Materiel mat) {
+    public boolean ajouterMateriel(Materiel mat) throws SQLException, ParseException {
 
         boolean result = false;
-        try {
-
-            //Format de la date de fin de validation pour la TVA
-            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-            //Date du jour
-            Date dateNow = new Date();
-            //recherche de la tva dans
-            TVA tva = trouverTva(mat.getId_tva());
-            //si la tva existe
-            if (tva != null) {
-                //parsing de la date de fin de validation de la TVA (format string en format Date)
-                Date dateTva = sdf.parse(tva.getDatefinvalidation_tva());
-                //si la tva est valide
-                if (dateTva.compareTo(dateNow) > 0) {
-                    //insertion du materiel et on retourne true
-                    this.dao.ajouter(mat);
-                    result = true;
-                }
-
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date dateNow = new Date();
+        TVA tva = trouverTva(mat.getId_tva());
+        if (tva != null) {
+            //parsing de la date de fin de validation de la TVA (format string en format Date)
+            Date dateTva = sdf.parse(tva.getDatefinvalidation_tva());
+            //si la tva est valide
+            if (dateTva.compareTo(dateNow) > 0) {
+                //insertion du materiel et on retourne true
+                this.dao.ajouter(mat);
+                result = true;
             }
 
-        } catch (SQLException | ParseException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
 
     //Modification d'un Materiel
     // TEST -> OK
-    public boolean modifierMateriel(Materiel materiel) {
+    public boolean modifierMateriel(Materiel materiel) throws SQLException {
         boolean modifier = false;
-        try {
-            //Pour des raisons de securité On ne peut changer seulement le nom le modele et la description
-            //verification si le materiel existe bien
-            Materiel materielUpdate = new Materiel();
-            materielUpdate = trouverMateriel(materiel.getId_materiel());
-
-            if (materielUpdate != null) {
-               
-                this.dao.modifier(materiel);
-                modifier = true;
-               
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        Materiel materielUpdate = new Materiel();
+        materielUpdate = trouverMateriel(materiel.getId_materiel());
+        if (materielUpdate != null) {
+            
+            this.dao.modifier(materiel);
+            modifier = true;
+            
         }
         //retour du materiel modifié
         return modifier;
@@ -164,15 +145,11 @@ public class AirPurManager {
 
     //Suppression d'un matériel
     // TEST -> OK
-    public boolean supprimerMateriel(Materiel materiel) {
+    public boolean supprimerMateriel(Materiel materiel) throws SQLException {
         boolean result = false;
-        try {
-            if (trouverMateriel(materiel.getId_materiel()) != null) {
-                this.dao.supprimer(materiel);
-                result = true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        if (trouverMateriel(materiel.getId_materiel()) != null) {
+            this.dao.supprimer(materiel);
+            result = true;
         }
         return result;
     }
@@ -244,7 +221,7 @@ public class AirPurManager {
      *Renvoi Vrai si la date a bien été saisie
      *faux si la date est inferieur à la date du jour
      */
-    public boolean ajouterTVA(TVA tva) {
+    public boolean ajouterTVA(TVA tva) throws ParseException {
 
         boolean result = false;
         try {
@@ -271,7 +248,7 @@ public class AirPurManager {
 
             }
 
-        } catch (SQLException | ParseException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
@@ -492,7 +469,7 @@ public class AirPurManager {
                     String DateDebut = this.result.getString("DATEDEBUT_EMPRUNTER");
                     String DateFin = this.result.getString("DATEFIN_EMPRUNTER");
                     String DateFinReel = this.result.getString("DATEFINREEL_EMPRUNTER");
-                    emprunter = new Emprunter(idL, idF, DateDebut, DateFin, DateFinReel, null);
+                    emprunter = new Emprunter(idL, idF, DateDebut, DateFin, DateFinReel);
                     listEmprunts.add(emprunter);
                 }
 
@@ -521,7 +498,7 @@ public class AirPurManager {
                 String DateDebut = this.result.getString("DATEDEBUT_EMPRUNTER");
                 String DateFin = this.result.getString("DATEFIN_EMPRUNTER");
                 String DateFinReel = this.result.getString("DATEFINREEL_EMPRUNTER");
-                this.emprunt = new Emprunter(idL, idF, DateDebut, DateFin, DateFinReel, null);
+                this.emprunt = new Emprunter(idL, idF, DateDebut, DateFin, DateFinReel);
             }
         } catch (SQLException e) {
             e.printStackTrace();
