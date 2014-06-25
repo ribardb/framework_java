@@ -36,16 +36,16 @@ public class AirPurManager {
     private ArrayList values; //liste de valeurs | liste d'attributs et de valeurs ex:id=1
     private String table;
 
-    static Materiel mat = new Materiel();
-    static Exemplaire_location location;
-    static Exemplaire_vente vente;
-    static Emprunter emprun;
+    static Materiel mat = new Materiel(); // OK
+    static Exemplaire_location location = new Exemplaire_location(); //OK
+    static Exemplaire_vente vente = new Exemplaire_vente(); // OK
+    static Emprunter emprunt = new Emprunter(); //OK
     static Site site;
     static Facture fact;
     static Payer payer;
     static Modepaiement mode;
     static TVA tva = new TVA();
-    static Partenaire_patient patient = new Partenaire_patient();
+    //static Partenaire_patient patient = new Partenaire_patient();
 
     
     /*************** MATERIEL  ***************/
@@ -289,8 +289,8 @@ public class AirPurManager {
         ArrayList<Exemplaire_location> listExemplaire = new ArrayList<Exemplaire_location>();
 
         try {
-
-            this.result = dao.selectManager("select * from Exemplaire_location");
+            
+            this.result = this.dao.lister(this.location, this.where);
             if (result.first()) {
                 while (result.next()) {
                     Exemplaire_location exemplaireLocation;
@@ -312,12 +312,15 @@ public class AirPurManager {
     }
 
     //Sélectionner un exemplaire de location
+    // TEST ->
     public Exemplaire_location trouverExemplaireLocation(int id) {
-        Exemplaire_location exemplaireLocation = null;
+        
+        this.where = new ArrayList();
+        this.where.add("id_location = " + id);
 
         try {
 
-            this.result = dao.selectManager("select * from Exemplaire_location where ID_LOCATION=" + id);
+            this.result = dao.lister(this.location, this.where) ; 
             if (result.first()) {
 
                 int idL = this.result.getInt("ID_LOCATION");
@@ -325,66 +328,255 @@ public class AirPurManager {
                 int idS = this.result.getInt("ID_SITE");
                 Float tarif = this.result.getFloat("TARIF_LOCATION");
                 String etat = this.result.getString("ETATEMPRUNT_LOCATION");
-                exemplaireLocation = new Exemplaire_location(idL, idM, idS, tarif, etat);
+                this.location = new Exemplaire_location(idL, idM, idS, tarif, etat);
 
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return exemplaireLocation;
+        return this.location;
     }
 
+    //Ajout d'un exemplaire de location
+    // TEST ->
+    public boolean AjouterExemplaireLocation(Exemplaire_location loc)
+    {
+        boolean Result = false;
+        
+        this.dao.ajouter(loc);
+        Result = true;
+        
+        return Result;
+    }
+    
+    
     //Modification d'un exepemplaire location
-    public Exemplaire_location modifierUnExemplaireLocation(Exemplaire_location exemplaireLocation) {
-        Exemplaire_location locationlUpdate = null;
-        try {
-
-            locationlUpdate = trouverExemplaireLocation(exemplaireLocation.getId_location());
-
-            if (locationlUpdate != null) {
-                //requete Update  de l'exemplaire
-                String update = "Update Exemplaire_location set TARIF_LOCATION = '" + exemplaireLocation.getTarif_location() + "' , "
-                        + "ETATEMPRUNT_LOCATION = '" + exemplaireLocation.getEtatemprunt_location() + "' "
-                        + "WHERE ID_LOCATION =" + exemplaireLocation.getId_location();
-                //execution de la requete
-                dao.updateManager(update);
-                //recuperation du materiel modifié
-                locationlUpdate = trouverExemplaireLocation(exemplaireLocation.getId_location());
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+    public boolean modifierUnExemplaireLocation(Exemplaire_location loc) {
+        boolean Modifier = false;
+        
+        if (trouverExemplaireLocation(loc.getId_location()) != null) {
+            //requete Update  de l'exemplaire
+            this.dao.modifier(loc);
+            Modifier = true;
         }
         //retour de l'exemplaire modifié
-        return locationlUpdate;
+        return Modifier;
 
     }
     
     //Supprimer un exemplaire de location
-    public void supprimerExemplaireLocation(Exemplaire_location exemplaireLocation) {
-        Exemplaire_location locationlUpdate = null;
-        try {
-            //Pour des raisons de securité On ne peut changer seulement le nom le modele et la description
-            //verification si le materiel existe bien
-            locationlUpdate = trouverExemplaireLocation(exemplaireLocation.getId_location());
-
-            if (locationlUpdate != null) {
-                String delete = "Delete Exemplaire_location where ID_Location =" + exemplaireLocation.getId_location();
-                //execution de la requete
-                dao.updateManager(delete);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+    public boolean supprimerExemplaireLocation(Exemplaire_location loc) {
+        
+        boolean Result = false;
+        if (trouverExemplaireLocation(loc.getId_location()) != null) {
+            this.dao.supprimer(loc);
+            Result = true;
         }
+        
+        return Result;
     }
     
     /*************** /EXEMPLAIRE LOCATION  ***************/
+    
+    
+    /*************** EXEMPLAIRE VENTE  ***************/
+    //liste des exemplaires de vente
+    public ArrayList<Exemplaire_vente> listerExemplaireVente() {
+        ArrayList<Exemplaire_vente> listExemplaire = new ArrayList<Exemplaire_vente>();
+
+        try {
+            
+            this.result = this.dao.lister(this.location, this.where);
+            if (result.first()) {
+                while (result.next()) {
+                    Exemplaire_vente exemplaireVente;
+                    int idV = this.result.getInt("ID_VENTE");
+                    int idS = this.result.getInt("ID_SITE");
+                    int idM = this.result.getInt("ID_MATERIEL");
+                    int idF = this.result.getInt("ID_FACTURE");                    
+                    Float tarif = this.result.getFloat("TARIF_VENTE");
+                    Float remise = this.result.getFloat("REMISE_VENTE");
+                    exemplaireVente = new Exemplaire_vente(idV, idM, idS, idF, tarif, remise);
+                    listExemplaire.add(exemplaireVente);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listExemplaire;
+    }
+    
+    //Sélectionner un exemplaire de vente
+    // TEST ->
+    public Exemplaire_vente trouverExemplaireVente(int id) {
+        
+        this.where = new ArrayList();
+        this.where.add("id_vente = " + id);
+
+        try {
+
+            this.result = dao.lister(this.vente, this.where) ; 
+            if (result.first()) {
+
+                int idV = this.result.getInt("ID_VENTE");
+                int idS = this.result.getInt("ID_SITE");
+                int idM = this.result.getInt("ID_MATERIEL");
+                int idF = this.result.getInt("ID_FACTURE");                    
+                Float tarif = this.result.getFloat("TARIF_VENTE");
+                Float remise = this.result.getFloat("REMISE_VENTE");
+                this.vente = new Exemplaire_vente(idV, idM, idS, idF, tarif, remise);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return this.vente;
+    }
+    
+    //Ajout d'un exemplaire de vente
+    // TEST ->
+    public boolean AjouterExemplaireVente(Exemplaire_vente vente)
+    {
+        boolean Result = false;
+        
+        this.dao.ajouter(vente);
+        Result = true;
+        
+        return Result;
+    }
+    
+    //Modification d'un exepemplaire vente
+    public boolean modifierUnExemplaireVente(Exemplaire_vente vente) {
+        boolean Modifier = false;
+        
+        if (trouverExemplaireVente(vente.getId_vente()) != null) {
+            //requete Update  de l'exemplaire
+            this.dao.modifier(vente);
+            Modifier = true;
+        }
+        //retour de l'exemplaire modifié
+        return Modifier;
+
+    }
+    
+    //Supprimer un exemplaire de vente
+    public boolean supprimerExemplaireVente(Exemplaire_vente vente) {
+        
+        boolean Result = false;
+        if (trouverExemplaireLocation(vente.getId_vente()) != null) {
+            this.dao.supprimer(vente);
+            Result = true;
+        }
+        
+        return Result;
+    }    
+    /*************** /EXEMPLAIRE VENTE  ***************/
+    
+    /*************** EMPRUNT  ***************/
+    //Liste des emprunts
+    public ArrayList<Emprunter> listerEmprunter() {
+        ArrayList<Emprunter> listEmprunts = new ArrayList<Emprunter>();
+
+        try {
+            
+            this.result = this.dao.lister(this.emprunt, this.where);
+            if (result.first()) {
+                while (result.next()) {
+                    Emprunter emprunter;
+                    int idL = this.result.getInt("ID_LOCATION");
+                    int idF = this.result.getInt("ID_FACTURE");
+                    String DateDebut = this.result.getString("DATEDEBUT_EMPRUNTER");
+                    String DateFin = this.result.getString("DATEFIN_EMPRUNTER");
+                    String DateFinReel = this.result.getString("DATEFINREEL_EMPRUNTER");
+                    emprunter = new Emprunter(idL, idF, DateDebut, DateFin, DateFinReel, null);
+                    listEmprunts.add(emprunter);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listEmprunts;
+    }
+    
+    //Sélectionner un emprunt
+    // TEST ->
+    public Emprunter trouverEmprunt(int id) {
+        
+        this.where = new ArrayList();
+        this.where.add("id_location = " + id);
+
+        try {
+
+            this.result = dao.lister(this.emprunt, this.where) ; 
+            if (result.first()) {
+
+                int idL = this.result.getInt("ID_LOCATION");
+                int idF = this.result.getInt("ID_FACTURE");
+                String DateDebut = this.result.getString("DATEDEBUT_EMPRUNTER");
+                String DateFin = this.result.getString("DATEFIN_EMPRUNTER");
+                String DateFinReel = this.result.getString("DATEFINREEL_EMPRUNTER");
+                this.emprunt = new Emprunter(idL, idF, DateDebut, DateFin, DateFinReel, null);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return this.emprunt;
+    }
+    
+    //Ajout d'un emprunt
+    // TEST ->
+    public boolean AjouterEmprunt(Emprunter emp)
+    {
+        boolean Result = false;
+        
+        this.dao.ajouter(emp);
+        Result = true;
+        
+        return Result;
+    }
+    
+    
+    //Modification d'un emprunt
+    public boolean modifierEmprunt(Emprunter emp) {
+        boolean Modifier = false;
+       
+        if (trouverEmprunt(emp.getId_location()) != null) {
+            //requete Update  de l'exemplaire
+            this.dao.modifier(emp);
+            Modifier = true;
+        }
+        //retour de l'exemplaire modifié
+        return Modifier;
+
+    }
+    
+    //Supprimer un emprunt
+    public boolean supprimerEmprunt(Emprunter emp) {
+        
+        boolean Result = false;
+        if (trouverExemplaireLocation(emp.getId_location()) != null) {
+            this.dao.supprimer(emp);
+            Result = true;
+        }
+        
+        return Result;
+    }
+    
+    
+    /*************** /EMPRUNT  ***************/
 
     /*************** PARTENAIRE PATIENT  ***************/
     
     //Liste des patients 
     // TEST -> OK
-    public ArrayList<Partenaire_patient> ListerPatients()
+    /*public ArrayList<Partenaire_patient> ListerPatients()
     {
         ArrayList<Partenaire_patient> ListePatients = new ArrayList<Partenaire_patient>();
         try {
@@ -454,19 +646,7 @@ public class AirPurManager {
         }
         
         return this.patient ;
-    }
-    
-    //Ajouter d'un patient
-    //TEST ->
-    public boolean AjouterPatient (Partenaire_patient patient) throws SQLException
-    {
-        boolean Result = false;
-      
-        this.dao.ajouter(patient);
-        Result = true;
-             
-        return Result;
-    }
+    }*/
     
     
     /*************** /PARTENAIRE PATIENT  ***************/
