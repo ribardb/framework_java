@@ -118,7 +118,7 @@ public class AirPurManager {
             //Date du jour
             Date dateNow = new Date();
             //recherche de la tva dans
-            TVA tva = trouverTva(mat.getId_tva());
+            TVA tva = trouverTVA(mat.getId_tva());
             //si la tva existe
             if (tva != null) {
                 //parsing de la date de fin de validation de la TVA (format string en format Date)
@@ -184,7 +184,7 @@ public class AirPurManager {
     /*************** TVA  ***************/
     
     //Sélectionner une TVA
-    public TVA trouverTva(int id) throws SQLException {
+    public TVA trouverTVA(int id) throws SQLException {
         this.where = new ArrayList();
         this.where.add("id_tva = " + id);
         try {
@@ -205,7 +205,7 @@ public class AirPurManager {
      *Si le parametre est a vrai alors on filtre les TVA encore valide
      *Sinon on renvoi toutes les données de la table TVA
      */
-    public ArrayList<TVA> listerTva(boolean dateValide) {
+    public ArrayList<TVA> listerTVA(boolean dateValide) {
         ArrayList<TVA> listTva = new ArrayList<TVA>();
         ArrayList where = new ArrayList();
         TVA tvasel = new TVA();

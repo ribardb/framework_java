@@ -331,70 +331,71 @@ public class Menu {
             System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
             /*switch (choixMenu) {
-                case 1:
-                    for (Exemplaire_vente listeVente : apm.listerExemplaireVente()) {
-                        System.out.println("ID du de l'exemplaire : " + listeVente.getId_vente());
-                        System.out.println("ID du site : " + listeVente.getId_site());
-                        System.out.println("ID du materiel : " + listeVente.getId_materiel());
-                        System.out.println("ID de la facture : " + listeVente.getId_facture());
-                        System.out.println("Tarif de l'exemplaire : " + listeVente.getTarif_vente());
-                        System.out.println("Remise accordee a la vente : " + listeVente.getRemise_vente());
-                        System.out.println("*****************************************************************");
-                    }
-                    break;
-                case 2:
-                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire");
-                    exVente = null;
-                    exVente = apm.trouverExemplaireVente(choixID);
-                    System.out.println("ID du de l'exemplaire : " + exVente.getId_vente());
-                    System.out.println("ID du site : " + exVente.getId_site());
-                    System.out.println("ID du materiel : " + exVente.getId_materiel());
-                    System.out.println("ID de la facture : " + exVente.getId_facture());
-                    System.out.println("Tarif de l'exemplaire : " + exVente.getTarif_vente());
-                    System.out.println("Remise accordee a la vente : " + exVente.getRemise_vente());
-                    break;
-                case 3:
-                    System.out.println("Ajout d'un exemplaire en vente");
-                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel");
-                    choixSite = ConsoleReader.readInt("Entrez l'ID du site");
-                    choixFacture = ConsoleReader.readInt("Entrez l'ID de la facture");
-                    choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
-                    choixRemise = ConsoleReader.readFloat("Entrez la remise accordee a la vente");
-                    exVente = new Exemplaire_vente(0, choixMateriel, choixSite, choixFacture, choixTarif, choixRemise);
-                    System.out.println("Exemplaire en vente ajoute");
-                    break;
-                case 4:
-                    System.out.println("Modification d'un exemplaire en vente");
-                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a modifier");
-                    choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel");
-                    choixSite = ConsoleReader.readInt("Entrez l'ID du site");
-                    choixFacture = ConsoleReader.readInt("Entrez l'ID de la facture");
-                    choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
-                    choixRemise = ConsoleReader.readFloat("Entrez la remise accordee a la vente");
-                    exVente = new Exemplaire_vente(choixID, choixMateriel, choixSite, choixFacture, choixTarif, choixRemise);
-                    this.apm.modifierUnExemplaireVente(exVente);
-                    System.out.println("Exemplaire en vente modifie");
-                    break;
-                case 5:
-                    choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a supprimer :");
-                    exVente = new Exemplaire_vente(choixID, 0, 0, 0, null);
-                    this.apm.supprimerExemplaireVente(exVente);
-                    System.out.println("Exemplaire en Vente supprimer");
-                    break;
-                case 6:
-                    try {
-                        afficherMenuPrincipal();
-                    } catch (Exception ex) {
-                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case 7:
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Valeur incorrecte");
-                    choixMenu = 0;
-            }*/
+             case 1:
+             for (Exemplaire_vente listeVente : apm.listerExemplaireVente()) {
+             System.out.println("ID de l'exemplaire : " + listeVente.getId_vente());
+             System.out.println("ID du site : " + listeVente.getId_site());
+             System.out.println("ID du materiel : " + listeVente.getId_materiel());
+             System.out.println("ID de la facture : " + listeVente.getId_facture());
+             System.out.println("Tarif de l'exemplaire : " + listeVente.getTarif_vente());
+             System.out.println("Remise accordee a la vente : " + listeVente.getRemise_vente());
+             System.out.println("*****************************************************************");
+             }
+             break;
+             case 2:
+             choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire");
+             exVente = null;
+             exVente = apm.trouverExemplaireVente(choixID);
+             System.out.println("ID du de l'exemplaire : " + exVente.getId_vente());
+             System.out.println("ID du site : " + exVente.getId_site());
+             System.out.println("ID du materiel : " + exVente.getId_materiel());
+             System.out.println("ID de la facture : " + exVente.getId_facture());
+             System.out.println("Tarif de l'exemplaire : " + exVente.getTarif_vente());
+             System.out.println("Remise accordee a la vente : " + exVente.getRemise_vente());
+             break;
+             case 3:
+             System.out.println("Ajout d'un exemplaire en vente");
+             choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel");
+             choixSite = ConsoleReader.readInt("Entrez l'ID du site");
+             choixFacture = ConsoleReader.readInt("Entrez l'ID de la facture");
+             choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
+             choixRemise = ConsoleReader.readFloat("Entrez la remise accordee a la vente");
+             exVente = new Exemplaire_vente(0, choixMateriel, choixSite, choixFacture, choixTarif, choixRemise);
+             this.apm.ajouterExemplaire_Vente(exVente);
+             System.out.println("Exemplaire en vente ajoute");
+             break;
+             case 4:
+             System.out.println("Modification d'un exemplaire en vente");
+             choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a modifier");
+             choixMateriel = ConsoleReader.readInt("Entrez l'ID du materiel");
+             choixSite = ConsoleReader.readInt("Entrez l'ID du site");
+             choixFacture = ConsoleReader.readInt("Entrez l'ID de la facture");
+             choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
+             choixRemise = ConsoleReader.readFloat("Entrez la remise accordee a la vente");
+             exVente = new Exemplaire_vente(choixID, choixMateriel, choixSite, choixFacture, choixTarif, choixRemise);
+             this.apm.modifierUnExemplaireVente(exVente);
+             System.out.println("Exemplaire en vente modifie");
+             break;
+             case 5:
+             choixID = ConsoleReader.readInt("Entrez l'ID de l'exemplaire a supprimer :");
+             exVente = new Exemplaire_vente(choixID, 0, 0, 0, null);
+             this.apm.supprimerExemplaireVente(exVente);
+             System.out.println("Exemplaire en Vente supprimer");
+             break;
+             case 6:
+             try {
+             afficherMenuPrincipal();
+             } catch (Exception ex) {
+             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+             }
+             break;
+             case 7:
+             System.exit(0);
+             break;
+             default:
+             System.out.println("Valeur incorrecte");
+             choixMenu = 0;
+             }*/
         } while (choixMenu < 6);
 
     }
@@ -479,18 +480,85 @@ public class Menu {
 
     }
 
-    public void menuTVA() {
+    public void menuTVA() throws SQLException {
 
+        TVA tva;
+        int choixID;
+        float choixTaux;
+        String choixDate;
         do {
             System.out.println("Menu TVA");
-            System.out.println("1  - Lister les TVA");
-            System.out.println("2  - Trouver une TVA");
-            System.out.println("3  - Ajouter une TVA");
-            System.out.println("4  - Modifier une TVA");
-            System.out.println("5  - Supprimer une TVA");
-            System.out.println("6  - Retour menu principal");
-            System.out.println("7  - Quitter");
+            System.out.println("1  - Lister les TVA valides");
+            System.out.println("2  - Lister toutes les TVA");
+            System.out.println("3  - Trouver une TVA");
+            System.out.println("4  - Ajouter une TVA");
+            System.out.println("5  - Modifier une TVA");
+            System.out.println("6  - Supprimer une TVA");
+            System.out.println("7  - Retour menu principal");
+            System.out.println("8  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
+            switch (choixMenu) {
+                case 1:
+                    for (TVA listeTVA : apm.listerTVA(true)) {
+                        System.out.println("ID de la TVA : " + listeTVA.getId_tva());
+                        System.out.println("Taux de la TVA : " + listeTVA.getTaux_tva());
+                        System.out.println("Date de fin de validité de la TVA : " + listeTVA.getDatefinvalidation_tva());
+                        System.out.println("*****************************************************************");
+                    }
+                    break;
+                case 2:
+                    for (TVA listeTVA : apm.listerTVA(true)) {
+                        System.out.println("ID de la TVA : " + listeTVA.getId_tva());
+                        System.out.println("Taux de la TVA : " + listeTVA.getTaux_tva());
+                        System.out.println("Date de fin de validité de la TVA : " + listeTVA.getDatefinvalidation_tva());
+                        System.out.println("*****************************************************************");
+                    }
+                    break;
+                case 3:
+                    choixID = ConsoleReader.readInt("Entrez l'ID de la TVA");
+                    tva = null;
+                    tva = apm.trouverTVA(choixID);
+                        System.out.println("ID de la TVA : " + tva.getId_tva());
+                        System.out.println("Taux de la TVA : " + tva.getTaux_tva());
+                        System.out.println("Date de fin de validité de la TVA : " + tva.getDatefinvalidation_tva());
+                    break;
+                case 4:
+                    System.out.println("Ajout d'un exemplaire en vente");
+                    choixTaux = ConsoleReader.readFloat("Entrez le taux de la TVA");
+                    choixDate = ConsoleReader.readString("Entrez la date de fin de validation de la TVA");
+                    tva = new TVA(0, choixTaux, choixDate);
+                    this.apm.ajouterTVA(tva);
+                    System.out.println("TVA ajoute");
+                    break;
+                case 5:
+                    System.out.println("Modification d'un exemplaire en vente");
+                    choixID = ConsoleReader.readInt("Entrez l'ID de la TVA a modifier");
+                    choixTaux = ConsoleReader.readFloat("Entrez le taux de la TVA");
+                    choixDate = ConsoleReader.readString("Entrez la date de fin de validation de la TVA");
+                    tva = new TVA(0, choixTaux, choixDate);
+                    //this.apm.modifierUneTVA(tva);
+                    System.out.println("Exemplaire en vente modifie");
+                    break;
+                case 6:
+                    choixID = ConsoleReader.readInt("Entrez l'ID de la a supprimer :");
+                    tva = new TVA(choixID, 0, null);
+                    //this.apm.supprimerTVA(tva);
+                    System.out.println("TVA supprimer");
+                    break;
+                case 7:
+                    try {
+                        afficherMenuPrincipal();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case 8:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Valeur incorrecte");
+                    choixMenu = 0;
+            }
         } while (choixMenu < 6);
 
     }
