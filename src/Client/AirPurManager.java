@@ -352,7 +352,7 @@ public class AirPurManager {
     
     
     //Modification d'un exepemplaire location
-    public boolean modifierUnExemplaireLocation(Exemplaire_location loc) {
+    public boolean ModifierUnExemplaireLocation(Exemplaire_location loc) {
         boolean Modifier = false;
         
         if (trouverExemplaireLocation(loc.getId_location()) != null) {
@@ -366,7 +366,7 @@ public class AirPurManager {
     }
     
     //Supprimer un exemplaire de location
-    public boolean supprimerExemplaireLocation(Exemplaire_location loc) {
+    public boolean SupprimerExemplaireLocation(Exemplaire_location loc) {
         
         boolean Result = false;
         if (trouverExemplaireLocation(loc.getId_location()) != null) {
@@ -450,7 +450,7 @@ public class AirPurManager {
     }
     
     //Modification d'un exepemplaire vente
-    public boolean modifierUnExemplaireVente(Exemplaire_vente vente) {
+    public boolean ModifierUnExemplaireVente(Exemplaire_vente vente) {
         boolean Modifier = false;
         
         if (trouverExemplaireVente(vente.getId_vente()) != null) {
@@ -464,7 +464,7 @@ public class AirPurManager {
     }
     
     //Supprimer un exemplaire de vente
-    public boolean supprimerExemplaireVente(Exemplaire_vente vente) {
+    public boolean SupprimerExemplaireVente(Exemplaire_vente vente) {
         
         boolean Result = false;
         if (trouverExemplaireLocation(vente.getId_vente()) != null) {
@@ -478,7 +478,7 @@ public class AirPurManager {
     
     /*************** EMPRUNT  ***************/
     //Liste des emprunts
-    public ArrayList<Emprunter> listerEmprunter() {
+    public ArrayList<Emprunter> ListerEmprunter() {
         ArrayList<Emprunter> listEmprunts = new ArrayList<Emprunter>();
 
         try {
@@ -506,7 +506,7 @@ public class AirPurManager {
     
     //Sélectionner un emprunt
     // TEST ->
-    public Emprunter trouverEmprunt(int id) {
+    public Emprunter TrouverEmprunt(int id) {
         
         this.where = new ArrayList();
         this.where.add("id_location = " + id);
@@ -544,10 +544,10 @@ public class AirPurManager {
     
     
     //Modification d'un emprunt
-    public boolean modifierEmprunt(Emprunter emp) {
+    public boolean ModifierEmprunt(Emprunter emp) {
         boolean Modifier = false;
        
-        if (trouverEmprunt(emp.getId_location()) != null) {
+        if (TrouverEmprunt(emp.getId_location()) != null) {
             //requete Update  de l'exemplaire
             this.dao.modifier(emp);
             Modifier = true;
@@ -558,7 +558,7 @@ public class AirPurManager {
     }
     
     //Supprimer un emprunt
-    public boolean supprimerEmprunt(Emprunter emp) {
+    public boolean SupprimerEmprunt(Emprunter emp) {
         
         boolean Result = false;
         if (trouverExemplaireLocation(emp.getId_location()) != null) {
