@@ -12,8 +12,8 @@ import DataAccessLayer.DatabaseConnectionOracle;
 import DataAccessLayer.DatabaseConnectionSQLServer;
 import airpur.*;
 import com.sun.rowset.CachedRowSetImpl;
-import frameworkairpur.Cast;
-import frameworkairpur.ImportXML;
+import Tools.Cast;
+import Tools.ImportXML;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -63,9 +63,9 @@ public class DAOManager {
      *
      * @param url
      */
-    private DAOManager() {
+    public DAOManager() {
         try {
-            ImportXML xml = new ImportXML("src/frameworkairpur/database.xml");
+            ImportXML xml = new ImportXML("src/client/database.xml");
 
             switch (xml.getTypeDB()) {
                 case "Oracle":

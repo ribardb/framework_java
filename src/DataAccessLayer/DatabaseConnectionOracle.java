@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package DataAccessLayer;
 
 import java.sql.Connection;
@@ -16,32 +15,32 @@ import javax.swing.JOptionPane;
  *
  * @author Edgar
  */
-public class DatabaseConnectionOracle extends DatabaseConnection {    
-    
+public class DatabaseConnectionOracle extends DatabaseConnection {
+
     private static final String DRIVER_ORACLE = "oracle.jdbc.OracleDriver";
     private static final String INSTANCE_ORACLE = "jdbc:oracle:thin:@";
-    
-    
+
     public DatabaseConnectionOracle(String login, String psw, String ip, String port, String base) throws Exception {
         super(login, psw, ip, port, base);
+        //System.out.println("Nouvelle connexion");
     }
+
     /**
      *
-     * @return 
+     * @return
      */
     @Override
-        public Connection getConnection() {
+    public Connection getConnection() {
         try {
             Class.forName(DRIVER_ORACLE);
-        }
-	catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null,	"Classe de dirriver introuvable " + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Classe de dirriver introuvable " + ex.getMessage());
             System.exit(0);
-	}
-        
+        }
+
         try {
             this.con = DriverManager.getConnection(INSTANCE_ORACLE + ip + ":" + port + ":" + base, login, psw);
-            System.out.println("Connexion Oracle ok");
+            //System.out.println("Connexion Oracle ok");
         } catch (SQLException ex) {
             System.out.println("Exception SQL : ");
             while (ex != null) {
@@ -56,5 +55,5 @@ public class DatabaseConnectionOracle extends DatabaseConnection {
         }
         return this.con;
     }
-    
+
 }
