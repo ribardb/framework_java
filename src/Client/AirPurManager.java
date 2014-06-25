@@ -7,7 +7,7 @@ package Client;
 
 import BusinessLogicLayer.DAOManager;
 import airpur.*;
-import frameworkairpur.Cast;
+import Tools.Cast;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -107,7 +107,7 @@ public class AirPurManager {
 
     //Ajout d'un materiel et verification de la TVA
     // TEST -> OK
-    public boolean ajouterMariel(Materiel mat) {
+    public boolean ajouterMateriel(Materiel mat) {
 
         boolean result = false;
         try {
@@ -140,7 +140,7 @@ public class AirPurManager {
 
     //Modification d'un Materiel
     // TEST -> OK
-    public boolean modifierUnMateriel(Materiel materiel) {
+    public boolean modifierMateriel(Materiel materiel) {
         boolean modifier = false;
         try {
             //Pour des raisons de securité On ne peut changer seulement le nom le modele et la description
@@ -340,7 +340,7 @@ public class AirPurManager {
 
     //Ajout d'un exemplaire de location
     // TEST ->
-    public boolean AjouterExemplaireLocation(Exemplaire_location loc)
+    public boolean ajouterExemplaireLocation(Exemplaire_location loc)
     {
         boolean Result = false;
         
@@ -352,7 +352,7 @@ public class AirPurManager {
     
     
     //Modification d'un exepemplaire location
-    public boolean ModifierUnExemplaireLocation(Exemplaire_location loc) {
+    public boolean modifierUnExemplaireLocation(Exemplaire_location loc) {
         boolean Modifier = false;
         
         if (trouverExemplaireLocation(loc.getId_location()) != null) {
@@ -366,7 +366,7 @@ public class AirPurManager {
     }
     
     //Supprimer un exemplaire de location
-    public boolean SupprimerExemplaireLocation(Exemplaire_location loc) {
+    public boolean supprimerExemplaireLocation(Exemplaire_location loc) {
         
         boolean Result = false;
         if (trouverExemplaireLocation(loc.getId_location()) != null) {
@@ -439,7 +439,7 @@ public class AirPurManager {
     
     //Ajout d'un exemplaire de vente
     // TEST ->
-    public boolean AjouterExemplaireVente(Exemplaire_vente vente)
+    public boolean ajouterExemplaireVente(Exemplaire_vente vente)
     {
         boolean Result = false;
         
@@ -450,7 +450,7 @@ public class AirPurManager {
     }
     
     //Modification d'un exepemplaire vente
-    public boolean ModifierUnExemplaireVente(Exemplaire_vente vente) {
+    public boolean modifierUnExemplaireVente(Exemplaire_vente vente) {
         boolean Modifier = false;
         
         if (trouverExemplaireVente(vente.getId_vente()) != null) {
@@ -464,7 +464,7 @@ public class AirPurManager {
     }
     
     //Supprimer un exemplaire de vente
-    public boolean SupprimerExemplaireVente(Exemplaire_vente vente) {
+    public boolean supprimerExemplaireVente(Exemplaire_vente vente) {
         
         boolean Result = false;
         if (trouverExemplaireLocation(vente.getId_vente()) != null) {
@@ -478,7 +478,7 @@ public class AirPurManager {
     
     /*************** EMPRUNT  ***************/
     //Liste des emprunts
-    public ArrayList<Emprunter> ListerEmprunter() {
+    public ArrayList<Emprunter> listerEmprunter() {
         ArrayList<Emprunter> listEmprunts = new ArrayList<Emprunter>();
 
         try {
@@ -506,7 +506,7 @@ public class AirPurManager {
     
     //Sélectionner un emprunt
     // TEST ->
-    public Emprunter TrouverEmprunt(int id) {
+    public Emprunter trouverEmprunt(int id) {
         
         this.where = new ArrayList();
         this.where.add("id_location = " + id);
@@ -532,7 +532,7 @@ public class AirPurManager {
     
     //Ajout d'un emprunt
     // TEST ->
-    public boolean AjouterEmprunt(Emprunter emp)
+    public boolean ajouterEmprunt(Emprunter emp)
     {
         boolean Result = false;
         
@@ -544,10 +544,10 @@ public class AirPurManager {
     
     
     //Modification d'un emprunt
-    public boolean ModifierEmprunt(Emprunter emp) {
+    public boolean modifierEmprunt(Emprunter emp) {
         boolean Modifier = false;
        
-        if (TrouverEmprunt(emp.getId_location()) != null) {
+        if (trouverEmprunt(emp.getId_location()) != null) {
             //requete Update  de l'exemplaire
             this.dao.modifier(emp);
             Modifier = true;
@@ -558,7 +558,7 @@ public class AirPurManager {
     }
     
     //Supprimer un emprunt
-    public boolean SupprimerEmprunt(Emprunter emp) {
+    public boolean supprimerEmprunt(Emprunter emp) {
         
         boolean Result = false;
         if (trouverExemplaireLocation(emp.getId_location()) != null) {
@@ -572,85 +572,7 @@ public class AirPurManager {
     
     /*************** /EMPRUNT  ***************/
 
-    /*************** PARTENAIRE PATIENT  ***************/
-    
-    //Liste des patients 
-    // TEST -> OK
-    /*public ArrayList<Partenaire_patient> ListerPatients()
-    {
-        ArrayList<Partenaire_patient> ListePatients = new ArrayList<Partenaire_patient>();
-        try {
-            this.result = this.dao.lister(this.patient, this.where);
-            
-            Partenaire_patient Patient;
-            int IdP;
-            String Nom;
-            String Prenom;
-            String DateNaiss;
-            String Telephone;
-            String Mail;
-            String Password;
-            String Sexe;
-            String INE;
-            
-            while(result.next()){
-                IdP = this.result.getInt("ID_PATIENT");
-                Nom = this.result.getString("NOM_PATIENT");
-                Prenom = this.result.getString("PRENOM_PATIENT");
-                DateNaiss = this.result.getString("DATENAISSANCE_PATIENT");
-                Telephone = this.result.getString("TELEPHONE_PATIENT");
-                Mail = this.result.getString("MAIL_PATIENT");
-                Password = this.result.getString("PASSWORD_PATIENT");
-                Sexe = this.result.getString("SEXE_PATIENT");
-                INE = this.result.getString("INE_PATIENT");
-                Patient = new Partenaire_patient (IdP, Nom, Prenom, DateNaiss, Telephone, Mail, Password, Sexe, INE);
-                ListePatients.add(Patient);
-            }
-            this.result.close();
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return ListePatients;        
-    }
-    
-    //Sélectionner un patient
-    //TEST -> OK
-    public Partenaire_patient TrouverPatient(int id) throws SQLException
-    {
-        
-        this.where = new ArrayList();
-        this.where.add("ID_PATIENT = " + id);
-        
-        try {
-            
-            this.result = this.dao.lister(this.patient, this.where);
-            if (result.first())
-            {
-                int IdP = this.result.getInt("ID_PATIENT");
-                String Nom = this.result.getString("NOM_PATIENT");
-                String Prenom = this.result.getString("PRENOM_PATIENT");
-                String DateNaiss = this.result.getString("DATENAISSANCE_PATIENT");
-                String Telephone = this.result.getString("TELEPHONE_PATIENT");
-                String Mail = this.result.getString("MAIL_PATIENT");
-                String Password = this.result.getString("PASSWORD_PATIENT");
-                String Sexe = this.result.getString("SEXE_PATIENT");
-                String INE = this.result.getString("INE_PATIENT");
-                this.patient = new Partenaire_patient (IdP, Nom, Prenom, DateNaiss, Telephone, Mail, Password, Sexe, INE);
-                
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return this.patient ;
-    }*/
-    
-    
-    /*************** /PARTENAIRE PATIENT  ***************/
-    
+     
     
     /**
      * ************* Fonctions de la Base de Données **************

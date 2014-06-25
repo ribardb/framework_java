@@ -499,7 +499,7 @@ public class Menu {
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
             switch (choixMenu) {
                 case 1:
-                    for (TVA listeTVA : apm.listerTVA(true)) {
+                    for (TVA listeTVA : apm.listerTva(true)) {
                         System.out.println("ID de la TVA : " + listeTVA.getId_tva());
                         System.out.println("Taux de la TVA : " + listeTVA.getTaux_tva());
                         System.out.println("Date de fin de validité de la TVA : " + listeTVA.getDatefinvalidation_tva());
@@ -507,7 +507,7 @@ public class Menu {
                     }
                     break;
                 case 2:
-                    for (TVA listeTVA : apm.listerTVA(true)) {
+                    for (TVA listeTVA : apm.listerTva(true)) {
                         System.out.println("ID de la TVA : " + listeTVA.getId_tva());
                         System.out.println("Taux de la TVA : " + listeTVA.getTaux_tva());
                         System.out.println("Date de fin de validité de la TVA : " + listeTVA.getDatefinvalidation_tva());
@@ -517,7 +517,7 @@ public class Menu {
                 case 3:
                     choixID = ConsoleReader.readInt("Entrez l'ID de la TVA");
                     tva = null;
-                    tva = apm.trouverTVA(choixID);
+                    tva = apm.trouverTva(choixID);
                         System.out.println("ID de la TVA : " + tva.getId_tva());
                         System.out.println("Taux de la TVA : " + tva.getTaux_tva());
                         System.out.println("Date de fin de validité de la TVA : " + tva.getDatefinvalidation_tva());
