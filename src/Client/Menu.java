@@ -279,7 +279,7 @@ public class Menu {
                     choixTarif = ConsoleReader.readFloat("Entrez le tarif de l'exemplaire");
                     choixEtat = ConsoleReader.readString("Entrez l'état de l'exemplaire");
                     exLoc = new Exemplaire_location(choixID, choixMateriel, choixSite, choixTarif, choixEtat);
-                    this.apm.modifierUnExemplaireLocation(exLoc);
+                    this.apm.modifierExemplaireLocation(exLoc);
                     System.out.println("Exemplaire en location modifie");
                     break;
                 case 5:
@@ -457,12 +457,17 @@ public class Menu {
             System.out.println("6  - Retour menu principal");
             System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
+            
         } while (choixMenu < 6);
 
     }
 
     public void menuPayer() {
 
+        Payer payer;
+        int choixFacture;
+        int choixModePaiement;
+        String choixDate;
         do {
             System.out.println("Menu Paiement");
             System.out.println("1  - Lister les paiements");
@@ -473,6 +478,61 @@ public class Menu {
             System.out.println("6  - Retour menu principal");
             System.out.println("7  - Quitter");
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
+            switch (choixMenu) {
+                case 1:
+                    for (Payer listepaiement : apm.listerPaiement()) {
+                        System.out.println("ID de la facture : " + listepaiement.getId_facture());
+                        System.out.println("ID du mode de paiement : " + listepaiement.getId_modepaiement());
+                        System.out.println("Date du paiement : " + listepaiement.getDate_payer());
+                        System.out.println("***************************************************************");
+                    }
+                    break;
+                   case 2:
+                    choixFacture = ConsoleReader.readInt("Entrez l'ID de la facture");
+                    payer = null;
+                    payer = apm.trouverPaiement(choixFacture);
+                        System.out.println("ID de la facture : " + payer.getId_facture());
+                        System.out.println("ID du mode de paiement : " + payer.getId_modepaiement());
+                        System.out.println("Date du paiement : " + payer.getDate_payer());
+                    break;
+                case 3:
+                    System.out.println("Ajout d'un paiement");
+                    choixFacture = ConsoleReader.readInt("Entrez l'ID de la facture");
+                    choixModePaiement = ConsoleReader.readInt("Entrez l'ID du mode de paiement");
+                    choixDate = ConsoleReader.readString("Entrez la date du paiement");
+                    payer = new Payer(choixFacture, choixModePaiement, choixDate);
+                    this.apm.ajouterPaiement(payer);
+                    System.out.println("Paiement ajoute");
+                    break;
+                case 4:
+                    System.out.println("Modification d'un paiement");
+                    choixFacture = ConsoleReader.readInt("Entrez l'ID de la Facture");
+                    choixModePaiement = ConsoleReader.readInt("Entrez l'ID du mode de paiement");
+                    choixDate = ConsoleReader.readString("Entrez la date de paiement");
+                    payer = new Payer(choixFacture, choixModePaiement, choixDate);
+                    this.apm.modifierPaiement(payer);
+                    System.out.println("Exemplaire en vente modifie");
+                    break;
+                case 5:
+                    choixFacture = ConsoleReader.readInt("Entrez l'ID de la facture du paiement a supprimer");
+                    payer = new Payer(choixFacture, 0, null);
+                    this.apm.supprimerPaiement(payer);
+                    System.out.println("Paiement supprimer");
+                    break;
+                case 6:
+                    try {
+                        afficherMenuPrincipal();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case 7:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Valeur incorrecte");
+                    choixMenu = 0;
+            }
         } while (choixMenu < 6);
 
     }
@@ -496,15 +556,15 @@ public class Menu {
             choixMenu = ConsoleReader.readInt("Quel est votre choix ?");
             switch (choixMenu) {
                 case 1:
-                    for (TVA listeTVA : apm.listerTva(true)) {
+                    for (TVA listeTVA : apm.listerTVA(true)) {
                         System.out.println("ID de la TVA : " + listeTVA.getId_tva());
                         System.out.println("Taux de la TVA : " + listeTVA.getTaux_tva());
                         System.out.println("Date de fin de validité de la TVA : " + listeTVA.getDatefinvalidation_tva());
-                        System.out.println("*****************************************************************");
+                        System.out.println("***************************************************************");
                     }
                     break;
                 case 2:
-                    for (TVA listeTVA : apm.listerTva(true)) {
+                    for (TVA listeTVA : apm.listerTVA(true)) {
                         System.out.println("ID de la TVA : " + listeTVA.getId_tva());
                         System.out.println("Taux de la TVA : " + listeTVA.getTaux_tva());
                         System.out.println("Date de fin de validité de la TVA : " + listeTVA.getDatefinvalidation_tva());
@@ -514,7 +574,7 @@ public class Menu {
                 case 3:
                     choixID = ConsoleReader.readInt("Entrez l'ID de la TVA");
                     tva = null;
-                    tva = apm.trouverTva(choixID);
+                    tva = apm.trouverTVA(choixID);
                         System.out.println("ID de la TVA : " + tva.getId_tva());
                         System.out.println("Taux de la TVA : " + tva.getTaux_tva());
                         System.out.println("Date de fin de validité de la TVA : " + tva.getDatefinvalidation_tva());
@@ -532,14 +592,14 @@ public class Menu {
                     choixID = ConsoleReader.readInt("Entrez l'ID de la TVA a modifier");
                     choixTaux = ConsoleReader.readFloat("Entrez le taux de la TVA");
                     choixDate = ConsoleReader.readString("Entrez la date de fin de validation de la TVA");
-                    tva = new TVA(0, choixTaux, choixDate);
-                    //this.apm.modifierUneTVA(tva);
+                    tva = new TVA(choixID, choixTaux, choixDate);
+                    this.apm.modifierTVA(tva);
                     System.out.println("Exemplaire en vente modifie");
                     break;
                 case 6:
                     choixID = ConsoleReader.readInt("Entrez l'ID de la a supprimer :");
                     tva = new TVA(choixID, 0, null);
-                    //this.apm.supprimerTVA(tva);
+                    this.apm.supprimerTVA(tva);
                     System.out.println("TVA supprimer");
                     break;
                 case 7:

@@ -41,7 +41,7 @@ public class AirPurManager {
     static Exemplaire_vente vente = new Exemplaire_vente(); // OK
     static Emprunter emprunt = new Emprunter(); //OK
     static Site site; //OK
-    static Facture fact; //OK
+    static Facture facture; //OK
     static Payer payer; //OK
     static Modepaiement mode; //ok
     static TVA tva = new TVA();
@@ -111,7 +111,7 @@ public class AirPurManager {
         boolean result = false;
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateNow = new Date();
-        TVA tva = trouverTva(mat.getId_tva());
+        TVA tva = trouverTVA(mat.getId_tva());
         if (tva != null) {
             //parsing de la date de fin de validation de la TVA (format string en format Date)
             Date dateTva = sdf.parse(tva.getDatefinvalidation_tva());
@@ -161,7 +161,7 @@ public class AirPurManager {
     /*************** TVA  ***************/
     
     //Sélectionner une TVA
-    public TVA trouverTva(int id) throws SQLException {
+    public TVA trouverTVA(int id) throws SQLException {
         this.where = new ArrayList();
         this.where.add("id_tva = " + id);
         try {
@@ -182,7 +182,7 @@ public class AirPurManager {
      *Si le parametre est a vrai alors on filtre les TVA encore valide
      *Sinon on renvoi toutes les données de la table TVA
      */
-    public ArrayList<TVA> listerTva(boolean dateValide) {
+    public ArrayList<TVA> listerTVA(boolean dateValide) {
         ArrayList<TVA> listTva = new ArrayList<TVA>();
         ArrayList where = new ArrayList();
         TVA tvasel = new TVA();
@@ -253,6 +253,32 @@ public class AirPurManager {
         }
         return result;
 
+    }
+    
+    //Modification d'une TVA
+    public boolean modifierTVA(TVA tva) throws SQLException {
+        boolean Modifier = false;
+        
+        if (trouverTVA(tva.getId_tva()) != null) {
+            //requete Update  de l'exemplaire
+            this.dao.modifier(tva);
+            Modifier = true;
+        }
+        //retour de l'exemplaire modifié
+        return Modifier;
+
+    }
+    
+    //Supprimer une TVA
+    public boolean supprimerTVA(TVA tva) throws SQLException {
+        
+        boolean Result = false;
+        if (trouverTVA(tva.getId_tva()) != null) {
+            this.dao.supprimer(tva);
+            Result = true;
+        }
+        
+        return Result;
     }
     
      /*************** /TVA  ***************/
@@ -329,7 +355,7 @@ public class AirPurManager {
     
     
     //Modification d'un exepemplaire location
-    public boolean modifierUnExemplaireLocation(Exemplaire_location loc) {
+    public boolean modifierExemplaireLocation(Exemplaire_location loc) {
         boolean Modifier = false;
         
         if (trouverExemplaireLocation(loc.getId_location()) != null) {
@@ -548,7 +574,367 @@ public class AirPurManager {
     
     
     /*************** /EMPRUNT  ***************/
+    
+    
+     /*************** SITE  ***************/
+    //TEST -> OK
+    public ArrayList<Site> listerSite()
+    {
+         ArrayList<Site> listeSite = new ArrayList<Site>();
+        try {
+           site= new Site();
+           Site siteSelect ;
+            this.result = this.dao.lister(site, where);
 
+            while(result.next()){
+
+                site.setId_site(this.result.getInt("ID_SITE"));
+                site.setNom_site(this.result.getString("NOM_SITE"));
+                site.setMail_site(this.result.getString("mail_site"));
+                site.setFranchise_site(this.result.getString("franchise_site"));
+                site.setTelephone_site(this.result.getString("telephone_site"));
+                site.setId_adresse(this.result.getInt("id_adresse"));
+                siteSelect = new Site(site.getId_site(), site.getId_adresse(), site.getNom_site(),
+                                        site.getFranchise_site(), site.getMail_site(),
+                                        site.getTelephone_site());
+                listeSite.add(siteSelect);
+            }
+            this.result.close();
+
+
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return listeSite;
+    }
+
+    public Site trouverSite(int id) throws SQLException
+    {
+        Site siteTrouve = new Site();
+        site= new Site();
+        this.where = new ArrayList();
+        this.where.add("ID_SITE = " + id);
+        this.result = this.dao.lister(site, where);
+        if(result.first()){
+
+                site.setId_site(this.result.getInt("ID_SITE"));
+                site.setNom_site(this.result.getString("NOM_SITE"));
+                site.setMail_site(this.result.getString("mail_site"));
+                site.setFranchise_site(this.result.getString("franchise_site"));
+                site.setTelephone_site(this.result.getString("telephone_site"));
+                site.setId_adresse(this.result.getInt("id_adresse"));
+                siteTrouve = new Site(site.getId_site(), site.getId_adresse(), site.getNom_site(),
+                                        site.getFranchise_site(), site.getMail_site(),
+                                        site.getTelephone_site());
+
+            }
+        return siteTrouve;
+    }
+    public boolean modifierSite(Site siteUpdate) throws SQLException
+    {
+        boolean modifier = false;
+        try {
+            Site siteModifier = new Site();
+            siteModifier = trouverSite(siteUpdate.getId_site());
+
+            if (siteModifier != null) {
+
+                this.dao.modifier(siteUpdate);
+                modifier = true;
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //retour du materiel modifié
+        return modifier;
+    }
+    public boolean supprimerSite(Site site) {
+        boolean resultat = false;
+        try {
+            if (trouverSite(site.getId_site()) != null) {
+                this.dao.supprimer(site);
+                resultat = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultat;
+    }
+
+    /*************** /SITE  ***************/
+    
+    
+    /**
+     * *************  FACTURE  **************
+     *Pas de modification pour la facture
+     */
+
+    public ArrayList<Facture> listerFactures()
+    {
+        ArrayList<Facture> listeFactures = new ArrayList<Facture>();
+
+        this.result = this.dao.lister(facture, null);
+
+        try {
+
+            while(this.result.next())
+            {
+                facture.setId_facture(this.result.getInt("ID_FACTURE"));
+                facture.setId_ordonnance(this.result.getInt("ID_ORDONNANCE"));
+                facture.setDate_facture(this.result.getString("Date_facture"));
+                 facture.setId_adresse(this.result.getInt("ID_adresse"));
+                 facture.setId_patient(this.result.getInt("ID_Patient"));
+                 Facture factureListe = new Facture(facture.getId_facture(),
+                                                           facture.getId_ordonnance(),
+                                                           facture.getId_adresse(),
+                                                           facture.getId_patient(),
+                                                           facture.getDate_facture());
+                 listeFactures.add(factureListe);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+       return listeFactures;
+    }
+
+
+    public Facture trouverFacture(int id)
+    {
+        where = new ArrayList();
+        where.add("ID_FACTURE = "+ id );
+        this.result = this.dao.lister(facture, where);
+        Facture factureResult = null;
+        try {
+
+            if(this.result.next())
+            {
+                facture.setId_facture(this.result.getInt("ID_FACTURE"));
+                facture.setId_ordonnance(this.result.getInt("ID_ORDONNANCE"));
+                facture.setDate_facture(this.result.getString("Date_facture"));
+                 facture.setId_adresse(this.result.getInt("ID_adresse"));
+                 facture.setId_patient(this.result.getInt("ID_Patient"));
+                 Facture factureTrouve = new Facture(facture.getId_facture(),
+                                                           facture.getId_ordonnance(),
+                                                           facture.getId_adresse(),
+                                                           facture.getId_patient(),
+                                                           facture.getDate_facture());
+                 factureResult = factureTrouve;
+
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+       return factureResult;
+    }
+
+    public boolean supprimerFacture(Facture fact)
+    {
+        boolean resultat = false;
+        if (trouverFacture(fact.getId_facture()) != null) {
+            this.dao.supprimer(fact);
+            resultat = true;
+        }
+        return resultat;
+    }
+    
+    
+    /*************** /FACTURE  ***************/
+
+
+   /*************** PAYER  ***************/
+    
+    
+    public ArrayList<Payer> listerPaiement()
+    {
+        ArrayList<Payer> listePaiement = new ArrayList<Payer>();
+
+        try {
+
+            this.result  = this.dao.lister(payer, null);
+
+            while(this.result.next())
+            {
+
+                String date = (this.result.getString("Date_payer"));
+                int idFacture=(this.result.getInt("ID_facture"));
+                int idPaiement = (this.result.getInt("Id_Modepaiement"));
+
+                Payer payerTrouve = new Payer(idFacture, idPaiement,date);
+                listePaiement.add(payerTrouve);
+            }
+
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return listePaiement;
+    }
+    public Payer trouverPaiement(int id)
+    {
+
+        try {
+
+            where = new ArrayList();
+            where.add("ID_Facture = "+id);
+            this.result  = this.dao.lister(payer, where);
+
+            if(this.result.first())
+            {
+
+                String date = (this.result.getString("Date_payer"));
+                int idFacture=(this.result.getInt("ID_facture"));
+                int idPaiement = (this.result.getInt("Id_Modepaiement"));
+
+                Payer payerTrouve = new Payer(idFacture, idPaiement,date);
+                payer = payerTrouve;
+
+            }
+            else
+            {
+            payer = null;
+            }
+
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         return payer;
+    }
+
+    public boolean ajouterPaiement(Payer ajoutPayer)
+    {
+        boolean resultat = false;
+        Facture fact =  trouverFacture(ajoutPayer.getId_facture());
+        if (fact != null)
+        {
+        this.dao.ajouter(ajoutPayer);
+        resultat = true;
+
+        }
+        return resultat;
+    }
+
+    public boolean supprimerPaiement(Payer payer)
+    {
+       boolean resultat = false;
+       if (trouverPaiement(payer.getId_facture()) != null) {
+           this.dao.supprimer(payer);
+           resultat = true;
+       }
+        return resultat;
+    }
+
+    public boolean modifierPaiement(Payer paiement)
+    {
+        boolean resultat = false;
+        this.payer = null;
+        this.payer = trouverPaiement(paiement.getId_facture());
+
+        if(this.payer != null)
+        {
+            dao.modifier(paiement);
+            resultat = true;
+        }
+
+        return resultat;
+    }
+    
+    /*************** /PAYER  ***************/
+
+    
+    
+    /*************** MODEPAIEMENT  ***************/
+    
+    public ArrayList<Modepaiement> listerModePaiement() throws SQLException
+    {
+        ArrayList<Modepaiement> listeModePaiement = new ArrayList<Modepaiement>();
+        this.mode = new Modepaiement();
+
+        this.result  = this.dao.lister(mode, null);
+
+            while(this.result.next())
+            {
+
+                int id = (this.result.getInt("ID_MODEPAIEMENT"));
+                String libelle=(this.result.getString("LIBELLE_MODEPAIEMENT"));
+
+                Modepaiement modePaiement = new Modepaiement(id, libelle);
+                listeModePaiement.add(modePaiement);
+            }
+
+        return listeModePaiement;
+    }
+
+    public Modepaiement trouverModePaiement(int id)
+    {
+        Modepaiement mp = null;
+        this.mode = new Modepaiement();
+        this.where = new ArrayList();
+        where.add("ID_MODEPAIEMENT = "+ id);
+        this.result  = this.dao.lister(mode, where);
+            try {
+            if(this.result.first())
+            {
+
+
+
+                int idp = (this.result.getInt("ID_MODEPAIEMENT"));
+
+                String libelle=(this.result.getString("LIBELLE_MODEPAIEMENT"));
+
+                Modepaiement modePaiement = new Modepaiement(id, libelle);
+                mp = modePaiement;
+            }
+             } catch (SQLException ex) {
+                Logger.getLogger(AirPurManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+
+        return mp;
+    }
+
+     public boolean ajouterModePaiement(Modepaiement modePaiement)
+    {
+       boolean resultat = false;
+
+        dao.ajouter(modePaiement);
+            resultat = true;
+       return resultat;
+    }
+
+    public boolean modifierPaiement(Modepaiement modePaiement)
+    {
+       boolean resultat = false;
+            dao.modifier(modePaiement);
+
+        resultat = true;
+
+        return resultat;
+    }
+
+    public boolean supprimerModePaiement(Modepaiement mode)
+    {
+       boolean resultat = false;
+       if (trouverModePaiement(mode.getId_modepaiement()) != null) {
+           this.dao.supprimer(site);
+           resultat = true;
+       }
+        return resultat;
+    }
+
+    
+    /*************** /MODEPAIEMENT  ***************/
      
     
     /**
