@@ -347,10 +347,13 @@ public class AirPurManager {
     {
         boolean Result = false;
         
-        this.dao.ajouter(loc);
-        Result = true;
+        try {
+            this.dao.ajouter(loc);
+            Result = true;
+        } finally {
+            return Result;
+        }
         
-        return Result;
     }
     
     
@@ -446,10 +449,13 @@ public class AirPurManager {
     {
         boolean Result = false;
         
-        this.dao.ajouter(vente);
-        Result = true;
+        try {
+            this.dao.ajouter(vente);
+            Result = true;
+        } finally {
+            return Result;
+        }
         
-        return Result;
     }
     
     //Modification d'un exepemplaire vente
@@ -539,10 +545,14 @@ public class AirPurManager {
     {
         boolean Result = false;
         
-        this.dao.ajouter(emp);
-        Result = true;
+        try {
+            this.dao.ajouter(emp);
+            Result = true;
+        } finally {
+            return Result;
+        }
         
-        return Result;
+        
     }
     
     
@@ -663,6 +673,20 @@ public class AirPurManager {
         }
         return resultat;
     }
+    
+    public boolean ajouterSite (Site site)
+    {
+        boolean Result = false;
+        
+        try
+        {
+             this.dao.ajouter(site);
+             Result = true;
+        } finally {
+            return Result;
+        }      
+        
+    }
 
     /*************** /SITE  ***************/
     
@@ -745,6 +769,18 @@ public class AirPurManager {
             resultat = true;
         }
         return resultat;
+    }
+    
+    public boolean ajouterFacture(Facture fact)
+    {
+        boolean Result = false;
+        
+        try{
+            this.dao.ajouter(fact);
+            Result = true;
+        } finally {
+            return Result;
+        }
     }
     
     
@@ -907,10 +943,16 @@ public class AirPurManager {
      public boolean ajouterModePaiement(Modepaiement modePaiement)
     {
        boolean resultat = false;
-
-        dao.ajouter(modePaiement);
+       
+       try {
+            dao.ajouter(modePaiement);
             resultat = true;
-       return resultat;
+       } finally {
+            
+           return resultat;
+       }
+       
+       
     }
 
     public boolean modifierPaiement(Modepaiement modePaiement)
